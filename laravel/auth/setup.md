@@ -288,15 +288,17 @@ protected $middlewareGroups = [
 
 ### SSO Domain Verification {#sso-domain-verification}
 
-To prevent security issues using multiple-domain authentication using the `WindowsAuthenticate` middleware,
-domain verification is performed on the authenticating user by checking if their domain name is contained
-inside of the users distinguished name that is retrieved from each of your configured LDAP guards.
+To prevent security issues using multiple-domain authentication using the `WindowsAuthenticate`
+middleware, domain verification is performed on the authenticating user.
+
+This verification is done by checking if the users *domain name* is contained inside of the
+their *full distinguished name*, which is retrieved from each of your configured LDAP guards.
 
 > Only 'Domain Components' are checked in the users distinguished name. More on this below.
 
 To describe this issue in further detail -- the `WindowsAuthenticate` middleware retrieves all of your configured
-authentication guards inside of your `config/auth.php` file, determines which one is using the `ldap`
-driver, and then attempts to locate the authenticating users from **each connection**.
+authentication guards inside of your `config/auth.php` file. It then determines which one is using the `ldap`
+driver, and attempts to locate the authenticating users from **each connection**.
 
 Since there is the possibility of users having the same `sAMAccountName` on two separate domains,
 LdapRecord must verify that the user retrieved from your domain is in-fact the user who
@@ -315,7 +317,7 @@ cn=sbauman,ou=users,dc=local,dc=com
 ```
 
 They will be denied authentication. This is because the authenticating user has a domain of
-`ACME`, but it is not contained inside of their distinguished name domain components (dc).
+`ACME`, but it is not contained inside of their distinguished name domain components (`dc`).
 
 Using the same example, if the located users distinguished name is:
 
@@ -323,19 +325,18 @@ Using the same example, if the located users distinguished name is:
 cn=sbauman,ou=users,dc=acme,dc=com
 ```
 
-Then they will be allowed to authenticate, as their `ACME` domain is contained inside of
-their distinguished name domain components (`dc=acme`).
-
-> Comparison against each domain component will be performed in a **case-insensitive** manor.
+Then they will be allowed to authenticate, as their `ACME` domain is contained
+inside of their distinguished name domain components (`dc=acme`). Comparison
+against each domain component will be performed in a **case-insensitive** manor.
 
 If you would like to disable this check, you must call the static method `bypassDomainVerification`
 on the `WindowsAuthenticate` middleware inside of your `AuthServiceProvider`:
 
-> **Important**: If you only connect to one domain inside your application,
-> this is not a security issue. However, if you use multi-domain
-> authentication and disable this check, users who have the
-> same `sAMAccountName` could sign in as each other.
-> **This is a security issue. You have been warned.**
+> **Important**: This is a security issue if you use multi-domain authentication,
+> since users who have the same `sAMAccountName` could sign in as each other.
+> **You have been warned.** If however, you connect to only one domain
+> inside your application, there is no security issue, and you may
+> disable this check as shown below.
 
 ```php
 // app/Providers/AuthServiceProvider.php

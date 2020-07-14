@@ -552,18 +552,206 @@ $query->in('ou=Users,dc=local,dc=com')->get();
 ```
 
 #### `insert` {#insert}
+
+Insert a new entry in the directory:
+
+```php
+$query = $connection->query();
+
+$dn = 'cn=John Doe,dc=local,dc=com';
+
+$attributes = [
+    'cn' => 'John Doe',
+    'objectclass' => [
+       'top',
+        'person',
+        'organizationalperson',
+        'user',
+    ],
+];
+
+$query->insert($dn, $attributes);
+```
+
 #### `insertAttributes` {#insertAttributes}
+
+Create attributes on an existing entry in the directory:
+
+```php
+$query = $connection->query();
+
+$dn = 'cn=John Doe,dc=local,dc=com';
+
+$attributes = [
+    'company' => 'Acme',
+];
+
+$query->insertAttributes($dn, $attributes);
+```
+
 #### `isNested` {#isNested}
+
+Determine if a query builder is nested:
+
+```php
+$query = $connection->query();
+
+// Returns false:
+$query->isNested();
+
+$query->andFilter(function ($q) {
+    // Returns true:
+    $q->isNested();
+});
+```
+
 #### `isPaginated` {#isPaginated}
+
+Determine if a query builder has been paginated:
+
+```php
+$query = $connection->query();
+
+// Returns false:
+$query->isPaginated();
+
+$results = $query->paginate();
+
+// Returns true:
+$query->isPaginated();
+```
+
 #### `limit` {#limit}
+
+Set the maxmimum number of entries to be returned from the directory:
+
+```php
+$query = $connection->query();
+
+$results = $query->whereHas('cn')->limit(200)->get();
+```
+
 #### `listing` {#listing}
+
+Perform an LDAP `listing` operation, requesting only immediate children / leaf nodes of the query base:
+
+```php
+$query = $connection->query();
+
+// Only retrieve the immediate children / leaf nodes of the 'Groups' OU:
+$groups = $query->in('ou=Groups,dc=local,dc=com')->listing()->get();
+```
+
 #### `model` {#model}
+
+Create a new query builder instance for the given model:
+
+```php
+use LdapRecord\Models\ActiveDirectory\User;
+
+$query = $connection->query();
+
+$modelQuery = $query->model(new User);
+```
+
 #### `nested` {#nested}
+
+Whether to mark the current query as nested:
+
+> **Important**: This affects how the query filter is generated.
+
+```php
+$query = $connection->query();
+
+// Returns "(cn=John)(sn=Doe)":
+$query->nested()
+    ->where('cn', '=', 'John')
+    ->where('sn', '=', 'Doe')
+    ->getUnescapedQuery();
+
+// Returns "(&(cn=John)(sn=Doe))"
+$query->nested(false)
+    ->where('cn', '=', 'John')
+    ->where('sn', '=', 'Doe')
+    ->getUnescapedQuery();
+```
+
 #### `newInstance` {#newInstance}
+
+Create a new query instance:
+
+```php
+$query = $connection->query();
+
+// Create and inherit the base DN from the previous instance:
+$newQuery = $query->newInstace();
+
+// Use a new base DN:
+$newQuery = $query->newInstace('ou=Users,dc=local,dc=com');
+```
+
 #### `newNestedInstance` {#newNestedInstance}
+
+Create a new nested query instance:
+
+```php
+$query = $connection->query();
+
+// New nested query builder:
+$nested = $query->newNestedInstance();
+
+// New nested query builder With a closure:
+$nested = $query->newNestedInstance(function (Builder $query) {
+    //
+});
+```
+
 #### `notFilter` {#notFilter}
+
+Add a nested 'not' filter to the current query:
+
+```php
+$query = $connection->query();
+
+// Returns "(!(cn=John Doe))":
+$query->notFilter(function ($query) {
+    $query->where('cn', '=', 'John Doe');
+})->getUnescapedQuery();
+```
+
 #### `orFilter` {#orFilter}
+
+Add a nested 'or' filter to the current query:
+
+```php
+$query = $connection->query();
+
+// Returns "(|(cn=John Doe))":
+$query->notFilter(function ($query) {
+    $query->where('cn', '=', 'John Doe');
+})->getUnescapedQuery();
+```
+
 #### `orWhere` {#orWhere}
+
+Add an 'or where' clause to the query:
+
+> **Important**: If only a single "or" is added to the query with no
+> other filters, it will be converted to a single filter instead.
+
+```php
+// Returns "(cn=John)":
+$connection->query()
+    ->orWhere('cn', '=', 'John')
+    ->getUnescapedQuery();
+
+// Returns "(|(cn=John)(sn=Doe))":
+$$connection->query()
+    ->where('cn', '=', 'John')
+    ->orWhere('sn', '=', 'Doe')
+    ->getUnescapedQuery();
+```
+
 #### `orWhereApproximatelyEquals` {#orWhereApproximatelyEqual}
 #### `orWhereContains` {#orWhereContains}
 #### `orWhereEndsWith` {#orWhereEndsWith}
@@ -578,11 +766,33 @@ $query->in('ou=Users,dc=local,dc=com')->get();
 #### `orWhereStartsWith` {#orWhereStartsWith}
 #### `paginate` {#paginate}
 #### `query` {#query}
+
+Execute a raw query on the connection:
+
+```php
+$query = $connection->query();
+
+$results = $query->query('(cn=John Doe)');
+```
+
 #### `rawFilter` {#rawFilter}
 #### `read` {#read}
 #### `recursive` {#recursive}
 #### `rename` {#rename}
 #### `select` {#select}
+
+Set the attributes to return from the directory:
+
+> **Important*: By selecting only the attributes you need, you can
+> effectively reduce memory usage on large query result sets.
+
+```php
+$query = $connection->query();
+
+// Only return the 'cn' and 'sn' attributes in result
+$query->select(['cn', 'sn'])->get();
+```
+
 #### `setCache` {#setCache}
 #### `setConnection` {#setConnection}
 #### `setDn` {#setDn}
