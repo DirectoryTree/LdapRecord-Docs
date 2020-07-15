@@ -778,6 +778,12 @@ $results = $query->query('(cn=John Doe)');
 #### `read` {#read}
 #### `recursive` {#recursive}
 #### `rename` {#rename}
+
+Rename or move an object. Performs an `ldap_rename` under the hood:
+
+```php
+```
+
 #### `select` {#select}
 
 Set the attributes to return from the directory:
@@ -793,7 +799,29 @@ $query->select(['cn', 'sn'])->get();
 ```
 
 #### `setCache` {#setCache}
+
+Set the cache instance to use for the query:
+
+> The cache instance must extend `LdapRecord\Query\Cache`.
+
+```php
+$query = $connection->query();
+
+$query->setCache($cache);
+```
+
 #### `setConnection` {#setConnection}
+
+Set the connection instance to use for the query:
+
+```php
+$query = $connection->query();
+
+$newConnection = new Connection($config = ['...']);
+
+$query->setConnection($newConnection);
+```
+
 #### `setDn` {#setDn}
 
 Sets the base Distinguished Name to perform a search upon.
@@ -809,19 +837,200 @@ $query->setDn('ou=Users,dc=local,dc=com')->get();
 #### `update` {#update}
 #### `updateAttributes` {#updateAttributes}
 #### `where` {#where}
+
+Add a "where" clause to the query, searching for objects using the given attribute, operator, and value:
+
+```php
+$query = $connection->query();
+
+// Returns "(cn=John Doe)"
+$query->where('cn', '=', 'John Doe')->getUnescapedQuery();
+```
+
 #### `whereApproximatelyEquals` {#whereApproximatelyEquals}
+
+Add a "where approximately equals" clause to the query, searching for objects where the attribute is around the given value:
+
+```php
+$query = $connection->query();
+
+$query->whereApproximatelyEquals('givenName', 'John');
+
+// Returns "(givenName~=John)"
+$query->getUnescapedQuery();
+```
+
+The approximately equals operator is great for performing "sounds like" search operations.
+
+For example, the above query would match entries with `givenName` values of either `John` or `Jon`.
+
 #### `whereBetween` {#whereBetween}
+
+Add a "where between" clause to the query, searching for objects where the attribute is between the given values:
+
+```php
+$query = $connection->query();
+
+$from = (new DateTime('October 1st 2016'))->format('YmdHis.0\Z');
+$to = (new DateTime('January 1st 2017'))->format('YmdHis.0\Z');
+
+$query->whereBetween('whencreated', [$from, $to]);
+
+// Returns "(&(whencreated>=20161001000000.0Z)(whencreated<=20170101000000.0Z))"
+$query->getUnescapedQuery();
+```
+
 #### `whereContains` {#whereContains}
+
+Add a "where contains" clause to the query, searching for objects where the attribute contains the given value:
+
+```php
+$query = $connection->query();
+
+// Returns "(title=*Accountant*)"
+$query->whereContains('title', 'Accountant')->getUnescapedQuery();
+```
+
 #### `whereDeleted` {#whereDeleted}
+
+Set an OID server control that will be sent with the query to instruct the LDAP server
+to include deleted objects in the result set, and add a `(isDeleted=TRUE)` clause
+to the query, effectively returning **only deleted** objects.
+
+```php
+$query = $connection->query();
+
+$onlyDeleted = $query->whereDeleted()->get();
+```
+
 #### `whereEndsWith` {#whereEndsWith}
+
+Add a "where ends with" clause to the query, searching for objects where the attribute ends with the given value:
+
+```php
+$query = $connection->query();
+
+// Returns "(title=*Accountant)"
+$query->whereEndsWith('title', 'Accountant')->getUnescapedQuery();
+```
+
 #### `whereEquals` {#whereEquals}
+
+Add a "where equals" clause to the query, searching for objects where the attribute equals the given value:
+
+```php
+$query = $connection->query();
+
+// Returns "(department=Accounting)"
+$query->whereEquals('department', 'Accounting')->getUnescapedQuery();
+```
+
 #### `whereHas` {#whereHas}
+
+Add a "where has" clause to the query, searching for objects where the attribute exists, or is not empty:
+
+```php
+$query = $connection->query();
+
+// Returns "(department=*)"
+$query->whereHas('department')->getUnescapedQuery();
+```
+
 #### `whereIn` {#whereIn}
+
+Add a "where in" clause to the query, searching for objects where the attribute does not contain any of the one given values:
+
+```php
+$query = $connection->query();
+
+// Returns "(|(name=john)(name=mary)(name=sue))"
+$query->whereIn('name', ['john', 'mary', 'sue'])->getUnescapedQuery();
+```
+
 #### `whereNotContains` {#whereNotContains}
+
+Add a "where doesn't contain" clause to the query, searching for objects where the attribute does not contain the given value:
+
+```php
+$query = $connection->query();
+
+// Returns "(!(telephoneNumber=*555*))"
+$query->whereNotContains('telephoneNumber', '555')->getUnescapedQuery();
+```
+
 #### `whereNotEndsWith` {#whereNotEndsWith}
+
+Add a "where doesn't end with" clause to the query, searching for objects where the attribute does not end with the given value:
+
+```php
+$query = $connection->query();
+
+// Returns "(!(mail=@local.com))"
+$query->whereNotEndsWith('mail', '@local.com')->getUnescapedQuery();
+```
+
 #### `whereNotEquals` {#whereNotEquals}
+
+Add a "where doesn't equal" clause to the query, searching for objects where the attribute does not contain the given value:
+
+```php
+$query = $connection->query();
+
+// Returns "(!(department=Accounting))"
+$query->whereNotEquals('department', 'Accounting')->getUnescapedQuery();
+```
+
 #### `whereNotHas` {#whereNotHas}
+
+Add a "where doesn't have" clause to the query, searching for objects where the attribute does not exist, or is empty:
+
+```php
+$query = $connection->query();
+
+// Returns "(!(mail=*))"
+$query->whereNotHas('mail')->getUnescapedQuery();
+```
+
 #### `whereNotStartsWith` {#whereNotStartsWith}
+
+Add a "where doesn't start with" clause to the query, searching for objects where the attribute does not start with the given value:
+
+```php
+$query = $connection->query();
+
+// Returns "(!(cn=John*))"
+$query->whereNotStartsWith('cn', 'John')->getUnescapedQuery();
+```
+
 #### `whereRaw` {#whereRaw}
+
+Add a "where" clause to the query without escaping the value, useful
+when values can contain distinguished names or GUIDs:
+
+```php
+$query = $connection->query();
+
+$query->whereRaw('objectguid', '=', '270db4d0-249d-46a7-9cc5-eb695d9af9ac');
+```
+
 #### `whereStartsWith` {#whereStartsWith}
+
+Add a "starts with" clause to the query, searching for objects where the attribute starts with the given value:
+
+```php
+$query = $connection->query();
+
+// Returns "(cn=John*)"
+$query->whereStartsWith('cn', 'John')->getUnescapedQuery();
+```
+
 #### `withDeleted` {#withDeleted}
+
+Set an OID server control that will be sent with the query to instruct
+the LDAP server to include deleted objects in the result set:
+
+```php
+$query = $connection->query();
+
+$resultsWithDeleted = $query->withDeleted()->get();
+```
