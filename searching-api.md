@@ -203,6 +203,13 @@ $query = $connection->query();
 $query->where('foo', '=', 'bar');
 
 $query->clearFilters();
+
+// array:3 [▼
+//   "and" => []
+//   "or" => []
+//   "raw" => []
+// ]
+var_dump($query->getFilters());
 ```
 
 #### `delete` {#delete}
@@ -481,7 +488,7 @@ var_dump($query->getSelects());
 
 #### `getType` {#getType}
 
-Get the type of LDAP query being executed, either `search`, `listing` or `read`:
+Get the type of LDAP query to be executed, either `search`, `listing` or `read`:
 
 ```php
 $query = $connection->query();
@@ -745,28 +752,246 @@ $connection->query()
     ->getUnescapedQuery();
 
 // Returns "(|(cn=John)(sn=Doe))":
-$$connection->query()
+$connection->query()
     ->where('cn', '=', 'John')
     ->orWhere('sn', '=', 'Doe')
     ->getUnescapedQuery();
 ```
 
 #### `orWhereApproximatelyEquals` {#orWhereApproximatelyEqual}
+
+Add an 'or where approximately equals' clause to the query:
+
+```php
+// Returns "(cn~=John)"
+$connection->query()
+    ->orWhereApproximatelyEquals('cn', 'John')
+    ->getUnescapedQuery();
+
+// Returns "(|(cn~=Sue)(cn~=John))"
+$connection->query()
+    ->whereApproximatelyEquals('cn', 'Sue')
+    ->orWhereApproximatelyEquals('cn', 'John')
+    ->getUnescapedQuery();
+```
+
 #### `orWhereContains` {#orWhereContains}
+
+Add an 'or where contains' clause to the query:
+
+```php
+// Returns "(cn=*John*)"
+$connection->query()
+    ->orWhereContains('cn', 'John')
+    ->getUnescapedQuery();
+
+// Returns "(|(cn=*Sue*)(cn=*John*))"
+$connection->query()
+    ->whereContains('cn', 'Sue')
+    ->orWhereContains('cn', 'John')
+    ->getUnescapedQuery();
+```
+
 #### `orWhereEndsWith` {#orWhereEndsWith}
+
+Add an 'or where ends with' clause to the query:
+
+```php
+// Returns "(cn=*Doe)"
+$connection->query()
+    ->orWhereEndsWith('cn', 'Doe')
+    ->getUnescapedQuery();
+
+// Returns "(|(cn=*Betty)(cn=*Doe))"
+$connection->query()
+    ->whereEndsWith('cn', 'Betty')
+    ->orWhereEndsWith('cn', 'Doe')
+    ->getUnescapedQuery();
+```
+
 #### `orWhereEquals` {#orWhereEquals}
+
+Add an 'or where equals' clause to the query:
+
+```php
+// Returns "(cn=John Doe)"
+$connection->query()
+    ->orWhereEquals('cn', 'John Doe')
+    ->getUnescapedQuery();
+
+// Returns "(|(cn=Suzy Doe)(cn=John Doe))"
+$connection->query()
+    ->whereEquals('cn', 'Suzy Doe')
+    ->orWhereEquals('cn', 'John Doe')
+    ->getUnescapedQuery();
+```
+
 #### `orWhereHas` {#orWhereHas}
+
+Add an 'or where has' clause to the query:
+
+```php
+// Returns "(title=*)"
+$connection->query()
+    ->orWhereHas('title')
+    ->getUnescapedQuery();
+
+// Returns "(|(title=*)(department=*))"
+$connection->query()
+    ->whereHas('title')
+    ->orWhereHas('department')
+    ->getUnescapedQuery();
+```
+
 #### `orWhereNotContains` {#orWhereNotContains}
+
+Add an 'or where not contains' clause to the query:
+
+```php
+// Returns "(!(title=*Accountant*))"
+$connection->query()
+    ->orWhereNotContains('title', 'Accountant')
+    ->getUnescapedQuery();
+
+// Returns "(|(!(title=*Accountant*))(!(department=*Accounting*)))"
+$connection->query()
+    ->whereNotContains('title', 'Accountant')
+    ->orWhereNotContains('department', 'Accounting')
+    ->getUnescapedQuery();
+```
+
 #### `orWhereNotEndsWith` {#orWhereNotEndsWith}
+
+Add an 'or where not ends with' clause to the query:
+
+```php
+// Returns "(!(cn=*Doe))"
+$connection->query()
+    ->orWhereNotEndsWith('cn', 'Doe')
+    ->getUnescapedQuery();
+
+// Returns "(|(!(cn=*Betty))(!(cn=*Doe)))"
+$connection->query()
+    ->whereNotEndsWith('cn', 'Betty')
+    ->orWhereNotEndsWith('cn', 'Doe')
+    ->getUnescapedQuery();
+```
+
 #### `orWhereNotEquals` {#orWhereNotEquals}
+
+Add an 'or where not equals' clause to the query:
+
+```php
+// Returns "(!(cn=John Doe))"
+$connection->query()
+    ->orWhereNotEquals('cn', 'John Doe')
+    ->getUnescapedQuery();
+
+// Returns "(|(!(cn=Suzy Betty))(!(cn=John Doe)))"
+$connection->query()
+    ->whereNotEquals('cn', 'Suzy Betty')
+    ->orWhereNotEquals('cn', 'John Doe')
+    ->getUnescapedQuery();
+```
+
 #### `orWhereNotHas` {#orWhereNotHas}
+
+Add an 'or where not has' clause to the query:
+
+```php
+// Returns "(!(title=*))"
+$connection->query()
+    ->orWhereNotHas('title')
+    ->getUnescapedQuery();
+
+// Returns "(|(!(title=*))(!(department=*)))"
+$connection->query()
+    ->whereNotHas('title')
+    ->orWhereNotHas('department')
+    ->getUnescapedQuery();
+```
+
 #### `orWhereNotStartsWith` {#orWhereNotStartsWith}
+
+Add an 'or where not starts with' clause to the query:
+
+```php
+// Returns "(!(cn=John*))"
+$connection->query()
+    ->orWhereNotStartsWith('cn', 'John')
+    ->getUnescapedQuery();
+
+// Returns "(|(!(cn=Suzy*))(!(cn=John*)))"
+$connection->query()
+    ->whereNotStartsWith('cn', 'Suzy')
+    ->orWhereNotStartsWith('cn', 'John')
+    ->getUnescapedQuery();
+```
+
 #### `orWhereRaw` {#orWhereRaw}
+
+Add a "or where" clause to the query without escaping the value, useful
+when values can contain distinguished names or GUIDs:
+
+```php
+$query = $connection->query();
+
+$query
+    ->whereRaw('objectguid', '=', '270db4d0-249d-46a7-9cc5-eb695d9af9ac')
+    ->orWhereRaw('objectguid', '=', '878ce8b7-2713-41a9-a765-5e3905ab5ef2');
+```
+
+Add an 'or where starts with' clause to the query:
+
+```php
+// Returns "(cn=John*)"
+$connection->query()
+    ->orWhereStartsWith('cn', 'John')
+    ->getUnescapedQuery();
+
+// Returns "(|(cn=Suzy*)(cn=John*))"
+$connection->query()
+    ->whereStartsWith('cn', 'Suzy')
+    ->orWhereStartsWith('cn', 'John')
+    ->getUnescapedQuery();
+```
+
 #### `orWhereStartsWith` {#orWhereStartsWith}
+
+Add an 'or where starts with' clause to the query:
+
+```php
+// Returns "(cn=John*)"
+$connection->query()
+    ->orWhereStartsWith('cn', 'John')
+    ->getUnescapedQuery();
+
+// Returns "(|(cn=Suzy*)(cn=John*))"
+$connection->query()
+    ->whereStartsWith('cn', 'Suzy')
+    ->orWhereStartsWith('cn', 'John')
+    ->getUnescapedQuery();
+```
+
 #### `paginate` {#paginate}
+
+Paginate the query by the given limit, returning all results from the LDAP directory:
+
+> This will allow you to exceed the LDAP max result limit of (usually) 1000.
+
+```php
+$query = $connection->query();
+
+// Paginate by default 1000:
+$results = $query->paginate();
+
+// Paginate by a specific amount:
+$results = $query->paginate(500);
+```
+
 #### `query` {#query}
 
-Execute a raw query on the connection:
+Execute a raw filter query on the connection:
 
 ```php
 $query = $connection->query();
@@ -775,13 +1000,61 @@ $results = $query->query('(cn=John Doe)');
 ```
 
 #### `rawFilter` {#rawFilter}
+
+Add a raw LDAP search filter to the query:
+
+```php
+$query = $connection->query();
+
+// Returns "(&(cn=Contoso)(sn=Doe*))"
+$query
+    ->rawFilter('(company=Contoso)')
+    ->rawFilter('(sn=Doe*)')
+    ->getUnescapedQuery();
+```
+
 #### `read` {#read}
+
+Set the query to read a single search result using the query's base DN (using `ldap_read`):
+
+> Queries executed with `read()` will only return a maximum of *one* result.
+
+```php
+$query = $connection->query();
+
+$entry = $query->setDn('cn=John Doe,dc=local,dc=com')->read()->first();
+```
+
 #### `recursive` {#recursive}
+
+Set the query to include recursive search results (using `ldap_search`):
+
+> This is the default search query operation.
+
+```php
+$query = $connection->query();
+
+$results = $query->recursive()->get();
+```
+
 #### `rename` {#rename}
 
 Rename or move an object. Performs an `ldap_rename` under the hood:
 
 ```php
+// Rename an object:
+$connection->query()->rename(
+    $dn = 'cn=John Doe,dc=local,dc=com',
+    $newRdn = 'cn=Johnathon Doe',
+    $newParentDn = 'dc=local,dc=com'
+);
+
+// Move an object:
+$connection->query()->rename(
+    $dn = 'cn=John Doe,dc=local,dc=com',
+    $newRdn = 'cn=John Doe',
+    $newParentDn = 'ou=Users,dc=local,dc=com'
+);
 ```
 
 #### `select` {#select}
@@ -834,8 +1107,55 @@ $query->setDn('ou=Users,dc=local,dc=com')->get();
 ```
 
 #### `setGrammar` {#setGrammar}
+
+Set the underlying query `Grammar` instance:
+
+> The given instance must extend the built-in `LdapRecord\Query\Grammar`.
+
+```php
+$query = $connection->query();
+
+$myGrammarInstance = new Grammar();
+
+$query->setGrammar($myGrammarInstance);
+```
+
 #### `update` {#update}
+
+Update an entry with the given modifications. Performs an `ldap_modify_batch` under the hood:
+
+```php
+$query = $connection->query();
+
+$dn = 'cn=John Doe,dc=local,dc=com';
+
+$modifs = [
+    [
+        'attrib'  => 'telephoneNumber',
+        'modtype' => LDAP_MODIFY_BATCH_ADD,
+        'values'  => ['+1 555 555 1717'],
+    ],
+];
+
+$query->update($dn, $modifs);
+```
+
 #### `updateAttributes` {#updateAttributes}
+
+Update / replace an entry's attribute with the given values. Performs an `ldap_mod_replace` under the hood:
+
+```php
+$query = $connection->query();
+
+$dn = 'cn=John Doe,dc=local,dc=com';
+
+// Remove the users telephone number:
+$query->updateAttributes($dn, ['telephoneNumber' => []]);
+
+// Update / replace the users telephone number:
+$query->updateAttributes($dn, ['telephoneNumber' => ['+1 555 555 1717']]);
+```
+
 #### `where` {#where}
 
 Add a "where" clause to the query, searching for objects using the given attribute, operator, and value:
