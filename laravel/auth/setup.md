@@ -14,6 +14,7 @@ section: content
 - [Eloquent Model Binding](#model-binding)
 - [Pass-Through Authentication / Single-Sign-On](#passthrough-authentication)
  - [Domain Verification](#sso-domain-verification)
+ - [Multi-Domain Single-Sign-On](#multi-domain-sso)
  - [Changing the Server Key](#changing-the-sso-server-key)
  - [Remember Single-Sign-On users](#remember-sso-users)
  - [Selective / Bypassing Single-Sign-On](#selective-single-sign-on)
@@ -160,13 +161,12 @@ protected function credentials(Request $request)
 }
 ```
 
-You can now sign into your application using usernames instead of email addresses.
-
+You can now sign in to your application using usernames instead of email addresses.
 
 ## Fallback Authentication {#fallback-auth}
 
-Database fallback allows the authentication of local database users if LDAP
-**connectivity is not present**, or an LDAP **user cannot be found**.
+Database fallback allows the authentication of local database users if **LDAP
+connectivity is not present**, or **an LDAP user cannot be found**.
 
 To enable this feature, you must define a `fallback` array inside of the credentials
 you return from the `credentials()` method inside of your `LoginController`:
@@ -286,13 +286,85 @@ protected $middlewareGroups = [
 > A user may successfully authenticate against your LDAP server when visiting your site, but depending
 > on your rules, may not be imported or logged in.
 
+### Multi-Domain SSO {#multi-domain-sso}
+
+To be able to use multi-domain single-sign-on, your LDAP directory servers must first be joined in a trust.
+
+Consider we have two domains: **alpha.local** and **bravo.local**.
+
+If you have a web server that is joined to the **alpha.local** domain that is hosting your
+Laravel application, it must allow users to authenticate to the **bravo.local** domain.
+
+Once you have a working trust defined between your domains, you must follow the steps of
+[setting up multi-domain authentication](/docs/laravel/auth/multi-domain/).
+You may skip step 2 if you do not need a login page for your users.
+
+After completing the above linked guide, you must instruct the `WindowsAuthenticate` middleware to
+utilize your LDAP authentication guards that you have configured in your `config/auth.php` file
+by calling the `guards` method:
+
+```php
+// app/Providers/AuthServiceProvider.php
+
+/**
+ * Register any authentication / authorization services.
+ *
+ * @return void
+ */
+public function boot()
+{
+    $this->registerPolicies();
+
+    WindowsAuthenticate::guards(['alpha', 'bravo']);
+}
+```
+
+Or, if you prefer, you may define the `WindowsAuthenticate` middleware as a named middleware inside
+your `app/Http/Kernel.php`, and insert the guard names in the definition of your routes:
+
+```php
+// app/Http/Kernel.php
+
+/**
+ * The application's route middleware.
+ *
+ * These middleware may be assigned to groups or used individually.
+ *
+ * @var array
+ */
+protected $routeMiddleware = [
+    'auth' => \App\Http\Middleware\Authenticate::class,
+    'auth.windows' => \LdapRecord\Laravel\Middleware\WindowsAuthenticate::class,
+    // ...
+],
+```
+
+Then, utilize it inside your routes file:
+
+> Remember, when covering your routes that require authentication via the
+> `auth` middleware, you must add both guard names into it as well.
+
+```php
+// routes/web.php
+
+Route::middleware([
+    'auth.windows:alpha,bravo', 'auth:alpha,bravo',
+])->group(function () {
+    // ...
+});
+```
+
+The actual ordering of the middleware definition is important here, so your users that are
+accessing your site through single-sign-on are logged in, prior to the `auth` middleware.
+Otherwise they will be simply redirected to your login page.
+
 ### SSO Domain Verification {#sso-domain-verification}
 
 To prevent security issues using multiple-domain authentication using the `WindowsAuthenticate`
-middleware, domain verification is performed on the authenticating user.
+middleware, domain verification will be performed on the authenticating user.
 
-This verification is done by checking if the users *domain name* is contained inside of the
-their *full distinguished name*, which is retrieved from each of your configured LDAP guards.
+This verification checks if the users *domain name* is contained inside of their
+*full distinguished name*, which is retrieved from each of your configured LDAP guards.
 
 > Only 'Domain Components' are checked in the users distinguished name. More on this below.
 
@@ -325,9 +397,9 @@ Using the same example, if the located users distinguished name is:
 cn=sbauman,ou=users,dc=acme,dc=com
 ```
 
-Then they will be allowed to authenticate, as their `ACME` domain is contained
-inside of their distinguished name domain components (`dc=acme`). Comparison
-against each domain component will be performed in a **case-insensitive** manor.
+Then they will be allowed to authenticate, as their `ACME` domain exists inside
+of their distinguished name domain components (`dc=acme`). Comparison against
+each domain component will be performed in a **case-insensitive** manor.
 
 If you would like to disable this check, you must call the static method `bypassDomainVerification`
 on the `WindowsAuthenticate` middleware inside of your `AuthServiceProvider`:

@@ -29,7 +29,7 @@ Having two separate models allows you to configure their connections independent
 ### Configuring the LDAP Connections {#configuring-ldap-connections}
 
 For this guide, we will have two example domains named `Alpha` and `Bravo`. We first
-need to setup these domain connections in our `ldap.php` configuration file:
+need to set up these domain connections in our `ldap.php` configuration file:
 
 ```php
 // config/ldap.php
@@ -47,7 +47,10 @@ need to setup these domain connections in our `ldap.php` configuration file:
 ],
 ```
 
-Now that we have our connections configured, you must create a `User` model for each one.
+> Remember to test your connections using `php artisan ldap:test` to ensure
+> you are able to connect to each of your LDAP servers.
+
+Now we have our connections configured, you must create a `User` model for each one.
 
 Let's go ahead and create them by running the below commands:
 
