@@ -51,36 +51,51 @@ As you can see from the above, the first parameter of the `attempt()` method is 
 If you're running Active Directory, you can use the users `userPrincipalName` instead, which (in the case 
 above) would be in the format of `jdoe@acme.org`.
 
-You may have also noticed we added a third parameter named `$stayAuthenticated = true`. This means, that throughout the 
-entire lifecycle of the current request, you can perform further operations on your LDAP server *as* the
+You may have also noticed we added a third parameter named `$stayAuthenticated = true`. This means, that throughout
+the entire lifecycle of the current request, you can perform further operations on your LDAP server *as* the
 successfully authenticated user.
 
 ### Determining Auth / Bind Failure Cause {#determining-bind-failure}
 
 > This will only work when binding to an Active Directory server.
 
-It's a common scenario to require showing why a users password failed, wether it be
+It's a common scenario to require showing why a user's password failed, whether it be
 an expired password, or account lockout. You can do this one of two ways:
 
-- Using `auth()->attempt()` with an if/else statement:
+- Using `auth()->attempt()` with an event listener:
 
 ```php
-if ($connection->auth()->attempt($username, $password)) {
-    // Further bound operations...  
-} else {
-    $error = $connection->getLdapConnection()->getDiagnosticMessage();
+use LdapRecord\Container;
+use LdapRecord\Auth\Events\Failed;
+
+$dispatcher = Container::getEventDispatcher();
+
+$message = '';
+
+$dispatcher->listen(Failed::class, function (Failed $event) use (&$message) {
+    $ldap = $event->connection->getLdapConnection();
+
+    // The diagnostic message will be available here.
+    $error = $ldap->getDiagnosticMessage();
 
     if (strpos($error, '532') !== false) {
-        return "Your password has expired.";
+        $message = 'Your password has expired.';
     } elseif (strpos($error, '533') !== false) {
-        return "Your account is disabled.";
+        $message = 'Your account is disabled.';
     } elseif (strpos($error, '701') !== false) {
-        return "Your account has expired.";
+        $message = 'Your account has expired.';
     } elseif (strpos($error, '775') !== false) {
-        return "Your account is locked.";
+        $message = 'Your account is locked.';
+    } else {
+        $message = 'Username or password is incorrect.';
     }
+});
 
-    return "Username or password is incorrect.";
+if ($connection->auth()->attempt($username, $password)) {
+    // The users credentials are valid.
+} else {
+    // Invalid credentials.
+    return $message;
 }
 ```
 
@@ -95,16 +110,16 @@ try {
     $error = $e->getDetailedError()->getDiagnosticMessage();
 
     if (strpos($error, '532') !== false) {
-        return "Your password has expired.";
+        return 'Your password has expired.';
     } elseif (strpos($error, '533') !== false) {
-        return "Your account is disabled.";
+        return 'Your account is disabled.';
     } elseif (strpos($error, '701') !== false) {
-        return "Your account has expired.";
+        return 'Your account has expired';
     } elseif (strpos($error, '775') !== false) {
-        return "Your account is locked.";
+        return 'Your account is locked.';
     }
 
-    return "Your account is locked.";
+    return 'Username or password is incorrect.';
 }
 ```
 
