@@ -13,7 +13,9 @@ section: content
 - [Running the command](#running-the-command)
 - [Scheduling the command](#scheduling-the-command)
 - [Programmatically Executing](#programmatically-executing)
-- [Single Users](#single-users)
+- [Command Arguments](#command-args)
+  - [Provider](#argument-provider)
+  - [User](#argument-user)
 - [Command Options](#command-options)
  - [Filter](#option-filter)
  - [Attributes](#option-attributes)
@@ -156,11 +158,12 @@ facade to programmatically execute the import inside of your application whereve
 Artisan::call('ldap:import', ['provider' => 'ldap', '--no-interaction']);
 ```
 
-To use more options, include them as array values:
+To use other arguments and options, include them as array values:
 
 ```php
 Artisan::call('ldap:import', [
     'provider' => 'ldap',
+    'user' => 'sbauman',
     '--no-interaction',
     '--restore' => true,
     '--delete' => true,
@@ -170,11 +173,30 @@ Artisan::call('ldap:import', [
 ]);
 ```
 
-## Single Users {#single-users}
+## Command Arguments {#command-args}
 
-To import or synchronize a single user, insert one of their attributes and LdapRecord will
-try to locate the user for you using Ambiguous Name Resolution. If your LDAP server
+### Provider {#argument-provider}
+
+To execute the import command, you **must** supply an [authentication provider](https://ldaprecord.com/docs/laravel/auth/configuration/#database)
+name. This will retrieve the users from your configured LdapRecord model, and import them using your configured Eloquent model.
+
+For example, if you have kept the default `users` authentication provider name in your `config/auth.php` file, then you would execute:
+
+```php
+php artisan ldap:import users
+```
+
+### User {#argument-user}
+
+To import or synchronize a single user, insert one of their attributes (such as `mail`, `samaccountname`, `cn`)
+and LdapRecord will try to locate the user for you using Ambiguous Name Resolution. If your LDAP server
 does not support ANR, an equivalent query will be created automatically.
+
+This argument is completely optional.
+
+> **Important**: Do not use the `--delete-missing` option with this argument.
+> Otherwise, other LDAP users that have been imported will be soft-deleted
+> (if configured & enabled on your Eloquent model).
 
 ```text
 php artisan ldap:import ldap jdoe@email.com
