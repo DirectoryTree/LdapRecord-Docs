@@ -198,6 +198,18 @@ The `--filter` (or `-f`) option allows you to apply a raw filter to further narr
 php artisan ldap:import ldap --filter "(cn=John Doe)"
 ```
 
+#### Escaping
+
+In some cases, you may need to pass commas or other escape level characters into the search filter.
+
+To do so, add a backslash (`\`) **before** the character to escape it properly:
+
+```text
+php artisan ldap:import ldap --filter "(cn=Doe\, John)"
+```
+
+If this is not done, you will receive a `Bad search filter` exception during import.
+
 ### Attributes {#option-attributes}
 
 The `--attributes` (or `-a`) option allows you to specify the attributes that should be returned from your LDAP server.
@@ -211,18 +223,6 @@ This option is great for reducing memory usage for large imports, since all attr
 ```text
 php artisan ldap:import ldap --attributes "cn,mail,sn,givenname,samaccountname"
 ```
-
-#### Escaping
-
-In some cases, you may need to pass commas or other escape level characters into the search filter.
-
-To do so, add a backslash (`\`) **before** the character to escape it properly:
-
-```text
-php artisan ldap:import ldap --filter "(cn=Doe\, John)"
-```
-
-If this is not done, you will receive a `Bad search filter` exception during import.
 
 ### Delete {#option-delete}
 
