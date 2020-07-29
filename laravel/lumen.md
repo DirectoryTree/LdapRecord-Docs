@@ -38,7 +38,7 @@ Once composer completes, register the `LdapServiceProvider` inside of your `boot
 ```php
 // bootstrap/app.php
 
-$app->register(\LdapRecord\Lumen\LdapRecordServiceProvider::class);
+$app->register(\LdapRecord\Lumen\LdapServiceProvider::class);
 ```
 
 ## Configuration {#configuration}
