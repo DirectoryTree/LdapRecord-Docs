@@ -40,7 +40,7 @@ composer require doctrine/dbal --dev
 Let's whip up a test by running the following command:
 
 ```bash
-php artisan make:test TestLdapAuthentication
+php artisan make:test LdapAuthenticationTest
 ```
 
 Inside of our generated test, we'll make use of the following traits:
@@ -75,7 +75,7 @@ use LdapRecord\Laravel\Testing\DirectoryEmulator;
 use LdapRecord\Models\ActiveDirectory\User;
 use Tests\TestCase;
 
-class TestLdapAuthentication extends TestCase
+class LdapAuthenticationTest extends TestCase
 {
     use DatabaseMigrations, WithFaker;
 
