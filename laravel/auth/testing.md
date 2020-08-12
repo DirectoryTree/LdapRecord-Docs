@@ -12,6 +12,7 @@ section: content
 - [Creating the test](#creating-the-test)
 - [Scopes](#scopes)
 - [Rules](#rules)
+- [SSO / Windows Authentication](#sso)
 
 ## Introduction {#introduction}
 
@@ -402,3 +403,45 @@ public function test_auth_fails()
 
 The above test passes because we have not added our LDAP user into any groups -
 so the `exists()` check inside of our rule returns `false`.
+
+## SSO / Windows Authentication {#sso}
+
+To test Sigle-Sign-On (or Windows Authentication) for your Laravel application, you must
+set the authenticating users [down-level logon name](https://docs.microsoft.com/en-us/windows/win32/secauthn/user-name-formats#down-level-logon-name)
+as a server variable.
+
+This server variable (typically `$_SERVER['AUTH_USER']`) is what the `WindowsAuthenticate`
+middleware reads to locate the authenticated user from your LDAP directory.
+
+To set server variables for upcoming requests inside of your Laravel tests, use the `withServerVariables()` method:
+
+```php
+public function test_windows_authentication_works()
+{
+    DirectoryEmulator::setup('default');
+
+    $user = User::create([
+        'cn' => $this->faker->name,
+        'mail' => $this->faker->email,
+        'objectguid' => $this->faker->uuid,
+    ]);
+    
+    // Replace 'DOMAIN' with your domain from your configured LDAP
+    // `base_dn`. For example, if your `base_dn` is equal to
+    // 'dc=company,dc=com', then you would use 'COMPANY'.
+    $authUser = implode('\\', [
+        'DOMAIN', $ldapUser->getFirstAttribute('samaccountname')
+    ]);
+
+    // Set the server variables for the upcoming request.
+    $this->withServerVariables([
+        WindowsAuthenticate::$serverKey => $authUser
+    ]);
+    
+    // Attempt accessing a protected page:
+    $this->get('/dashboard')->assertOk();
+    
+    // Ensure the user was authenticated:
+    $this->assertTrue(auth()->check());
+}
+```
