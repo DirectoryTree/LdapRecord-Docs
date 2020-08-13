@@ -424,6 +424,7 @@ public function test_windows_authentication_works()
         'cn' => $this->faker->name,
         'mail' => $this->faker->email,
         'objectguid' => $this->faker->uuid,
+        'samaccountname' => $this->faker->userName,
     ]);
     
     // Replace 'DOMAIN' with your domain from your configured LDAP
