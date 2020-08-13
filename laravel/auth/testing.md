@@ -443,6 +443,6 @@ public function test_windows_authentication_works()
     $this->get('/dashboard')->assertOk();
     
     // Ensure the user was authenticated:
-    $this->assertTrue(auth()->check());
+    $this->assertTrue(Auth::check());
 }
 ```
