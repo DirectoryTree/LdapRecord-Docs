@@ -13,6 +13,7 @@ section: content
   - [Changing Passwords](#changing-passwords)
   - [Resetting Passwords](#resetting-passwords)
   - [Password Policy Errors](#password-policy-errors)
+  - [Unlock Locked Out User Account](#unlock-user-account)
   - [Extend User Password Expiration](#password-extension)
   - [User Must Change Password at Next Logon](#password-reset-on-next-login)
 - [User Account Control](#uac)
@@ -241,6 +242,16 @@ try {
         // This is an invalid credentials error.
     }
 }
+```
+
+### Unlock Locked Out User Account  {#unlock-user-account}
+
+If a user has been locked out, set the `lockouttime` attribute to `0` (zero):
+
+```php
+$user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
+
+$user->update(['lockouttime' => 0]);
 ```
 
 ### Extend User Password Expiration {#password-extension}
