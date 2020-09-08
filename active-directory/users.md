@@ -29,7 +29,7 @@ section: content
 ## Creation {#creation}
 
 Let's walk through the basics of user creation for Active Directory. There
-are some requirement you must know prior to creation:
+are some requirements you must know prior to creation:
 
 Requirement |
 --- |
