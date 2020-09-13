@@ -7,8 +7,6 @@ section: content
 
 # Restricting Sign In
 
-LdapRecord-Laravel provides multiple ways you can restrict which users can sign in:
-
 - [Using Only Manually Imported Users](#using-only-imported-users)
 - [Using an Organizational Unit](#using-organizational-unit)
 - [Using a Group Membership](#using-group-membership)
@@ -50,6 +48,10 @@ class OnlyImportedUsers extends Rule
 }
 ```
 
+> Remember, inside the generated `Rule`, the `$model` property is
+> the Eloquent database instance of the user, while the `$user`
+> property is the LdapRecord instance.
+
 Once you've completed modifying the rule, add it into your `config/auth.php`
 file where your LDAP user provider has been configured:
 
@@ -81,7 +83,7 @@ allow sign in to your application, we will leverage LdapRecord [model scopes](/d
 
 In our application, we have an Organizational Unit named `Accounting` with the following Distinguished Name:
 
-```
+```text
 ou=Accounting,ou=Users,dc=local,dc=com
 ```
 
@@ -177,11 +179,6 @@ contained inside the `Accounting` OU will be allowed to authenticate.
 
 ## Using a Group Membership {#using-group-membership}
 
-can use either a [model scope](/docs/models#query-scopes) or
-
-We will walk through both, along with each of their advantages and disadvantages.
-
-
 To use a group membership for authorizing signing in to your application, we
 will use an [authentication rule](/docs/laravel/auth/configuration#rules).
 
@@ -196,7 +193,9 @@ php artisan make:ldap-rule OnlyHelpDeskUsers
 
 > A new rule will be created inside `app/Ldap/Rules/OnlyHelpDeskUsers.php`
 
-In the newly generated rule, we can check for group membership in various ways, as well as check for nested group membership, and even for multiple group memberships.
+In the newly generated rule, we can check for group membership in
+various ways, as well as check for nested group membership, and
+even for multiple group memberships.
 
 Let's walk through each example.
 
@@ -261,12 +260,10 @@ public function isValid()
 ```php
 public function isValid()
 {
-    $groups = [
+    return $this->user->groups()->exists([
         Group::findOrFail('cn=Help Desk,ou=Groups,dc=local,dc=com'),
         Group::findOrFail('cn=Site Admins,ou=Groups,dc=local,dc=com'),
-    ];
-
-    return $this->user->groups()->exists($groups);
+    ]);
 }
 ```
 
@@ -275,7 +272,9 @@ public function isValid()
 ```php
 public function isValid()
 {
-    return $this->user->groups()->exists(['Help Desk', 'Site Admins']);
+    return $this->user->groups()->exists([
+        'Help Desk', 'Site Admins'
+    ]);
 }
 ```
 
@@ -283,9 +282,61 @@ public function isValid()
 
 To check that a user has **any** of a given set of groups, we will use the `contains()` method:
 
+```php
+public function isValid()
+{
+    return $this->user->groups()->contains([
+        'Help Desk', 'Accounting'
+    ]);
+}
+```
 
-### Checking for nested group(s)
+> You can also provide a `Model` instance or Distinguished Name into the `contains` method.
 
-### Checking Recursively
+This will allow members of **either** the `Help Desk` or `Accounting` group to authenticate.
+
+### Checking for nested group(s) recursively
+
+Nested group checking allows LdapRecord to search recursively if a user is a member of a particular group.
+
+For example, if a user is a member of an `Accounting` group, and this
+`Accounting` group is a member of an `Office` group, you can tell
+LdapRecord to search recursively for the `Office` group:
+
+```php
+public function isValid()
+{
+    return $this->user->groups()->recursive()->exists('Office');
+}
+```
+
+Using the above example without the `recursive` call, it will fail to 
+determine the users group membership, since LdapRecord is only
+searching for immediate memberships of the user:
+
+```php
+public function isValid()
+{
+    // Only searching immediate group memberships:
+    return $this->user->groups()->exists('Office');
+}
+```
 
 ## Using a Whitelist {#using-whitelist}
+
+There are many ways to configure a list of users who are
+allowed to authenticate in your application. We will
+walk through two (2) examples here.
+
+- [Using a configuration file](#using-config-list)
+- [Using a database table](#using-database-list)
+
+### Using a configuration file
+
+To create a new configuration file named `allowed-users.php` inside of your applications `config` directory:
+
+```php
+
+```
+
+### Using a database table

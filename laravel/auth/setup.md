@@ -536,8 +536,8 @@ so it can remain in the global middleware stack.
 
 ### Forcing logouts on non Single-Sign-On users {#forcing-non-sso-logouts}
 
-If a user successfully authenticates to your Laravel application through single-sign-on,
-and their account happens to be deleted or disabled, the user will remain authenticated
+If a user successfully authenticates to your Laravel application through single-sign-on, and
+their LDAP account happens to be deleted or disabled, the user will remain authenticated
 to your application for the duration of your Laravel application's session.
 
 If you would like all users in your application to be signed out automatically
@@ -545,9 +545,9 @@ if SSO credentials are not available from your web server, call the
 `logoutUnauthenticatedUsers` method on the `WindowsAuthenticate`
 middleware in your `AuthServiceProvider::boot()` method:
 
-> **Important**: Only enable this feature if Single-Sign-On is the
-> only way you authenticate users. Enabling this otherwise will
-> cause all non-SSO users to be signed out of your application.
+> **Important**: Only enable this feature if Single-Sign-On is the only way
+> you authenticate users. If a non-Single-Sign-On user has a session open,
+> it will be ended automatically on their next request.
 
 ```php
 // app/Providers/AuthServiceProvider.php
@@ -615,6 +615,9 @@ class LoginController extends Controller
     
         $this->listenForLdapBindFailure();
     }
+
+    // ...
+}
 ```
 
 ### Altering the response
@@ -649,6 +652,8 @@ class LoginController extends Controller
     
         $this->baseHandleLdapBindError($message, $code);
     }
+   
+    // ...
 }
 ```
 
