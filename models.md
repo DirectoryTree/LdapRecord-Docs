@@ -110,6 +110,14 @@ Model |
 `LdapRecord\Models\OpenLdap\Group` |
 `LdapRecord\Models\OpenLdap\OrganizationalUnit` |
 
+#### FreeIPA Models
+
+Model |
+--- | 
+`LdapRecord\Models\FreeIPA\Entry` |
+`LdapRecord\Models\FreeIPA\User` |
+`LdapRecord\Models\FreeIPA\Group` |
+
 > Don't see a model for the LDAP server you're using? [Create a pull request!](https://github.com/DirectoryTree/LdapRecord/pulls)
 
 ### Connections {#connections}
