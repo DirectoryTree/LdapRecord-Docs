@@ -97,7 +97,7 @@ in the third parameter in the `attempt()` method:
 $user = 'cn=user,dc=local,dc=com';
 $password = 'secret';
 
-if ($connection->auth()->attempt($user, $password, $bindAsUser = true))
+if ($connection->auth()->attempt($user, $password, $stayBound = true))
 {
     echo "Username and password are correct!";
 
