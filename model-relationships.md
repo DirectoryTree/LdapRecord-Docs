@@ -306,7 +306,9 @@ Circular group dependencies are rejected automatically to prevent infinite loopi
 Using relationships you define, you can easily attach and detach related models from each other.
 For example, you may want to attach a `Group` to a `User`, or vice-versa.
 
-Using the above relationship examples, lets walk through this:
+### Attaching {#attaching}
+
+Using the above relationship examples, lets walk through attaching a user to a group:
 
 ```php
 $user = User::find('cn=John Doe,dc=acme,dc=org');
@@ -334,6 +336,19 @@ $user->groups()->attachMany($groups);
 ```
 
 As you can see above, we took a complex LDAP operation and completed it in just 4 lines of code.
+
+### Detach {#detaching}
+
+Using the above relationship examples, lets walk through detaching a user from a group:
+
+```php
+$user = User::find('cn=John Doe,dc=acme,dc=org');
+
+// Retrieve the first group that the user is apart of:
+$group = $user->groups()->get()->first();
+
+$user->groups()->detach($group);
+```
 
 You may also want to detach a user from all groups, if for example they are
 leaving the company and you it is apart of your off-boarding process.
