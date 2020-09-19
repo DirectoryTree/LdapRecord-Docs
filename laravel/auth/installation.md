@@ -5,7 +5,7 @@ extends: _layouts.laravel-documentation
 section: content
 ---
 
-# Installation
+# Authentication Installation
 
 If you are using [database synchronization](/docs/laravel/auth#database), you must publish the
 included migrations to add the following database columns to your `users` table:

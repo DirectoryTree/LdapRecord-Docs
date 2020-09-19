@@ -217,9 +217,7 @@ public function isValid()
 }
 ```
 
-With the `exists()` method, we can also use:
-
-**An LdapRecord `Model` instance**:
+With the `exists()` method, we can also use an LdapRecord `Model` instance:
 
 > This approach is useful, so an exception will be thrown when the group cannot be located.
 
@@ -232,7 +230,7 @@ public function isValid()
 }
 ```
 
-**Or; A Common Name (`cn`)**:
+Or; A Common Name (`cn`):
 
 ```php
 public function isValid()
@@ -255,7 +253,7 @@ public function isValid()
 }
 ```
 
-**We can also use `Model` instances**:
+We can also use `Model` instances:
 
 ```php
 public function isValid()
@@ -267,7 +265,7 @@ public function isValid()
 }
 ```
 
-**Or; Common Names (`cn`)**:
+Or; Common Names (`cn`):
 
 ```php
 public function isValid()

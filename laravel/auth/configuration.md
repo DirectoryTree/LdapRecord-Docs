@@ -5,7 +5,7 @@ extends: _layouts.laravel-documentation
 section: content
 ---
 
-# Configuration
+# Authentication Configuration
 
 - [Plain Authentication](#plain)
  - [Driver](#plain-driver)
@@ -23,14 +23,14 @@ section: content
 
 ## Introduction
 
-LDAP authentication configuration options are defined inside of your `config/auth.php` file.
+To configure LDAP authentication, you must define or update a `provider` inside of your `config/auth.php` file.
 
 Let's walk through configuring both LDAP authentication mechanisms.
 
 ## Plain Authentication {#plain}
 
-To create a plain LDAP authentication provider, navigate to the `providers` array,
-and paste the following `ldap` provider:
+To create a plain LDAP authentication provider, navigate to the `providers`
+array, and paste the following `ldap` provider:
 
 ```php
 // config/auth.php

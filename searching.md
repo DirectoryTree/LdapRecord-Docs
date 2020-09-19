@@ -57,8 +57,6 @@ $results = $connection->query()->where('cn', '=', 'John Doe')->get();
 > Fields are case in-sensitive. For example, you can
 > insert `CN`, `cn` or `cN`, they will return the same result.
 
-#### Selecting attributes
-
 Selecting only the LDAP attributes you need will increase the speed of your queries.
 
 ```php
