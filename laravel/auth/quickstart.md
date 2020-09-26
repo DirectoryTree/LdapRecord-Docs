@@ -25,9 +25,9 @@ section: content
 > to install LdapRecord and configure your LDAP connection prior to setting up
 > authentication.
 
-Before you begin, this guide assumes you have published Laravel's default authentication scaffolding.
+Before you begin, this guide assumes you have published Laravel's default authentication scaffolding using the `laravel/ui` package.
 
-If you haven't done this yet, please follow Laravel's [auth scaffolding guide](https://laravel.com/docs/authentication#introduction) 
+If you haven't done this yet, please follow Laravel's [auth scaffolding guide](https://laravel.com/docs/7.x/authentication) 
 to get started, then head back here once done.
 
 ## Debugging {#debugging}
