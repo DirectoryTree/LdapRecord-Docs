@@ -259,7 +259,7 @@ class LoginController extends Controller
     // ...
 ```
 
-**However, this feature will only work automatically if your `LoginController` resides in the default
+**However, this feature will only register automatically if your `LoginController` resides in the default
 `App\Http\Controllers\Auth` namespace**. If you have changed the location of your `LoginController`,
 you must modify the constructor and add the following method call to register the LDAP listener:
 
@@ -285,7 +285,7 @@ class LoginController extends Controller
 }
 ```
 
-### Altering the response
+### Altering the Response
 
 By default, when an LDAP bind failure occurs, a `ValidationException` will be thrown which will
 redirect users to your login page and display the error. If you would like to modify this
@@ -312,7 +312,7 @@ class LoginController extends Controller
     {
         if ($code == '773') {
             // The users password has expired. Redirect them.
-            abort(redirect('/password-reset'));
+            redirect('/password-reset')->send();
         }
     
         $this->baseHandleLdapBindError($message, $code);
@@ -324,3 +324,59 @@ class LoginController extends Controller
 
 > Refer to the [Password Policy Errors](/docs/active-directory/users/#password-policy-errors)
 > documentation to see what each code means.
+
+### Changing the Error Messages
+
+If you need to modify the translations of these error messages, create a new translation
+file named `errors.php` in your `resources` directory at the following path:
+
+> The `vendor` directory (and each sub-directory) will have to be created manually.
+
+<div class="files">
+    <div class="ellipsis"></div>
+
+    <div class="folder folder--open">
+        resources
+
+        <div class="ellipsis"></div>
+        
+        <div class="folder folder--open">
+            lang
+
+            <div class="ellipsis"></div>
+
+            <div class="folder folder--open">
+                vendor
+
+                <div class="folder folder--open">
+                    ldap
+
+                    <div class="folder folder--open">
+                        en
+
+                        <div class="file">errors.php</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ellipsis"></div>
+</div>
+
+Then, paste in the following translations in the file and modify where necessary:
+
+```php
+<?php
+
+return [
+    'user_not_found' => 'User not found.',
+    'user_not_permitted_at_this_time' => 'Not permitted to logon at this time.',
+    'user_not_permitted_to_login' => 'Not permitted to logon at this workstation.',
+    'password_expired' => 'Your password has expired.',
+    'account_disabled' => 'Your account is disabled.',
+    'account_expired' => 'Your account has expired.',
+    'user_must_reset_password' => 'You must reset your password before logging in.',
+    'user_account_locked' => 'Your account is locked.',
+];
+```

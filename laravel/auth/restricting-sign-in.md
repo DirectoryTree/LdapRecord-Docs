@@ -10,7 +10,6 @@ section: content
 - [Using Only Manually Imported Users](#using-only-imported-users)
 - [Using an Organizational Unit](#using-organizational-unit)
 - [Using a Group Membership](#using-group-membership)
-- [Using a Whitelist](#using-whitelist)
 
 ## Using Only Manually Imported Users {#using-only-imported-users}
 
@@ -319,22 +318,3 @@ public function isValid()
     return $this->user->groups()->exists('Office');
 }
 ```
-
-## Using a Whitelist {#using-whitelist}
-
-There are many ways to configure a list of users who are
-allowed to authenticate in your application. We will
-walk through two (2) examples here.
-
-- [Using a configuration file](#using-config-list)
-- [Using a database table](#using-database-list)
-
-### Using a configuration file
-
-To create a new configuration file named `allowed-users.php` inside of your applications `config` directory:
-
-```php
-
-```
-
-### Using a database table
