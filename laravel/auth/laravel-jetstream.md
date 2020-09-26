@@ -9,12 +9,18 @@ section: content
 
 - [Introduction](#introduction)
 - [Fortify Setup](#fortify-setup)
+    - [Authentication Callback](#fortify-auth-callback)
+    - [Feature Configuration](#fortify-feature-config)
 - [Using Usernames](#using-usernames)
- - [Fortify Setup](#fortify-setup-usernames)
- - [Sync Attributes](#sync-attributes-usernames)
+   - [Fortify Setup](#fortify-setup-username)
+       - [Authentication Callback](#fortify-setup-username-callback)
+       - [Username Configuration](#fortify-setup-username-config)
+    - [Database Migration](#usernames-migration)
+   - [Sync Attributes](#sync-attributes-usernames)
+   - [Login View](#usernames-login-view)
 - [Fallback Authentication](#fallback-auth)
 - [Eloquent Model Binding](#model-binding)
-- [Displaying LDAP Error Messages (password expiry, account lockouts)](#displaying-ldap-error-messages)
+- [Displaying LDAP Error Messages](#displaying-ldap-error-messages)
 
 ## Introduction {#introduction}
 
@@ -23,7 +29,7 @@ We will customize various aspects of it to allow our LDAP users to sign in succe
 
 ## Fortify Setup {#fortify-setup}
 
-### Authentication Callback
+### Authentication Callback {#fortify-auth-callback}
 
 For this example application, we will authenticate our LDAP users with their email address using the LDAP attribute `mail`.
 
@@ -34,18 +40,26 @@ method in our `AuthServiceProvider.php` file:
 ```php
 // app/Providers/AuthServiceProvider.php
 
-public function boot()
+// ...
+use Laravel\Fortify\Fortify;
+
+class AuthServiceProvider extends ServiceProvider
 {
-    $this->registerPolicies();
+    // ...
 
-    Fortify::authenticateUsing(function ($request) {
-        $validated = Auth::validate([
-            'mail' => $request->email,
-            'password' => $request->password
-        ]);
+    public function boot()
+    {
+        $this->registerPolicies();
 
-        return $validated ? Auth::getLastAttempted() : null;
-    });
+        Fortify::authenticateUsing(function ($request) {
+            $validated = Auth::validate([
+                'mail' => $request->email,
+                'password' => $request->password
+            ]);
+
+            return $validated ? Auth::getLastAttempted() : null;
+        });
+    }
 }
 ```
 
@@ -61,7 +75,7 @@ login page normally with the "*Invalid credentials*" error message.
 > You may also add extra key => value pairs in the `credentials` array to further scope the
 > LDAP query. The `password` key is automatically ignored by LdapRecord.
 
-### Features
+### Feature Configuration {#fortify-feature-config}
 
 Since we are synchronizing data from our LDAP server, we must disable the following
 features by commenting them out inside of the `config/fortify.php` file:
@@ -96,7 +110,7 @@ features by commenting them out inside of the `config/fortify.php` file:
 > **Important**: You may keep `Features::registration()` enabled if you would like
 > to continue accepting local application user registration. Keep in mind, if you
 > continue to allow registration, you will need to either use multiple Laravel
-> authentication guards, or setup [login fallback](#fallback-auth).
+> authentication guards, or setup the [login fallback](#fallback-auth) feature.
 
 ## Using Usernames {#using-usernames}
 
@@ -105,20 +119,6 @@ To authenticate your users by their username we must adjust some scaffolded code
 In the following example, we will authenticate users by their `sAMAccountName`.
 
 ### Fortify Setup {#fortify-setup-username}
-
-#### Configuration {#fortify-setup-username-config}
-
-Inside of our `config/fortify.php` file, we must change the `username` option to `username` from `email`:
-
-```php
-// config/fortify.php
-
-// Before:
-'username' => 'email',
-
-// After:
-'username' => 'username',
-```
 
 #### Authentication Callback {#fortify-setup-username-callback}
 
@@ -143,10 +143,24 @@ public function boot()
 }
 ```
 
+#### Username Configuration {#fortify-setup-username-config}
+
+Inside of our `config/fortify.php` file, we must change the `username` option to `username` from `email`:
+
+```php
+// config/fortify.php
+
+// Before:
+'username' => 'email',
+
+// After:
+'username' => 'username',
+```
+
 You will notice above that we are passing in an array of credentials with
 `samaccountname` as the key, and the requests `username` form input.
 
-### Migration {#usernames-migration}
+### Database Migration {#usernames-migration}
 
 The built in `users` database table migration must also be modified to use a `username` column instead of `email`:
 
@@ -187,13 +201,38 @@ database column to be synchronized with the `samaccountname` attribute:
 
 > Remember to add any additional database columns you need synchronized here.
 
-### Login View
+### Login View {#usernames-login-view}
 
-Now we must open up our `login.blade.php` view to swap the  current HTML input field from `email` to `username`:
+Now we must open up the `login.blade.php` view and swap the current HTML input field from `email`
+to `username` so we can retrieve it properly in our `Fortify::authenticateUsing()` callback:
+
+<div class="files">
+    <div class="ellipsis"></div>
+
+    <div class="folder folder--open">
+        resources
+
+        <div class="ellipsis"></div>
+
+        <div class="folder folder--open">
+            views
+
+            <div class="ellipsis"></div>
+
+             <div class="folder folder--open">
+                auth
+
+                <div class="ellipsis"></div>
+
+                <div class="file">login.blade.php</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ellipsis"></div>
+</div>
 
 ```html
-<!-- resources/auth/login.blade.php -->
-
 <!-- Before: -->
 <div>
     <x-jet-label value="Email" />

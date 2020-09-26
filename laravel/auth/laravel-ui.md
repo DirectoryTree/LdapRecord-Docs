@@ -12,7 +12,7 @@ section: content
 - [Using Usernames](#using-usernames)
 - [Fallback Authentication](#fallback-auth)
 - [Eloquent Model Binding](#model-binding)
-- [Displaying LDAP Error Messages (password expiry, account lockouts)](#displaying-ldap-error-messages)
+- [Displaying LDAP Error Messages](#displaying-ldap-error-messages)
 
 ## Introduction {#introduction}
 
