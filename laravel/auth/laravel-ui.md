@@ -19,6 +19,8 @@ section: content
 Now that we have updated our default authentication guard to use our new `ldap` provider, we will jump into
 the default `LoginController` that is included with the [Laravel UI package](https://laravel.com/docs/authentication#introduction).
 
+> Laravel UI is now deprecated (since Laravel 8.0) in favour of Laravel Jetstream.
+
 ## Login Controller {#login-controller}
 
 For this example application, we will authenticate our LDAP users with their email address using the LDAP attribute `mail`.
@@ -312,7 +314,7 @@ class LoginController extends Controller
     {
         if ($code == '773') {
             // The users password has expired. Redirect them.
-            redirect('/password-reset')->send();
+            abort(redirect('/password-reset'));
         }
     
         $this->baseHandleLdapBindError($message, $code);
