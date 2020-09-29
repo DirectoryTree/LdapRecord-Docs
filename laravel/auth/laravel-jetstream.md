@@ -31,7 +31,8 @@ We will customize various aspects of it to allow our LDAP users to sign in succe
 
 ### Authentication Callback {#fortify-auth-callback}
 
-For this example application, we will authenticate our LDAP users with their email address using the LDAP attribute `mail`.
+For this example application, we will authenticate our LDAP users
+with their email address using the LDAP attribute `mail`.
 
 For LdapRecord to properly locate the user in your directory during sign in, we will
 override Fortify's authentication callback using the `Fortify::authenticateUsing()`
@@ -79,9 +80,6 @@ login page normally with the "*Invalid credentials*" error message.
 
 Since we are synchronizing data from our LDAP server, we must disable the following
 features by commenting them out inside of the `config/fortify.php` file:
-
-- `Features::updateProfileInformation()`
-- `Features::updatePasswords()`
 
 ```php
 // config/fortify.php
@@ -380,11 +378,12 @@ $groups = $user->ldap->groups()->get();
 
 When using Laravel Jetstream, LDAP error messages will now be displayed automatically
 to users. You do not need to configure or include the `ListensForLdapBindFailure`
-trait as you would using [Laravel UI](/docs/laravel/auth/laravel-ui/#displaying-ldap-error-messages).
+trait as you would using [Laravel UI](/docs/laravel/auth/laravel-ui/#displaying-ldap-error-messages)
+on the `LoginController`.
 
 ### Altering the Response
 
-Since this functionality now automatically registered, if you would like to modify how
+Since this functionality is now automatically registered, if you would like to modify how
 an error is handled, call the `setErrorHandler` method on the `BindFailureListener`
 class inside of your `AuthServiceProvider.php` file:
 
@@ -405,7 +404,7 @@ class AuthServiceProvider extends ServiceProvider
         BindFailureListener::setErrorHandler(function ($message, $code = null) {
             if ($code == '773') {
                 // The users password has expired. Redirect them.
-                redirect('/password-reset')->send();
+                abort(redirect('/password-reset'));
             }
         });
     }
@@ -444,7 +443,7 @@ file named `errors.php` in your `resources` directory at the following path:
                     <div class="folder folder--open">
                         en
 
-                        <div class="file">errors.php</div>
+                        <div class="file focus">errors.php</div>
                     </div>
                 </div>
             </div>

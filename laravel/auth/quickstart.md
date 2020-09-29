@@ -11,13 +11,13 @@ section: content
 - [Debugging](#debugging)
 - [Plain Authentication](#plain)
  - [Step 1: Configure the driver](#configure-plain-auth)
- - [Step 2: Setting up your LoginController](#plain-controller-setup)
+ - [Step 2: Setting up Laravel Fortify](#plain-fortify-setup)
  - [Step 3: Modifying your Blade views](#plain-view-setup)
 - [Synchronized Database Authentication](#database-sync)
  - [Step 1: Publish the database migration](#publish-migration)
  - [Step 2: Configure the driver](#configure-database-auth)
  - [Step 3: Setting up your database user model](#database-user-model-setup)
- - [Step 4: Setting up your LoginController](#database-controller-setup)
+ - [Step 4: Setting up Laravel Fortify](#database-fortify-setup)
 
 ## Introduction {#introduction}
 
@@ -25,9 +25,9 @@ section: content
 > to install LdapRecord and configure your LDAP connection prior to setting up
 > authentication.
 
-Before you begin, this guide assumes you have published Laravel's default authentication scaffolding using the `laravel/ui` package.
+Before you begin, this guide assumes you have published Laravel's authentication scaffolding using the `laravel/jetstream` package.
 
-If you haven't done this yet, please follow Laravel's [auth scaffolding guide](https://laravel.com/docs/7.x/authentication) 
+If you haven't done this yet, please follow Laravel Jetstream's [scaffolding guide](https://jetstream.laravel.com/1.x/installation) 
 to get started, then head back here once done.
 
 ## Debugging {#debugging}
@@ -38,7 +38,8 @@ Doing this will help you immensely in debugging connectivity and authentication 
 If you encounter issues along the way, be sure to open your `storage/logs` directory after you
 attempt signing in to your application and see what issues may be occurring.
 
-In addition, you may also run the below artisan command to test connectivity to your LDAP server:
+In addition, you may also run the below artisan command to test
+connectivity to each of your configured LDAP servers:
 
 ```bash
 php artisan ldap:test
@@ -52,6 +53,19 @@ Inside of your `config/auth.php` file, we must add a new provider in the `provid
 
 In this example, we will create a provider named `ldap`:
 
+<div class="files">
+    <div class="ellipsis"></div>
+
+    <div class="folder folder--open">
+        config
+
+        <div class="eillipses"></div>
+        <div class="file focus">auth.php</div>
+    </div>
+
+    <div class="ellipsis"></div>
+</div>
+
 ```php
 // config/auth.php
 
@@ -62,13 +76,15 @@ In this example, we will create a provider named `ldap`:
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
     ],
+
+// ...
 ```
 
-If you are using OpenLDAP, you must switch the providers `model` option to:
-
-```php
-LdapRecord\Models\OpenLDAP\User::class
-```
+> If you are using OpenLDAP, you must switch the providers `model` option to:
+> 
+> ```php
+> LdapRecord\Models\OpenLDAP\User::class
+> ```
 
 Once you have setup your `ldap` provider, you must update the `provider` value in the `web` guard:
 
@@ -80,58 +96,150 @@ Once you have setup your `ldap` provider, you must update the `provider` value i
         'driver' => 'session',
         'provider' => 'ldap', // Changed to 'ldap'
     ],
-    
-    // ...
+
+// ...
 ```
 
-### Step 2: Setting up your LoginController {#plain-controller-setup}
+### Step 2: Setting up Laravel Fortify {#plain-fortify-setup}
 
-Now we must change our `LoginController` to allow LdapRecord to properly
-locate users who are attempting to sign into our application. We do
-this by changing the `credentials` method. In this method we will
-return an array that contains the users username and password.
+#### Authentication Callback
 
-**The array keys you set here are important.** The `password` key must be present,
-as this is sent directly to your LDAP server for verification.
+Laravel Jetstream uses [Laravel Fortify](https://github.com/laravel/fortify) for authentication.
+We will configure its various features to support signing in with LdapRecord.
 
-The other key must be the **name of the LDAP attribute** you want LdapRecord to
-locate the authenticating user with. It **must** be an attribute that has
-a unique value per user in your directory. `uid`, `sAMAccountName`,
-`mail`, or `userPrincipalName` are good examples of attributes
-that have a unique value per user.
+For LdapRecord to properly locate the user in your directory during a sign in attempt, we
+will override Fortify's authentication callback using the `Fortify::authenticateUsing()`
+method in our `AuthServiceProvider.php` file:
 
-In this example we want to use the users `mail` LDAP attribute to sign them into our application.
+<div class="files">
+    <div class="ellipsis"></div>
+
+    <div class="folder folder--open">
+        app
+
+        <div class="folder folder--open">
+            Providers
+
+            <div class="file focus">AuthServiceProvider.php</div>
+        </div>
+    </div>
+
+    <div class="ellipsis"></div>
+</div>
 
 ```php
-use Illuminate\Http\Request;
+// app/Providers/AuthServiceProvider.php
 
-class LoginController extends Controller
+// ...
+use Laravel\Fortify\Fortify;
+
+class AuthServiceProvider extends ServiceProvider
 {
     // ...
-    
-    protected function credentials(Request $request)
+
+    public function boot()
     {
-        return [
-            'mail' => $request->get('email'),
-            'password' => $request->get('password'),
-        ];
+        $this->registerPolicies();
+
+        Fortify::authenticateUsing(function ($request) {
+            $validated = Auth::validate([
+                'mail' => $request->email,
+                'password' => $request->password
+            ]);
+
+            return $validated ? Auth::getLastAttempted() : null;
+        });
     }
 }
 ```
 
-### Step 3: Modifying The Layout Blade View {#plain-view-setup}
+As you can see above, we are passing an array of the users credentials to the `Auth::validate()`
+method. Most notibly, we set the `mail` key in this credentials array which is passed to the
+LdapRecord authentication provider.
 
-When we use plain LDAP authentication, an instance of the LdapRecord `model` you have
-configured for authentication will be returned when calling the `Auth::user()`
-method. This means that our currently published blade views will throw an
-exception due to using `Auth::user()->name` call inside of the view file
-`views/layouts/app.blade.php`.
+Upon a user attempting to sign in, a search query will be executed on your directory for a user
+that contains the `mail` attribute equal to the entered `email` that the user has submitted
+on your login form. The `password` key will not be used in the search.
 
-You must change the syntax to the following:
+If a user cannot be located in your directory, or they fail authentication, they will be
+redirected to the login page normally with the "*Invalid credentials*" error message.
+
+> You may also add extra key => value pairs in the `credentials` array to further scope
+> the LDAP query. The `password` key is automatically ignored by LdapRecord.
+
+#### Feature Configuration
+
+When using plain LDAP authentication, we must disable various Jetstream and Fortify features, such as
+teams, profile photos, API, registration, updating profile information, and resetting / updating
+passwords. We will make these changes in the `config/jetstream.php` and `config/fority.php`
+configuration files respectively:
+
+<div class="files">
+    <div class="ellipsis"></div>
+    
+    <div class="folder folder--open">
+        config
+
+        <div class="ellipsis"></div>
+        <div class="file focus">fortify.php</div>
+        <div class="file focus">jetstream.php</div>
+    </div>
+
+    <div class="ellipsis"></div>
+</div>
+
+```php
+// config/fortify.php
+
+// Before:
+'features' => [
+    Features::registration(),
+    Features::resetPasswords(),
+    // Features::emailVerification(),
+    Features::updateProfileInformation(),
+    Features::updatePasswords(),
+    // Features::twoFactorAuthentication(),
+],
+
+// After:
+'features' => [
+    // Features::registration(),
+    // Features::resetPasswords(),
+    // Features::emailVerification(),
+    // Features::updateProfileInformation(),
+    // Features::updatePasswords(),
+    // Features::twoFactorAuthentication(),
+],
+```
+
+```php
+// config/jetstream.php
+
+// Before:
+'features' => [
+    Features::profilePhotos(),
+    Features::api(),
+    Features::teams(),
+],
+
+// After:
+'features' => [
+    // Features::profilePhotos(),
+    // Features::api(),
+    // Features::teams(),
+],
+```
+
+### Step 3: Modifying Blade Views {#plain-view-setup}
+
+When we use plain LDAP authentication, an instance of the LdapRecord `model` you have configured
+for authentication will be returned when calling the `Auth::user()` method. This means that our
+currently published blade views will immediately throw an exception due to calls such as: 
+`Auth::user()->name`. Most notably, the `views/navigation-dropdown.php` file.
+
+You must change the syntax to the following wherever it is found:
 
 ```html
-<!-- resources/views/layouts/app.blade.php -->
-
 <!-- From... -->
 {{ Auth::user()->name }}
 
@@ -139,7 +247,16 @@ You must change the syntax to the following:
 {{ Auth::user()->getFirstAttribute('cn') }}
 ```
 
-Once you've updated the syntax, your application is now ready to authenticate LDAP users.
+You will have to remove other calls completely, such as:
+
+```html
+{{ Auth::user()->profile_photo_url }}
+```
+
+These calls directly rely on Laravel's scaffolded database columns.
+
+Once you've made the necessary modifications shown above, your
+application is now ready to authenticate LDAP users.
 
 ## Synchronized Database Authentication {#database-sync}
 
@@ -180,7 +297,7 @@ In this example, we will create a provider named `ldap`:
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
         'database' => [
-            'model' => App\User::class,
+            'model' => App\Models\User::class,
             'sync_passwords' => false,
             'sync_attributes' => [
                 'name' => 'cn',
@@ -224,8 +341,8 @@ Interface | `LdapRecord\Laravel\Auth\LdapAuthenticatable` |
 Trait | `LdapRecord\Laravel\Auth\AuthenticatesWithLdap` |
 
 
-```````php
-// app/User.php
+```php
+// app/Models/User.php
 
 // ...
 use LdapRecord\Laravel\Auth\LdapAuthenticatable;
@@ -233,11 +350,11 @@ use LdapRecord\Laravel\Auth\AuthenticatesWithLdap;
 
 class User extends Authenticatable implements LdapAuthenticatable
 {
-    use Notifiable, AuthenticatesWithLdap;
+    use AuthenticatesWithLdap;
 
     // ...
 }
-```````
+```
 
 These are required so LdapRecord can set and retrieve your users `domain` and `guid` database columns.
 
@@ -248,39 +365,75 @@ Methods |
 `User::getLdapDomainColumn()` |
 `User::getLdapGuidColumn()` |
 
-### Step 4: Setting up your LoginController: {#database-controller-setup}
+### Step 4: Setting up Laravel Fortify: {#database-fortify-setup}
 
-Now we must change our `LoginController` to allow LdapRecord to properly
-locate users who are attempting to sign into our application. We do
-this by changing the `credentials` method. In this method we will
-return an array that contains the users username and password.
+#### Feature Configuration
 
-**The array keys you set here are important.** The `password` key must be present,
-as this is sent directly to your LDAP server for verification.
-
-The other key must be the **name of the LDAP attribute** you want LdapRecord to
-locate the authenticating user with. It **must** be an attribute that has
-a unique value per user in your directory. `uid`, `sAMAccountName`,
-`mail`, or `userPrincipalName` are good examples of attributes
-that have a unique value per user.
-
-In this example we want to use the users `mail` LDAP attribute to sign them into our application.
+Since we are synchronizing data from our LDAP server, we must disable several
+features by commenting them out inside of the `config/fortify.php` file:
 
 ```php
-use Illuminate\Http\Request;
+// config/fortify.php
 
-class LoginController extends Controller
+// Before:
+'features' => [
+    Features::registration(),
+    Features::resetPasswords(),
+    // Features::emailVerification(),
+    Features::updateProfileInformation(),
+    Features::updatePasswords(),
+    // Features::twoFactorAuthentication(),
+],
+
+// After:
+'features' => [
+    // Features::registration(),
+    // Features::resetPasswords(),
+    // Features::emailVerification(),
+    // Features::updateProfileInformation(),
+    // Features::updatePasswords(),
+    // Features::twoFactorAuthentication(),
+],
+```
+
+> **Important**: You may keep `Features::registration()` enabled if you would like
+> to continue accepting local application user registration. Keep in mind, if you
+> continue to allow registration, you will need to either use multiple Laravel
+> authentication guards, or setup the [login fallback](#fallback-auth) feature.
+
+#### Authentication Callback
+
+With our Fortiy configuration updated, we will jump into our `AuthServiceProvider.php` file
+and setup our authentication callback using the `Fortify::authenticateUsing()` method:
+
+```php
+// app/Providers/AuthServiceProvider.php
+
+public function boot()
 {
-    // ...
-    
-    protected function credentials(Request $request)
-    {
-        return [
-            'mail' => $request->get('email'),
-            'password' => $request->get('password'),
-        ];
-    }
+    $this->registerPolicies();
+
+    Fortify::authenticateUsing(function ($request) {
+        $validated = Auth::validate([
+            'mail' => $request->username,
+            'password' => $request->password
+        ]);
+
+        return $validated ? Auth::getLastAttempted() : null;
+    });
 }
 ```
+
+As you can see above, we set the `mail` key which is passed to the LdapRecord authentication provider.
+
+A search query will be executed on your directory for a user that contains the `mail` attribute equal
+to the entered `email` that the user has submitted on your login form. The `password`
+key will not be used in the search.
+
+If a user cannot be located in your directory, or they fail authentication, they will be redirected to the
+login page normally with the "*Invalid credentials*" error message.
+
+> You may also add extra key => value pairs in the `credentials` array to further scope the
+> LDAP query. The `password` key is automatically ignored by LdapRecord.
 
 Your application is now ready to authenticate LDAP users.
