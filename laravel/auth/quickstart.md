@@ -102,7 +102,7 @@ Once you have setup your `ldap` provider, you must update the `provider` value i
 
 ### Step 2: Setting up Laravel Fortify {#plain-fortify-setup}
 
-#### Authentication Callback & Password Confirmation
+#### Authentication Callback
 
 Laravel Jetstream uses [Laravel Fortify](https://github.com/laravel/fortify) for authentication.
 We will configure its various features to support signing in with LdapRecord.
@@ -389,7 +389,7 @@ and supply our own callbacks, overriding Laravel Fortify's default:
 - `Fortify::authenticateUsing()`
 - `Fortify::confirmPasswordsUsing()`
 
-We will call the above methods in our `AuthServiceProvider.php` file, with our own callbacks:
+We will call the above in our `AuthServiceProvider.php` file, inside the `boot()` method:
 
 <div class="files">
     <div class="ellipsis"></div>
@@ -491,41 +491,6 @@ features by commenting them out inside of the `config/fortify.php` file:
 > **Important**: You may keep `Features::registration()` enabled if you would like
 > to continue accepting local application user registration. Keep in mind, if you
 > continue to allow registration, you will need to either use multiple Laravel
-> authentication guards, or setup the [login fallback](#fallback-auth) feature.
-
-#### Authentication Callback
-
-With our Fortiy configuration updated, we will jump into our `AuthServiceProvider.php` file
-and setup our authentication callback using the `Fortify::authenticateUsing()` method:
-
-```php
-// app/Providers/AuthServiceProvider.php
-
-public function boot()
-{
-    $this->registerPolicies();
-
-    Fortify::authenticateUsing(function ($request) {
-        $validated = Auth::validate([
-            'mail' => $request->email,
-            'password' => $request->password
-        ]);
-
-        return $validated ? Auth::getLastAttempted() : null;
-    });
-}
-```
-
-As you can see above, we set the `mail` key which is passed to the LdapRecord authentication provider.
-
-A search query will be executed on your directory for a user that contains the `mail` attribute equal
-to the entered `email` that the user has submitted on your login form. The `password`
-key will not be used in the search.
-
-If a user cannot be located in your directory, or they fail authentication, they will be redirected to the
-login page normally with the "*Invalid credentials*" error message.
-
-> You may also add extra key => value pairs in the `credentials` array to further scope the
-> LDAP query. The `password` key is automatically ignored by LdapRecord.
+> authentication guards, or setup the [login fallback](/docs/laravel/auth/laravel-jetstream/#fallback-auth) feature.
 
 Your application is now ready to authenticate LDAP users.
