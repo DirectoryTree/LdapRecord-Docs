@@ -80,11 +80,11 @@ In this example, we will create a provider named `ldap`:
 // ...
 ```
 
-> If you are using OpenLDAP, you must switch the providers `model` option to:
-> 
-> ```php
-> LdapRecord\Models\OpenLDAP\User::class
-> ```
+If you are using OpenLDAP, you must switch the providers `model` option to:
+ 
+```php
+LdapRecord\Models\OpenLDAP\User::class
+```
 
 Once you have setup your `ldap` provider, you must update the `provider` value in the `web` guard:
 
@@ -102,14 +102,15 @@ Once you have setup your `ldap` provider, you must update the `provider` value i
 
 ### Step 2: Setting up Laravel Fortify {#plain-fortify-setup}
 
-#### Authentication Callback
+#### Authentication Callback & Password Confirmation
 
 Laravel Jetstream uses [Laravel Fortify](https://github.com/laravel/fortify) for authentication.
 We will configure its various features to support signing in with LdapRecord.
 
-For LdapRecord to properly locate the user in your directory during a sign in attempt, we
-will override Fortify's authentication callback using the `Fortify::authenticateUsing()`
-method in our `AuthServiceProvider.php` file:
+To support LDAP authentication, we must call the `Fortify::authenticateUsing()`
+and supply our own callback, overriding Laravel Fortify's default:
+
+We will call the above in our `AuthServiceProvider.php` file, inside the `boot()` method:
 
 <div class="files">
     <div class="ellipsis"></div>
@@ -132,6 +133,7 @@ method in our `AuthServiceProvider.php` file:
 
 // ...
 use Laravel\Fortify\Fortify;
+use LdapRecord\Models\ActiveDirectory\User as LdapUser;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -153,8 +155,9 @@ class AuthServiceProvider extends ServiceProvider
 }
 ```
 
-As you can see above, we are passing an array of the users credentials to the `Auth::validate()`
-method. Most notibly, we set the `mail` key in this credentials array which is passed to the
+As you can see above in the `Fortify::authenticateUsing()` callback, we are passing
+an array of the users credentials to the `Auth::validate()` method. Most notibly,
+we set the `mail` key in this credentials array which is passed to the
 LdapRecord authentication provider.
 
 Upon a user attempting to sign in, a search query will be executed on your directory for a user
@@ -170,9 +173,9 @@ redirected to the login page normally with the "*Invalid credentials*" error mes
 #### Feature Configuration
 
 When using plain LDAP authentication, we must disable various Jetstream and Fortify features, such as
-teams, profile photos, API, registration, updating profile information, and resetting / updating
-passwords. We will make these changes in the `config/jetstream.php` and `config/fority.php`
-configuration files respectively:
+teams, two-factor authentication, profile photos, API, registration, updating profile information,
+and resetting / updating passwords. We will make these changes in the `config/jetstream.php` and
+`config/fority.php` configuration files respectively:
 
 <div class="files">
     <div class="ellipsis"></div>
@@ -198,7 +201,9 @@ configuration files respectively:
     // Features::emailVerification(),
     Features::updateProfileInformation(),
     Features::updatePasswords(),
-    // Features::twoFactorAuthentication(),
+    Features::twoFactorAuthentication([
+        'confirmPassword' => true,
+    ]),
 ],
 
 // After:
@@ -208,7 +213,9 @@ configuration files respectively:
     // Features::emailVerification(),
     // Features::updateProfileInformation(),
     // Features::updatePasswords(),
-    // Features::twoFactorAuthentication(),
+    // Features::twoFactorAuthentication([
+    //     'confirmPassword' => true,
+    // ]),
 ],
 ```
 
@@ -230,12 +237,16 @@ configuration files respectively:
 ],
 ```
 
+These features must be disabled since we cannot persist profile data,
+two-factor authentication codes, and more, into the users LDAP object.
+
 ### Step 3: Modifying Blade Views {#plain-view-setup}
 
 When we use plain LDAP authentication, an instance of the LdapRecord `model` you have configured
 for authentication will be returned when calling the `Auth::user()` method. This means that our
 currently published blade views will immediately throw an exception due to calls such as: 
-`Auth::user()->name`. Most notably, the `views/navigation-dropdown.php` file.
+`Auth::user()->name`. Most notably, the `views/navigation-dropdown.php` file, if you
+are using the Livewire stack.
 
 You must change the syntax to the following wherever it is found:
 
@@ -367,6 +378,83 @@ Methods |
 
 ### Step 4: Setting up Laravel Fortify: {#database-fortify-setup}
 
+#### Authentication Callback & Password Confirmation
+
+Laravel Jetstream uses [Laravel Fortify](https://github.com/laravel/fortify) for authentication.
+We will configure its various features to support signing in with LdapRecord.
+
+To support LDAP authentication, we must call the following two methods
+and supply our own callbacks, overriding Laravel Fortify's default:
+
+- `Fortify::authenticateUsing()`
+- `Fortify::confirmPasswordsUsing()`
+
+We will call the above methods in our `AuthServiceProvider.php` file, with our own callbacks:
+
+<div class="files">
+    <div class="ellipsis"></div>
+
+    <div class="folder folder--open">
+        app
+
+        <div class="folder folder--open">
+            Providers
+
+            <div class="file focus">AuthServiceProvider.php</div>
+        </div>
+    </div>
+
+    <div class="ellipsis"></div>
+</div>
+
+```php
+// app/Providers/AuthServiceProvider.php
+
+// ...
+use App\Models\User;
+use Laravel\Fortify\Fortify;
+
+class AuthServiceProvider extends ServiceProvider
+{
+    // ...
+
+    public function boot()
+    {
+        $this->registerPolicies();
+
+        Fortify::authenticateUsing(function ($request) {
+            $validated = Auth::validate([
+                'mail' => $request->email,
+                'password' => $request->password
+            ]);
+
+            return $validated ? Auth::getLastAttempted() : null;
+        });
+
+        Fortify::confirmPasswordsUsing(function (User $user, $password) {
+            return Auth::validate([
+                'mail' => $user->email,
+                'password' => $password,
+            ]);
+        });
+    }
+}
+```
+
+As you can see above, we are passing an array of the users credentials to the `Auth::validate()`
+method. Most notibly, we set the `mail` key in this credentials array which is passed to the
+LdapRecord authentication provider.
+
+Upon a user attempting to sign in, a search query will be executed on your directory for a user
+that contains the `mail` attribute equal to the entered `email` that the user has submitted
+on your login form. The `password` key will not be used in the search.
+
+If a user cannot be located in your directory, or they fail authentication, they will be
+redirected to the login page normally with the "*Invalid credentials*" error message.
+
+> You may also add extra key => value pairs in the `credentials` array to further scope
+> the LDAP query. The `password` key is automatically ignored by LdapRecord.
+
 #### Feature Configuration
 
 Since we are synchronizing data from our LDAP server, we must disable several
@@ -382,7 +470,9 @@ features by commenting them out inside of the `config/fortify.php` file:
     // Features::emailVerification(),
     Features::updateProfileInformation(),
     Features::updatePasswords(),
-    // Features::twoFactorAuthentication(),
+    Features::twoFactorAuthentication([
+        'confirmPassword' => true,
+    ]),
 ],
 
 // After:
@@ -392,7 +482,9 @@ features by commenting them out inside of the `config/fortify.php` file:
     // Features::emailVerification(),
     // Features::updateProfileInformation(),
     // Features::updatePasswords(),
-    // Features::twoFactorAuthentication(),
+    Features::twoFactorAuthentication([
+        'confirmPassword' => true,
+    ]),
 ],
 ```
 
@@ -400,40 +492,5 @@ features by commenting them out inside of the `config/fortify.php` file:
 > to continue accepting local application user registration. Keep in mind, if you
 > continue to allow registration, you will need to either use multiple Laravel
 > authentication guards, or setup the [login fallback](#fallback-auth) feature.
-
-#### Authentication Callback
-
-With our Fortiy configuration updated, we will jump into our `AuthServiceProvider.php` file
-and setup our authentication callback using the `Fortify::authenticateUsing()` method:
-
-```php
-// app/Providers/AuthServiceProvider.php
-
-public function boot()
-{
-    $this->registerPolicies();
-
-    Fortify::authenticateUsing(function ($request) {
-        $validated = Auth::validate([
-            'mail' => $request->username,
-            'password' => $request->password
-        ]);
-
-        return $validated ? Auth::getLastAttempted() : null;
-    });
-}
-```
-
-As you can see above, we set the `mail` key which is passed to the LdapRecord authentication provider.
-
-A search query will be executed on your directory for a user that contains the `mail` attribute equal
-to the entered `email` that the user has submitted on your login form. The `password`
-key will not be used in the search.
-
-If a user cannot be located in your directory, or they fail authentication, they will be redirected to the
-login page normally with the "*Invalid credentials*" error message.
-
-> You may also add extra key => value pairs in the `credentials` array to further scope the
-> LDAP query. The `password` key is automatically ignored by LdapRecord.
 
 Your application is now ready to authenticate LDAP users.
