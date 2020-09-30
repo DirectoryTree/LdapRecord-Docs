@@ -493,4 +493,39 @@ features by commenting them out inside of the `config/fortify.php` file:
 > continue to allow registration, you will need to either use multiple Laravel
 > authentication guards, or setup the [login fallback](#fallback-auth) feature.
 
+#### Authentication Callback
+
+With our Fortiy configuration updated, we will jump into our `AuthServiceProvider.php` file
+and setup our authentication callback using the `Fortify::authenticateUsing()` method:
+
+```php
+// app/Providers/AuthServiceProvider.php
+
+public function boot()
+{
+    $this->registerPolicies();
+
+    Fortify::authenticateUsing(function ($request) {
+        $validated = Auth::validate([
+            'mail' => $request->email,
+            'password' => $request->password
+        ]);
+
+        return $validated ? Auth::getLastAttempted() : null;
+    });
+}
+```
+
+As you can see above, we set the `mail` key which is passed to the LdapRecord authentication provider.
+
+A search query will be executed on your directory for a user that contains the `mail` attribute equal
+to the entered `email` that the user has submitted on your login form. The `password`
+key will not be used in the search.
+
+If a user cannot be located in your directory, or they fail authentication, they will be redirected to the
+login page normally with the "*Invalid credentials*" error message.
+
+> You may also add extra key => value pairs in the `credentials` array to further scope the
+> LDAP query. The `password` key is automatically ignored by LdapRecord.
+
 Your application is now ready to authenticate LDAP users.
