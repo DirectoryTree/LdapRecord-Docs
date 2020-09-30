@@ -415,7 +415,7 @@ public function boot()
 
     Fortify::authenticateUsing(function ($request) {
         $validated = Auth::validate([
-            'mail' => $request->username,
+            'mail' => $request->email,
             'password' => $request->password
         ]);
 
