@@ -15,6 +15,7 @@ section: content
       - [LDAP Timestamp](#ldap-date-type)
       - [Windows Timestamp](#windows-date-type)
       - [Windows Integer Timestamp](#windows-int-date-type)
+- [Attribute Casting](#attribute-casting)
 
 ## Introduction {#introduction}
 
@@ -225,4 +226,53 @@ Which equals:
 
 ```text
 Monday, September 16, 2019 4:24:01 PM
+```
+
+## Attribute Casting {#attribute-casting}
+
+Similarly with Laravel's Eloquent, the `$casts` property on your model provides
+a convenient method of converting attributes to common data types. The `$casts`
+property should be an array where the key is the name of the attribute being
+cast and the value is the type you wish to cast the column to.
+
+The supported cast types are:
+
+- `integer`
+- `real`
+- `float`
+- `double`
+- `decimal:<digits>`
+- `string`
+- `boolean`
+- `object`
+- `array`
+- `collection`
+- `datetime:<ldap/windows/windows-int>`
+
+To demonstrate attribute casting, let's cast the `msExchHideFromAddressList` Active Directory attribute,
+which determines whether a user account is shown in the Global Address List in Outlook.
+
+This attribute is stored as a string in Active Directory, with the value `TRUE` or `FALSE`.
+
+```php
+namespace App\Models\Ldap;
+
+use LdapRecord\Models\ActiveDirectory\User as BaseUser;
+
+class User extends BaseUser
+{
+    protected $casts = [
+        'msExchHideFromAddressList' => 'boolean',
+    ];
+}
+```
+
+Then, we can utilize it when we retrieve users from our directory:
+
+```php
+$user = User::find('cn=John Doe,dc=local,dc=com');
+
+if ($user->msExchHideFromAddressList) {
+    // This user is being hidden from the Global Address list.
+}
 ```
