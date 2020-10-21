@@ -30,4 +30,3 @@ Insert the following line at the top of your projects PHP script (usually `index
 ```php
 require __DIR__ . '/vendor/autoload.php';
 ```
-

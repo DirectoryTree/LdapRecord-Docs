@@ -57,8 +57,9 @@ You insert as many servers or as little as you'd like depending on your forest (
 
 ### Base Distinguished Name {#base-distinguished-name}
 
-A 'Distinguished Name' is a string based identifier in LDAP that is used
-to indicate hierarchy. Each object in your domain is assigned one.
+A 'Distinguished Name' is a string based identifier in LDAP that is used to indicate hierarchy.
+
+Each object in your domain is assigned a Distinguished Name.
 
 An example Distinguished Name would be `cn=John Doe,ou=Users,dc=local,dc=com`.
 
