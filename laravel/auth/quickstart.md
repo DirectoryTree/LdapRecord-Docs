@@ -10,14 +10,14 @@ section: content
 - [Introduction](#introduction)
 - [Debugging](#debugging)
 - [Plain Authentication](#plain)
- - [Step 1: Configure the driver](#configure-plain-auth)
- - [Step 2: Setting up Laravel Fortify](#plain-fortify-setup)
- - [Step 3: Modifying your Blade views](#plain-view-setup)
+ - [Step 1 - Configure the driver](#configure-plain-auth)
+ - [Step 2 - Setting up Laravel Fortify](#plain-fortify-setup)
+ - [Step 3 - Modifying your Blade views](#plain-view-setup)
 - [Synchronized Database Authentication](#database-sync)
- - [Step 1: Publish the database migration](#publish-migration)
- - [Step 2: Configure the driver](#configure-database-auth)
- - [Step 3: Setting up your database user model](#database-user-model-setup)
- - [Step 4: Setting up Laravel Fortify](#database-fortify-setup)
+ - [Step 1 - Publish the database migration](#publish-migration)
+ - [Step 2 - Configure the driver](#configure-database-auth)
+ - [Step 3 - Setting up your database user model](#database-user-model-setup)
+ - [Step 4 - Setting up Laravel Fortify](#database-fortify-setup)
 
 ## Introduction {#introduction}
 
@@ -47,7 +47,7 @@ php artisan ldap:test
 
 ## Plain LDAP Authentication {#plain}
 
-### Step 1: Configure the Authentication Driver {#configure-plain-auth}
+### Step 1 - Configure the Authentication Driver {#configure-plain-auth}
 
 Inside of your `config/auth.php` file, we must add a new provider in the `providers` array.
 
@@ -100,7 +100,7 @@ Once you have setup your `ldap` provider, you must update the `provider` value i
 // ...
 ```
 
-### Step 2: Setting up Laravel Fortify {#plain-fortify-setup}
+### Step 2 - Setting up Laravel Fortify {#plain-fortify-setup}
 
 #### Authentication Callback
 
@@ -240,7 +240,7 @@ and resetting / updating passwords. We will make these changes in the `config/je
 These features must be disabled since we cannot persist profile data,
 two-factor authentication codes, and more, into the users LDAP object.
 
-### Step 3: Modifying Blade Views {#plain-view-setup}
+### Step 3 - Modifying Blade Views {#plain-view-setup}
 
 When we use plain LDAP authentication, an instance of the LdapRecord `model` you have configured
 for authentication will be returned when calling the `Auth::user()` method. This means that our
@@ -271,7 +271,7 @@ application is now ready to authenticate LDAP users.
 
 ## Synchronized Database Authentication {#database-sync}
 
-### Step 1: Publish the Migration {#publish-migration}
+### Step 1 - Publish the Migration {#publish-migration}
 
 LdapRecord requires you to have two additional user database columns.
 
@@ -292,7 +292,7 @@ Then, run the migrations with the `artisan migrate` command:
 php artisan migrate
 ```
 
-### Step 2: Configure the Authentication Driver {#configure-database-auth}
+### Step 2 - Configure the Authentication Driver {#configure-database-auth}
 
 Inside of your `config/auth.php` file, we must add a new provider in the `providers` array.
 
@@ -342,7 +342,7 @@ Once you have setup your `ldap` provider, you must update the `provider` value i
     // ...
 ```
 
-### Step 3: Setting up your database user model {#database-user-model-setup}
+### Step 3 - Setting up your database user model {#database-user-model-setup}
 
 Now, we must add the following trait and interface to our `User` Eloquent model:
 
@@ -376,7 +376,7 @@ Methods |
 `User::getLdapDomainColumn()` |
 `User::getLdapGuidColumn()` |
 
-### Step 4: Setting up Laravel Fortify: {#database-fortify-setup}
+### Step 4 - Setting up Laravel Fortify: {#database-fortify-setup}
 
 #### Authentication Callback & Password Confirmation
 

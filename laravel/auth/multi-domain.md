@@ -8,11 +8,11 @@ section: content
 # Multi-Domain Authentication {#multi-domain-authentication}
 
 - [Introduction](#introduction)
-- [Step 1: Configuration](#configuration)
+- [Step 1 - Configuration](#configuration)
  - [Configuring the LDAP Connections](#configuring-ldap-connections)
  - [Configuring the Authentication Guards](#configuring-auth-guards)
-- [Step 2: Login Controller Setup](#authenticating)
-- [Step 3: Updating Your Web Routes](#routes)
+- [Step 2 - Login Controller Setup](#authenticating)
+- [Step 3 - Updating Your Web Routes](#routes)
 
 ## Introduction {#introduction}
 
@@ -20,7 +20,7 @@ LdapRecord-Laravel allows you to authenticate users from as many LDAP directorie
 
 This useful when you have separate domains that are not joined in a trust.
 
-## Step 1: Configuration {#configuration}
+## Step 1 - Configuration {#configuration}
 
 To begin, you must create two separate LdapRecord models for each of your domains.
 
@@ -126,7 +126,7 @@ as well as their own guard inside of our `config/auth.php` file:
 ],
 ```
 
-## Step 2: Login Controller Setup {#authenticating}
+## Step 2 - Login Controller Setup {#authenticating}
 
 To start authenticating users from both of your LDAP domains, we need to modify our `LoginController`.
 
@@ -266,7 +266,7 @@ to our `alpha` domain.
 > You may wish to add a request validation rule instead to prevent users from signing
 > in with invalid email domain. The way you implement this is totally up to you.
 
-## Step 3: Updating Your Web Routes {#routes}
+## Step 3 - Updating Your Web Routes {#routes}
 
 Having multiple authentication guards means that we need to update the `auth` middleware
 that is covering our protected application routes inside of our `routes/web.php` file.

@@ -10,14 +10,14 @@ section: content
 - [Introduction](#introduction)
 - [Debugging](#debugging)
 - [Plain Authentication](#plain)
- - [Step 1: Configure the driver](#configure-plain-auth)
- - [Step 2: Setting up your LoginController](#plain-controller-setup)
- - [Step 3: Modifying your Blade views](#plain-view-setup)
+ - [Step 1 - Configure the driver](#configure-plain-auth)
+ - [Step 2 - Setting up your LoginController](#plain-controller-setup)
+ - [Step 3 - Modifying your Blade views](#plain-view-setup)
 - [Synchronized Database Authentication](#database-sync)
- - [Step 1: Publish the database migration](#publish-migration)
- - [Step 2: Configure the driver](#configure-database-auth)
- - [Step 3: Setting up your database user model](#database-user-model-setup)
- - [Step 4: Setting up your LoginController](#database-controller-setup)
+ - [Step 1 - Publish the database migration](#publish-migration)
+ - [Step 2 - Configure the driver](#configure-database-auth)
+ - [Step 3 - Setting up your database user model](#database-user-model-setup)
+ - [Step 4 - Setting up your LoginController](#database-controller-setup)
 
 ## Introduction {#introduction}
 
@@ -46,7 +46,7 @@ php artisan ldap:test
 
 ## Plain LDAP Authentication {#plain}
 
-### Step 1: Configure the Authentication Driver {#configure-plain-auth}
+### Step 1 - Configure the Authentication Driver {#configure-plain-auth}
 
 Inside of your `config/auth.php` file, we must add a new provider in the `providers` array.
 
@@ -86,7 +86,7 @@ Once you have setup your `ldap` provider, you must update the `provider` value i
 // ...
 ```
 
-### Step 2: Setting up your LoginController {#plain-controller-setup}
+### Step 2 - Setting up your LoginController {#plain-controller-setup}
 
 Now we must change our `LoginController` to allow LdapRecord to properly
 locate users who are attempting to sign into our application. We do
@@ -121,7 +121,7 @@ class LoginController extends Controller
 }
 ```
 
-### Step 3: Modifying The Layout Blade View {#plain-view-setup}
+### Step 3 - Modifying The Layout Blade View {#plain-view-setup}
 
 When we use plain LDAP authentication, an instance of the LdapRecord `model` you have
 configured for authentication will be returned when calling the `Auth::user()`
@@ -145,7 +145,7 @@ Once you've updated the syntax, your application is now ready to authenticate LD
 
 ## Synchronized Database Authentication {#database-sync}
 
-### Step 1: Publish the Migration {#publish-migration}
+### Step 1 - Publish the Migration {#publish-migration}
 
 LdapRecord requires you to have two additional user database columns.
 
@@ -166,7 +166,7 @@ Then, run the migrations with the `artisan migrate` command:
 php artisan migrate
 ```
 
-### Step 2: Configure the Authentication Driver {#configure-database-auth}
+### Step 2 - Configure the Authentication Driver {#configure-database-auth}
 
 Inside of your `config/auth.php` file, we must add a new provider in the `providers` array.
 
@@ -216,7 +216,7 @@ Once you have setup your `ldap` provider, you must update the `provider` value i
     // ...
 ```
 
-### Step 3: Setting up your database user model {#database-user-model-setup}
+### Step 3 - Setting up your database user model {#database-user-model-setup}
 
 Now, we must add the following trait and interface to our `User` Eloquent model:
 
@@ -250,7 +250,7 @@ Methods |
 `User::getLdapDomainColumn()` |
 `User::getLdapGuidColumn()` |
 
-### Step 4: Setting up your LoginController: {#database-controller-setup}
+### Step 4 - Setting up your LoginController: {#database-controller-setup}
 
 Now we must change our `LoginController` to allow LdapRecord to properly
 locate users who are attempting to sign into our application. We do

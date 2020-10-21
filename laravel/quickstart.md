@@ -9,11 +9,11 @@ section: content
 
 - [Introduction](#introduction)
 - [Install, Setup & Usage](#install-setup-usage)
-  - [Step 1: Install LdapRecord-Laravel](#install-ldaprecord-laravel)
-  - [Step 2: Publish configuration file](#publish-configuration)
-  - [Step 3: Configure your LDAP Connection](#configure-connection)
-  - [Step 4: Use LdapRecord](#usage)
-  - [Step 5: Setup Authentication](#setup-authentication)
+  - [Step 1 - Install LdapRecord-Laravel](#install-ldaprecord-laravel)
+  - [Step 2 - Publish configuration file](#publish-configuration)
+  - [Step 3 - Configure your LDAP Connection](#configure-connection)
+  - [Step 4 - Use LdapRecord](#usage)
+  - [Step 5 - Setup Authentication](#setup-authentication)
 
 ## Introduction {#introduction}
 
@@ -28,7 +28,7 @@ An LDAP server (Active Directory, OpenLDAP, FreeIPA etc.) |
 
 ## Install, Setup & Usage {#install-setup-usage}
 
-### Step 1: Install LdapRecord-Laravel {#install-ldaprecord-laravel}
+### Step 1 - Install LdapRecord-Laravel {#install-ldaprecord-laravel}
 
 Require LdapRecord-Laravel via [composer](https://getcomposer.org/):
 
@@ -36,13 +36,13 @@ Require LdapRecord-Laravel via [composer](https://getcomposer.org/):
 composer require directorytree/ldaprecord-laravel
 ```
 
-### Step 2: Publish the LDAP configuration file {#publish-configuration}
+### Step 2 - Publish the LDAP configuration file {#publish-configuration}
 
 ```bash
 php artisan vendor:publish --provider="LdapRecord\Laravel\LdapServiceProvider"
 ```
 
-### Step 3: Configure your LDAP connection {#configure-connection}
+### Step 3 - Configure your LDAP connection {#configure-connection}
 
 Paste these environment variables into your `.env` file, and configure each option as necessary:
 
@@ -61,7 +61,7 @@ LDAP_TLS=false
 
 View the core [configuration](/docs/configuration) documentation for more information on each option.
 
-### Step 4: Use LdapRecord {#usage}
+### Step 4 - Use LdapRecord {#usage}
 
 To begin, you may either use the built-in [models that LdapRecord comes with](/docs/models#predefined-models),
 or you may create your own models that reference the connection you have created in your `config/ldap.php` file.
@@ -92,6 +92,6 @@ class LdapUserController extends Controller
 }
 ```
 
-### Step 5: Setup Authentication {#setup-authentication}
+### Step 5 - Setup Authentication {#setup-authentication}
 
 View the [authentication quickstart guide](/docs/laravel/auth/quickstart) if you require LDAP authentication in your application.
