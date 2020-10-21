@@ -17,15 +17,15 @@ An LDAP server (Active Directory, OpenLDAP, FreeIPA etc.) |
 
 LdapRecord uses [Composer](https://getcomposer.org) for installation.
 
-Once you have composer installed, run the following command in the root directory of your project:
+After installing composer, run the following command in the root directory of your project:
 
 ```bash
 composer require directorytree/ldaprecord
 ```
 
-Then, if your application doesn't already require Composer's autoload, you will need to do it manually.
+If your application doesn't already require Composer's autoload, you will need to do it manually.
 
-Insert this line at the top of your projects PHP script (usually `index.php`):
+Insert the following line at the top of your projects PHP script (usually `index.php`):
 
 ```php
 require __DIR__ . '/vendor/autoload.php';
