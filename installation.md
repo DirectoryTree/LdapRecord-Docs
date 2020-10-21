@@ -17,7 +17,7 @@ An LDAP server (Active Directory, OpenLDAP, FreeIPA etc.) |
 
 LdapRecord uses [Composer](https://getcomposer.org) for installation.
 
-After installing composer, run the following command in the root directory of your project:
+After installing Composer, run the following command in the root directory of your project:
 
 ```bash
 composer require directorytree/ldaprecord
