@@ -138,6 +138,28 @@ protected function credentials(Request $request)
 }
 ```
 
+If we are using Fortify package, we must modify `Fortify::authenticateUsing` method in `App\Providers\AuthServiceProvider::boot`.
+
+```php
+// app\Providers\AuthServiceProvider.php
+
+public function boot()
+{
+    Fortify::authenticateUsing(function ($request) {
+        $validated = Auth::validate([
+            // Before...
+            'mail' => $request->email,
+    
+            // After...
+            'samaccountname' => $request->username,
+            'password' => $request->password
+        ]);
+    
+        return $validated ? Auth::getLastAttempted() : null;
+    });
+}
+```
+
 You can now sign in to your application using usernames instead of email addresses.
 
 ## Fallback Authentication {#fallback-auth}
