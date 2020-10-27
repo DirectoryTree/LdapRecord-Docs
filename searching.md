@@ -16,6 +16,7 @@ section: content
 - [Raw Filters](#raw-filters)
 - [Paginating](#paginating)
 - [Base DN](#base-dn)
+- [Root DSE](#root-dse)
 - [Search Options](#search-options)
  - [Recursive](#recursive)
  - [Listing](#listing)
@@ -456,6 +457,18 @@ $results = $query->setDn('ou=Accounting,dc=acme,dc=org')->get();
 
 Either option will return the same results. Use which ever method you prefer to be more readable.
 
+## Root DSE {#root-dse}
+
+To fetch the [Root DSE](https://ldapwiki.com/wiki/RootDSE) object in your directory, execute the below query:
+
+```php
+$rootDse = $query->query()
+    ->in(null)
+    ->read()
+    ->whereHas('objectclass')
+    ->first();
+```
+ 
 ## Search Options {#search-options}
 
 #### Recursive {#recursive}
