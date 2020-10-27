@@ -21,6 +21,7 @@ section: content
 <a href="#find">find</a>
 <a href="#findBy">findBy</a>
 <a href="#findByOrFail">findByOrFail</a>
+<a href="#findMany">findMany</a>
 <a href="#findManyBy">findManyBy</a>
 <a href="#findOrFail">findOrFail</a>
 <a href="#first">first</a>
@@ -317,9 +318,22 @@ try {
 }
 ```
 
+#### `findMany` {#findMany}
+
+Find many entries in the directory by an array of Distinguished Names:
+
+```php
+$query = $connection->query();
+
+$entries = $query->findMany([
+    'cn=John Doe,dc=local,dc=com',
+    'ou=Accounting,dc=local,dc=com',
+]);
+```
+
 #### `findManyBy` {#findManyBy}
 
-Find may entries in the directory by the given attribute and values:
+Find many entries in the directory by the given attribute and values:
 
 ```php
 $query = $connection->query();
