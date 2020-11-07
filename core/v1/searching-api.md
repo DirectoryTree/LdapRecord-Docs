@@ -1,7 +1,7 @@
 ---
 title: Searching API
 description: A list of all available LdapRecord query builder methods.
-extends: _layouts.core.page
+extends: _layouts.page
 section: content
 ---
 
@@ -164,7 +164,7 @@ $query->addSelect(['sn', 'givenname']);
 var_dump($query->getSelects());
 ```
 
-#### `andFilter` {#addFilter}
+#### `andFilter` {#andFilter}
 
 Add a nested "and" filter to the query:
 
@@ -747,7 +747,7 @@ Add a nested 'or' filter to the current query:
 $query = $connection->query();
 
 // Returns "(|(cn=John Doe))":
-$query->notFilter(function ($query) {
+$query->orFilter(function ($query) {
     $query->where('cn', '=', 'John Doe');
 })->getUnescapedQuery();
 ```
