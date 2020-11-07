@@ -1,0 +1,97 @@
+---
+title: Quickstart
+description: LdapRecord-Laravel Quickstart Guide
+extends: _layouts.laravel.page
+section: content
+---
+
+# Quickstart
+
+- [Introduction](#introduction)
+- [Install, Setup & Usage](#install-setup-usage)
+  - [Step 1 - Install LdapRecord-Laravel](#install-ldaprecord-laravel)
+  - [Step 2 - Publish configuration file](#publish-configuration)
+  - [Step 3 - Configure your LDAP Connection](#configure-connection)
+  - [Step 4 - Use LdapRecord](#usage)
+  - [Step 5 - Setup Authentication](#setup-authentication)
+
+## Introduction {#introduction}
+
+LdapRecord-Laravel requires the following:
+
+Requirements |
+--- |
+PHP >= 7.2 |
+Laravel >= 5.6 |
+PHP LDAP extension enabled |
+An LDAP server (Active Directory, OpenLDAP, FreeIPA etc.) |
+
+## Install, Setup & Usage {#install-setup-usage}
+
+### Step 1 - Install LdapRecord-Laravel {#install-ldaprecord-laravel}
+
+Require LdapRecord-Laravel via [composer](https://getcomposer.org/):
+
+```bash
+composer require directorytree/ldaprecord-laravel
+```
+
+### Step 2 - Publish the LDAP configuration file {#publish-configuration}
+
+```bash
+php artisan vendor:publish --provider="LdapRecord\Laravel\LdapServiceProvider"
+```
+
+### Step 3 - Configure your LDAP connection {#configure-connection}
+
+Paste these environment variables into your `.env` file, and configure each option as necessary:
+
+```dotenv
+LDAP_LOGGING=true
+LDAP_CONNECTION=default
+LDAP_HOST=127.0.0.1
+LDAP_USERNAME="cn=user,dc=local,dc=com"
+LDAP_PASSWORD=secret
+LDAP_PORT=389
+LDAP_BASE_DN="dc=local,dc=com"
+LDAP_TIMEOUT=5
+LDAP_SSL=false
+LDAP_TLS=false
+```
+
+View the core [configuration](/docs/laravel/v1/configuration) documentation for more information on each option.
+
+### Step 4 - Use LdapRecord {#usage}
+
+To begin, you may either use the built-in [models that LdapRecord comes with](/docs/laravel/v1/models#predefined-models),
+or you may create your own models that reference the connection you have created in your `config/ldap.php` file.
+
+Call the below command to create a new LdapRecord model:
+
+```bash
+php artisan make:ldap-model User
+```
+
+Then use it in your application:
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Ldap\User;
+
+class LdapUserController extends Controller
+{
+    public function index()
+    {
+        $users = User::get();
+
+        return view('ldap.users.index', ['users' => $users]);
+    }
+}
+```
+
+### Step 5 - Setup Authentication {#setup-authentication}
+
+View the [authentication quickstart guide](/docs/laravel/v1/laravel/auth/quickstart) if you require LDAP authentication in your application.
