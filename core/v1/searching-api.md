@@ -1,7 +1,7 @@
 ---
 title: Searching API
 description: A list of all available LdapRecord query builder methods.
-extends: _layouts.page
+extends: _layouts.core.page
 section: content
 ---
 
