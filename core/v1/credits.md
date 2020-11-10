@@ -7,7 +7,7 @@ section: content
 
 # Credits
 
-LdapRecord was based heavily on Laravel's fantastic ORM [Eloquent](https://laravel.com/docs/core/v1/eloquent)
+LdapRecord was based heavily on Laravel's fantastic ORM [Eloquent](https://laravel.com/docs/eloquent)
 which was created by [Taylor Otwell](https://github.com/taylorotwell). Many of its features and
 documentation are direct ports to be used for LDAP.
 

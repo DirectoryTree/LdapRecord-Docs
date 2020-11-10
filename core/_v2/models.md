@@ -224,7 +224,7 @@ class User extends Model
 ## Retrieving Models {#retrieving-models}
 
 Once you've created an LdapRecord model you're ready to start retrieving data from your directory.
-If you've used Laravel's [Eloquent ORM](https://laravel.com/docs/core/v2/eloquent), you'll feel right at home.
+If you've used Laravel's [Eloquent ORM](https://laravel.com/docs/eloquent), you'll feel right at home.
 
 You can think of a model as a powerful query builder allowing you to query your directory for objects
 fluently and easily.
@@ -337,7 +337,7 @@ $user->synchronize();
 
 When you query your models, returned results will be contained inside of a
 `LdapRecord\Query\Collection`. The `Collection` class directly extends
-Laravel's collection. Be sure to check out its [documentation](https://laravel.com/docs/core/v2/collections)
+Laravel's collection. Be sure to check out its [documentation](https://laravel.com/docs/collections)
 for all of the available helpful methods.
 
 ```php

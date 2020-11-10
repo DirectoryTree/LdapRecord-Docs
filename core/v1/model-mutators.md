@@ -21,7 +21,7 @@ section: content
 
 Accessors and mutators allow you to modify attribute values when you
 retrieve or set them on model instances. If you'd ever used 
-[Laravel accessors or mutators](https://laravel.com/docs/core/v1/eloquent-mutators),
+[Laravel accessors or mutators](https://laravel.com/docs/eloquent-mutators),
 you'll feel right at home.
 
 ## Accessors & Mutators {#accessors-amp-mutators}
