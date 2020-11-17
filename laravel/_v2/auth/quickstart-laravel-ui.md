@@ -21,7 +21,7 @@ section: content
 
 ## Introduction {#introduction}
 
-> Please complete the [LdapRecord-Laravel quickstart guide](/docs/laravel/v2/laravel/quickstart)
+> Please complete the [LdapRecord-Laravel quickstart guide](/docs/laravel/v2/quickstart)
 > to install LdapRecord and configure your LDAP connection prior to setting up
 > authentication.
 

@@ -13,8 +13,8 @@ section: content
 
 ## Using Only Manually Imported Users {#using-only-imported-users}
 
-To allow only [manually imported LDAP users](/docs/laravel/v1/laravel/importing) who exist inside of your
-database to sign in to your application, you must create an [authentication rule](/docs/laravel/v1/laravel/auth/configuration#rules).
+To allow only [manually imported LDAP users](/docs/laravel/v1/importing) who exist inside of your
+database to sign in to your application, you must create an [authentication rule](/docs/laravel/v1/auth/configuration#rules).
 
 Let's create this rule using the below artisan command:
 
@@ -179,7 +179,7 @@ contained inside the `Accounting` OU will be allowed to authenticate.
 ## Using a Group Membership {#using-group-membership}
 
 To use a group membership for authorizing signing in to your application, we
-will use an [authentication rule](/docs/laravel/v1/laravel/auth/configuration#rules).
+will use an [authentication rule](/docs/laravel/v1/auth/configuration#rules).
 
 In our example application, we want to only allow users who are members of
 a single group to authenticate. This group will be called `Help Desk`.

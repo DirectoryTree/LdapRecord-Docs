@@ -16,7 +16,7 @@ section: content
 ## Introduction {#introduction}
 
 > If you are looking to import LDAP users into your application,
-> view [this guide](/docs/laravel/v1/laravel/auth/importing) instead.
+> view [this guide](/docs/laravel/v1/auth/importing) instead.
 
 With LdapRecord-Laravel, you can easily import and synchronize LDAP objects into a database table
 using a given Eloquent model. This is useful for importing groups, memberships and more.
@@ -120,7 +120,7 @@ $config = [
 ];
 ```
 
-As with [importing LDAP users](/docs/laravel/v1/laravel/auth/importing), you may also use an [attribute handler](/docs/laravel/v1/laravel/auth/configuration/#attribute-handlers)
+As with [importing LDAP users](/docs/laravel/v1/auth/importing), you may also use an [attribute handler](/docs/laravel/v1/auth/configuration/#attribute-handlers)
 if you require extra logic when setting database values from the object.
 
 ```php

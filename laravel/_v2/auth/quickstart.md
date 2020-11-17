@@ -21,7 +21,7 @@ section: content
 
 ## Introduction {#introduction}
 
-> Please complete the [LdapRecord-Laravel quickstart guide](/docs/laravel/v2/laravel/quickstart)
+> Please complete the [LdapRecord-Laravel quickstart guide](/docs/laravel/v2/quickstart)
 > to install LdapRecord and configure your LDAP connection prior to setting up
 > authentication.
 
@@ -491,6 +491,6 @@ features by commenting them out inside of the `config/fortify.php` file:
 > **Important**: You may keep `Features::registration()` enabled if you would like
 > to continue accepting local application user registration. Keep in mind, if you
 > continue to allow registration, you will need to either use multiple Laravel
-> authentication guards, or setup the [login fallback](/docs/laravel/v2/laravel/auth/laravel-jetstream/#fallback-auth) feature.
+> authentication guards, or setup the [login fallback](/docs/laravel/v2/auth/laravel-jetstream/#fallback-auth) feature.
 
 Your application is now ready to authenticate LDAP users.

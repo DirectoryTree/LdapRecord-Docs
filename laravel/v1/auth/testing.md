@@ -17,8 +17,8 @@ section: content
 ## Introduction {#introduction}
 
 LdapRecord-Laravel prides itself on giving you a great and easy testing experience using
-the [Directory Emulator](/docs/laravel/v1/laravel/testing#directory-emulator). Using it, we can
-test authentication [rules](/docs/laravel/v1/laravel/auth/configuration#rules),
+the [Directory Emulator](/docs/laravel/v1/testing#directory-emulator). Using it, we can
+test authentication [rules](/docs/laravel/v1/auth/configuration#rules),
 [scopes](/docs/laravel/v1/models#query-scopes) and group memberships. 
 
 ## Getting Started {#getting-started}
@@ -159,7 +159,7 @@ Fourth, we are sending a post request to our `login` page, with our LDAP users e
 The password can be anything, since we asserted above (using the `actingAs()` method) that
 the user **will** pass, regardless of what password we use.
 
-If your application has [password synchronization](/docs/laravel/v1/laravel/auth/configuration/#database)
+If your application has [password synchronization](/docs/laravel/v1/auth/configuration/#database)
 enabled, this is a good place to send various passwords and assert that the hashes
 match after a successful login.
 

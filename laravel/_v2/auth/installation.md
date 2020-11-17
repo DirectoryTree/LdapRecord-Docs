@@ -7,7 +7,7 @@ section: content
 
 # Authentication Installation
 
-If you are using [database synchronization](/docs/laravel/v2/laravel/auth#database), you must publish the
+If you are using [database synchronization](/docs/laravel/v2/auth#database), you must publish the
 included migrations to add the following database columns to your `users` table:
 
 Column | Reason |

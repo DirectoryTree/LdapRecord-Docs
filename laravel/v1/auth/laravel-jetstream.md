@@ -327,7 +327,7 @@ This feature is ideal for environments where:
 
 ## Eloquent Model Binding {#model-binding}
 
-If you are using [database synchronization](/docs/laravel/v1/laravel/auth#database), model binding allows
+If you are using [database synchronization](/docs/laravel/v1/auth#database), model binding allows
 you to access the **currently authenticated user's** LdapRecord model from their Eloquent
 model. This grants you access to their LDAP data whenever you need it.
 
@@ -378,7 +378,7 @@ $groups = $user->ldap->groups()->get();
 
 When using Laravel Jetstream, LDAP error messages will now be displayed automatically
 to users. You do not need to configure or include the `ListensForLdapBindFailure`
-trait as you would using [Laravel UI](/docs/laravel/v1/laravel/auth/laravel-ui/#displaying-ldap-error-messages)
+trait as you would using [Laravel UI](/docs/laravel/v1/auth/laravel-ui/#displaying-ldap-error-messages)
 on the `LoginController`.
 
 ### Altering the Response

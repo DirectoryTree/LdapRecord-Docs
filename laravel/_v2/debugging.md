@@ -59,7 +59,7 @@ To debug issues logging in, its recommended to first complete the following step
 1. Enabled logging via the `logging` key inside of your `config/ldap.php` file <br/> 
    (or by enabling it via your `.env` by using the `LDAP_LOGGING` key)
 2. Clear your configurations cache (if enabled) by running the `php artisan config:clear` command
-3. Add the `ListensForLdapBindFailure` [trait](/docs/laravel/v2/laravel/auth/setup/#displaying-ldap-error-messages) onto your `LoginController`
+3. Add the `ListensForLdapBindFailure` [trait](/docs/laravel/v2/auth/setup/#displaying-ldap-error-messages) onto your `LoginController`
 4. Attempt logging in again
 
 After completing the above, the first thing to lookout for is whether a

@@ -109,7 +109,7 @@ As you can see above, a `database` array is used to configure the association be
 The `database => model` key is the class name of the [Eloquent model](https://laravel.com/docs/laravel/v2/eloquent) that will be
 used for creating and retrieving LDAP users from your applications database.
 
-> Be sure to add the required [trait and interface](/docs/laravel/v2/laravel/auth/installation) to this model as shown in the installation guide.
+> Be sure to add the required [trait and interface](/docs/laravel/v2/auth/installation) to this model as shown in the installation guide.
 
 ### Sync Password Column {#database-password-column}
 
@@ -249,7 +249,7 @@ Here is a synchronized database provider fully configured with all available opt
 ## Attribute Handlers {#attribute-handlers}
 
 If you require logic for synchronizing attributes when users sign into your application or are
-being [imported](/docs/laravel/v2/laravel/auth/importing), you can create an attribute handler class
+being [imported](/docs/laravel/v2/auth/importing), you can create an attribute handler class
 responsible for setting / synchronizing your database models attributes from their
 LDAP model.
 

@@ -186,7 +186,7 @@ This feature is ideal for environments where:
 
 ## Eloquent Model Binding {#model-binding}
 
-If you are using [database synchronization](/docs/laravel/v1/laravel/auth#database), model binding allows
+If you are using [database synchronization](/docs/laravel/v1/auth#database), model binding allows
 you to access the **currently authenticated user's** LdapRecord model from their Eloquent
 model. This grants you access to their LDAP data whenever you need it.
 
