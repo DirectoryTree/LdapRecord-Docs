@@ -324,13 +324,13 @@ $user = User::where('cn', '=', 'jdoe')->first();
 $freshUser = $user->fresh();
 ```
 
-If you would like to re-retrieve the existing model, call the `synchronize()` method.
+If you would like to re-retrieve the existing model, call the `refresh()` method.
 This will re-retrieve the models attributes from the directory:
 
 ```php
 $user = User::where('cn', '=', 'jdoe')->first();
 
-$user->synchronize();
+$user->refresh();
 ```
 
 ### Collections {#collections}

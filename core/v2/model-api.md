@@ -69,6 +69,7 @@ section: content
 <a href="#newInstance">newInstance</a>
 <a href="#newQuery">newQuery</a>
 <a href="#newQueryWithoutScopes">newQueryWithoutScopes</a>
+<a href="#refresh">refresh</a>
 <a href="#rename">rename</a>
 <a href="#save">save</a>
 <a href="#setAttribute">setAttribute</a>
@@ -80,7 +81,6 @@ section: content
 <a href="#setModifications">setModifications</a>
 <a href="#setVisible">setVisible</a>
 <a href="#siblings">siblings</a>
-<a href="#synchronize">synchronize</a>
 <a href="#update">update</a>
 <a href="#updateAttribute">updateAttribute</a>
 </p>
@@ -875,6 +875,16 @@ Create a new model query **without** global scopes:
 $results = $model->newQueryWithoutScopes()->get();
 ```
 
+#### `refresh` {#refresh}
+
+Refresh a models attributes by re-retrieving them from your LDAP directory.
+
+This will affect the current model instance:
+
+```php
+$model->refresh();
+```
+
 #### `rename` {#rename}
 
 Rename a model and keep it's container location:
@@ -1033,16 +1043,6 @@ Create a new query to retrieve a models siblings:
 
 ```php
 $siblings = $model->siblings()->get();
-```
-
-#### `synchronize` {#synchronize}
-
-Refresh a models attributes by re-retrieving them from your LDAP directory.
-
-This will affect the current model instance:
-
-```php
-$model->synchronize();
 ```
 
 #### `update` {#update}
