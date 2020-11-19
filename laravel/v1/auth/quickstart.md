@@ -134,7 +134,6 @@ We will call the above in our `AuthServiceProvider.php` file, inside the `boot()
 // ...
 use Laravel\Fortify\Fortify;
 use Illuminate\Support\Facades\Auth;
-use LdapRecord\Models\ActiveDirectory\User as LdapUser;
 
 class AuthServiceProvider extends ServiceProvider
 {
