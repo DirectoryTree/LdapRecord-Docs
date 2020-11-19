@@ -43,6 +43,7 @@ method in our `AuthServiceProvider.php` file:
 
 // ...
 use Laravel\Fortify\Fortify;
+use Illuminate\Support\Facades\Auth;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -126,18 +127,27 @@ and setup our authentication callback using the `Fortify::authenticateUsing()` m
 ```php
 // app/Providers/AuthServiceProvider.php
 
-public function boot()
+// ...
+use Laravel\Fortify\Fortify;
+use Illuminate\Support\Facades\Auth;
+
+class AuthServiceProvider extends ServiceProvider
 {
-    $this->registerPolicies();
+    // ...
 
-    Fortify::authenticateUsing(function ($request) {
-        $validated = Auth::validate([
-            'samaccountname' => $request->username,
-            'password' => $request->password
-        ]);
+    public function boot()
+    {
+        $this->registerPolicies();
 
-        return $validated ? Auth::getLastAttempted() : null;
-    });
+        Fortify::authenticateUsing(function ($request) {
+            $validated = Auth::validate([
+                'samaccountname' => $request->username,
+                'password' => $request->password
+            ]);
+
+            return $validated ? Auth::getLastAttempted() : null;
+        });
+    }
 }
 ```
 
@@ -284,22 +294,30 @@ you insert into the `Auth::validate()` method in your `Fortify::authenticateUsin
 ```php
 // app/Providers/AuthServiceProvider.php
 
-public function boot()
+use Laravel\Fortify\Fortify;
+use Illuminate\Support\Facades\Auth;
+
+class AuthServiceProvider extends ServiceProvider
 {
-    $this->registerPolicies();
+    // ...
 
-    Fortify::authenticateUsing(function ($request) {
-        $validated = Auth::validate([
-            'mail' => $request->email,
-            'password' => $request->password,
-            'fallback' => [
-                'email' => $request->email,
+    public function boot()
+    {
+        $this->registerPolicies();
+
+        Fortify::authenticateUsing(function ($request) {
+            $validated = Auth::validate([
+                'mail' => $request->email,
                 'password' => $request->password,
-            ],
-        ]);
+                'fallback' => [
+                    'email' => $request->email,
+                    'password' => $request->password,
+                ],
+            ]);
 
-        return $validated ? Auth::getLastAttempted() : null;
-    });
+            return $validated ? Auth::getLastAttempted() : null;
+        });
+    }
 }
 ```
 
