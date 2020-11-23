@@ -12,6 +12,7 @@ section: content
 - [Executing](#executing-searches)
 - [Limit](#limit)
 - [Wheres](#wheres)
+- [All Operators](#operators)
 - [Nested Filters](#nested-filters)
 - [Raw Filters](#raw-filters)
 - [Paginating](#paginating)
@@ -175,6 +176,40 @@ $query->where([
    ['cn', '=', 'John Doe'],
    ['manager', '!', 'Suzy Doe'],
 ]);
+```
+
+### All Operators {#operators}
+
+Here is a list of all supported operators:
+
+```php
+$query->where('field', '=', 'value');
+
+$query->where('field', '!', 'value');
+// Alias for above.
+$query->where('field', '!=', 'value');
+
+$query->where('field', '*');
+
+$query->where('field', '!*', 'value');
+
+$query->where('field', '>=', 'value');
+
+$query->where('field', '<=', 'value');
+
+$query->where('field', '~=', 'value');
+
+$query->where('field', 'starts_with', 'value');
+
+$query->where('field', 'not_starts_with', 'value');
+
+$query->where('field', 'ends_with', 'value');
+
+$query->where('field', 'not_ends_with', 'value');
+
+$query->where('field', 'contains', 'value');
+
+$query->where('field', 'not_contains', 'value');
 ```
 
 #### Where Starts With
