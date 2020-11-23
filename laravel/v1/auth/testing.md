@@ -101,7 +101,7 @@ class LdapAuthenticationTest extends TestCase
 
         $this->assertInstanceOf(\App\User::class, $user);
         $this->assertEquals($ldapUser->mail[0], $user->email);
-        $this->assertEquals($ldapUser->cn[0], $ldapUser->name);
+        $this->assertEquals($ldapUser->cn[0], $user->name);
     }
 }
 ```
@@ -170,7 +170,7 @@ $user = Auth::user();
 
 $this->assertInstanceOf(\App\User::class, $user);
 $this->assertEquals($ldapUser->mail[0], $user->email);
-$this->assertEquals($ldapUser->cn[0], $ldapUser->name);
+$this->assertEquals($ldapUser->cn[0], $user->name);
 ```
 
 Finally, we'll check to make sure we can retrieve the successfully authenticated
@@ -258,7 +258,7 @@ public function test_auth_works()
 
     $this->assertInstanceOf(\App\User::class, $user);
     $this->assertEquals($ldapUser->mail[0], $user->email);
-    $this->assertEquals($ldapUser->cn[0], $ldapUser->name);
+    $this->assertEquals($ldapUser->cn[0], $user->name);
 }
 ```
 
@@ -370,7 +370,7 @@ public function test_auth_works()
 
     $this->assertInstanceOf(\App\User::class, $user);
     $this->assertEquals($ldapUser->mail[0], $user->email);
-    $this->assertEquals($ldapUser->cn[0], $ldapUser->name);
+    $this->assertEquals($ldapUser->cn[0], $user->name);
 }
 ```
 
