@@ -39,6 +39,24 @@ Due to the above change, the following methods **will throw an exception** upon 
 - `$model->rename()`
 - `$model->move()`
 
+```php
+// Before...
+try {
+  if ($model->save()) {
+    // 
+  }
+} catch (\LdapRecord\LdapRecordException $ex) {
+  // 
+}
+
+// After...
+try {
+  $model->save();
+} catch (\LdapRecord\LdapRecordException $ex) {
+  // 
+}
+```
+
 The follwowing static methods **will also throw an exception** upon failure:
 
 > **Important**: These methods maintain their return value from v1.
