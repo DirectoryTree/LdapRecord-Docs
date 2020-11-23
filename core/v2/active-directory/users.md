@@ -13,6 +13,8 @@ section: content
   - [Changing Passwords](#changing-passwords)
   - [Resetting Passwords](#resetting-passwords)
   - [Password Policy Errors](#password-policy-errors)
+  - [Check if a user is locked out](#checking-user-lockout)
+  - [Getting all locked out users](#getting-locked-out-users)
   - [Unlock Locked Out User Account](#unlock-user-account)
   - [Extend User Password Expiration](#password-extension)
   - [User Must Change Password at Next Logon](#password-reset-on-next-login)
@@ -244,9 +246,38 @@ try {
 }
 ```
 
+### Check if a user is locked out {#checking-user-lockout}
+
+To check if a user is locked out, verify that the `lockouttime` attribute is greater than `0` (zero):
+
+```php
+$user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
+
+if ($user->lockouttime[0] ?? 0 > 0) {
+    // User is locked out.
+}
+
+if ($user->getFirstAttribute('lockouttime') > 0) {
+    // User is locked out.
+}
+```
+
+### Getting all locked out users {#getting-locked-out-users}
+
+To retrieve all currently locked out users, query for all users with a `lockouttime` greater or equal to `1` (one):
+
+```php
+$lockedOutUsers = User::where('lockouttime', '>=', '1')->get();
+```
+
 ### Unlock Locked Out User Account  {#unlock-user-account}
 
 If a user has been locked out, set the `lockouttime` attribute to `0` (zero):
+
+> **Note**: Updating this attribute in Active Directory will also
+> reset the users `badPwdCount` attribute to `0` (zero).
+>
+> For more information, see the [Microsoft Documentation](https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc775412(v=ws.10)?redirectedfrom=MSDN#account-lockout-values).
 
 ```php
 $user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
@@ -285,17 +316,15 @@ Value | Meaning |
 
 > **Important**:
 >
-> - The `pwdlastset` attribute can only be modified by domain administrators
+> - The `pwdlastset` attribute can only be modified by domain administrators.
 > - If toggled on, the Active Directory user **will not** pass LDAP authentication
->   until they visit a domain joined computer and update their password
+>   until they visit a domain joined computer and update their password.
 
 ```php
 $user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
 
 // The user must change their password on next login.
-$user->pwdlastset = 0;
-
-$user->save();
+$user->update(['pwdlastset' => 0]);
 ```
 
 ## User Account Control {#uac}
