@@ -731,12 +731,10 @@ attribute, you must request the first key from it:
 $user = User::find('cn=John Doe,dc=acme,dc=org');
 
 // Get the users email address.
-echo $user->mail[0];
+echo $user->mail[0] ?? null;
 ```
 
-However, the above will cause an exception if the attribute does not exist.
-
-To work around this, we can use the `getFirstAttribute()` method:
+Or if you'd prefer, use the `getFirstAttribute()` method:
 
 ```php
 $user = User::find('cn=John Doe,dc=acme,dc=org');
@@ -819,10 +817,6 @@ to a hyphen dynamically:
 $user = new User();
 
 $user->some_attribute = 'Value';
-
-// Returns 'Value'
-echo $user->some_attribute[0];
-echo $user->getAttribute('some-attribute')[0];
 ```
 
 Similarly, when retrieving attributes that contain a hyphen, use
@@ -831,9 +825,10 @@ an underscore instead:
 ```php
 $user = User::find('cn=John Doe,dc=acme,dc=org');
 
-// Both will act identically:
-echo $user->apple_user_homeurl[0];
-echo $user->getAttribute('apple-user-homeurl')[0];
+// Each method below will act identically:
+echo $user->some_attribute[0];
+echo $user->getAttribute('some-attribute')[0];
+echo $user->getFirstAttribute('some-attribute');
 ```
 
 ## Deleting Models {#deleting-models}
