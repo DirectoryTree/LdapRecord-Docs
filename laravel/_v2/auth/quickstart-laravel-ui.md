@@ -63,7 +63,8 @@ In this example, we will create a provider named `ldap`:
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
     ],
 
-// ...
+    // ...
+],
 ```
 
 If you are using OpenLDAP, you must switch the providers `model` option to:
@@ -83,7 +84,8 @@ Once you have setup your `ldap` provider, you must update the `provider` value i
         'provider' => 'ldap', // Changed to 'ldap'
     ],
 
-// ...
+    // ...
+],
 ```
 
 ### Step 2 - Setting up your LoginController {#plain-controller-setup}
@@ -212,8 +214,9 @@ Once you have setup your `ldap` provider, you must update the `provider` value i
         'driver' => 'session',
         'provider' => 'ldap', // Changed to 'ldap'
     ],
-    
+
     // ...
+],
 ```
 
 ### Step 3 - Setting up your database user model {#database-user-model-setup}

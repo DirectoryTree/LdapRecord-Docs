@@ -97,7 +97,8 @@ Once you have setup your `ldap` provider, you must update the `provider` value i
         'provider' => 'ldap', // Changed to 'ldap'
     ],
 
-// ...
+    // ...
+],
 ```
 
 ### Step 2 - Setting up Laravel Fortify {#plain-fortify-setup}
