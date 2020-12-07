@@ -274,9 +274,8 @@ $lockedOutUsers = User::where('lockouttime', '>=', '1')->get();
 
 If a user has been locked out, set the `lockouttime` attribute to `0` (zero):
 
-> **Note**: Updating this attribute in Active Directory will also
-> reset the users `badPwdCount` attribute to `0` (zero).
->
+> Updating this attribute in Active Directory will also
+> reset the users `badPwdCount` attribute to `0` (zero). 
 > For more information, see the [Microsoft Documentation](https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc775412(v=ws.10)?redirectedfrom=MSDN#account-lockout-values).
 
 ```php

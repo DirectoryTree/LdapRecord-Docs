@@ -56,13 +56,13 @@ $group = Group::find('cn=Accounting,dc=local,dc=com');
 $members = $group->members()->get();
 ```
 
-> When getting members, a collection of various model objects may be returned, such as:
+> When getting members, a collection of various models may be returned, such as:
 >
 > - `LdapRecord\Models\ActiveDirectory\User`
 > - `LdapRecord\Models\ActiveDirectory\Group`
 > - `LdapRecord\Models\ActiveDirectory\Contact`
 >
-> To use different models, override the `members` relationship.
+> To use different models, override the `members` relationship method.
 
 #### Getting Members Recursively {#getting-all-members}
 

@@ -420,7 +420,7 @@ public function test_windows_authentication_works()
 {
     DirectoryEmulator::setup('default');
 
-    $user = User::create([
+    $ldapUser = User::create([
         'cn' => $this->faker->name,
         'mail' => $this->faker->email,
         'objectguid' => $this->faker->uuid,
