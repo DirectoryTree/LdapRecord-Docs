@@ -88,7 +88,7 @@ class User extends Model
 }
 ```
 
-> You may want these models to extend the [built-in models](/docs/laravel/v1/models/#predefined-models), as they
+> You may want these models to extend the [built-in models](/docs/core/v1/models/#predefined-models), as they
 > include functionality that you do not need to build yourself. It's completely up to you.
 
 ### Configuring the Authentication Guards {#configuring-auth-guards}
