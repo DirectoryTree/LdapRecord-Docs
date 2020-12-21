@@ -30,5 +30,5 @@ For this example, we will change our default `web` guard to use our new `ldap` p
 LdapRecord-Laravel supports both [Laravel Jetstream](https://jetstream.laravel.com) and [Laravel UI](https://github.com/laravel/ui)
 (deprecated) out-of-the-box. Select whichever authentication scaffolding you feel suits your application best.
 
+- [Laravel UI](/docs/laravel/v1/auth/laravel-ui)
 - [Laravel Jetstream](/docs/laravel/v1/auth/laravel-jetstream)
-- [Laravel UI (deprecated)](/docs/laravel/v1/auth/laravel-ui)
