@@ -59,7 +59,7 @@ LDAP_SSL=false
 LDAP_TLS=false
 ```
 
-View the core [configuration](/docs/laravel/v1/configuration) documentation for more information on each option.
+View the core [configuration](/docs/core/v1/configuration) documentation for more information on each option.
 
 ### Step 4 - Use LdapRecord {#usage}
 

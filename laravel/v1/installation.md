@@ -30,7 +30,7 @@ php artisan vendor:publish --provider="LdapRecord\Laravel\LdapServiceProvider"
 
 Inside the published `config/ldap.php` file, setup your LDAP connections, or paste the following in your `.env` file:
 
-> Review the [configuration documentation](/docs/laravel/v1/configuration) to see what each option is used for.
+> Review the [configuration documentation](/docs/core/v1/configuration) to see what each option is used for.
 
 ```dotenv
 LDAP_LOGGING=true
