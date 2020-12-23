@@ -19,7 +19,7 @@ section: content
 LdapRecord-Laravel prides itself on giving you a great and easy testing experience using
 the [Directory Emulator](/docs/laravel/v1/testing#directory-emulator). Using it, we can
 test authentication [rules](/docs/laravel/v1/auth/configuration#rules),
-[scopes](/docs/laravel/v1/models#query-scopes) and group memberships. 
+[scopes](/docs/core/v1/models#query-scopes) and group memberships. 
 
 ## Getting Started {#getting-started}
 

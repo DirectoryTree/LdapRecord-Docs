@@ -327,7 +327,7 @@ If you are using OpenLDAP, you must switch the providers `model` option to:
 LdapRecord\Models\OpenLDAP\User::class
 ```
 
-If you are using a different LDAP type, you will need to [define your own LDAP model](/docs/laravel/v1/models/#defining-models)
+If you are using a different LDAP type, you will need to [define your own LDAP model](/docs/core/v1/models/#defining-models)
 and insert it there. This model is used for locating the authenticating user in your LDAP directory.
 
 Once you have setup your `ldap` provider, you must update the `provider` value in the `web` guard:

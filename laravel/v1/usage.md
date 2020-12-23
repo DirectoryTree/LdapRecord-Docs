@@ -23,7 +23,7 @@ Once you've configured your connections in your `config/ldap.php` file,
 you're ready to start running queries and operations on your LDAP server.
 
 If you're connecting to an Active Directory or OpenLDAP server, you may utilize the
-[built-in models](/docs/laravel/v1/models#predefined-models) to get up and running right away.
+[built-in models](/docs/core/v1/models#predefined-models) to get up and running right away.
 
 If you would like to create your own models, you can generate one via the `make:ldap-model` command:
 
@@ -125,7 +125,7 @@ Sometimes you may need to utilize several of the same query filters around your 
 Model scopes are a perfect for this, as you can extract these filters into its own class
 and apply it to a model query.
 
-> Be sure to take a peek at the [query scopes](/docs/laravel/v1/models#query-scopes)
+> Be sure to take a peek at the [query scopes](/docs/core/v1/models#query-scopes)
 > documentation for a more in-depth look.
 
 To create a new model scope, call the command:

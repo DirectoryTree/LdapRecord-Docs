@@ -145,7 +145,7 @@ The above scheduled import command will:
 - Soft-Delete user models who have been deactived in your LDAP directory (if you're using [Eloquent Soft Deletes](https://laravel.com/docs/laravel/v1/eloquent#soft-deleting))
 - Only import users that have an `objectclass` equal to user
 
-> It's recommended to use [model query scopes](/docs/laravel/v1/models#query-scopes) instead of the `--filter`
+> It's recommended to use [model query scopes](/docs/core/v1/models#query-scopes) instead of the `--filter`
 > option on your configured authentication LdapRecord model so LDAP users signing into your
 > application are applied the same search filter.
 

@@ -63,7 +63,7 @@ View the core [configuration](/docs/core/v1/configuration) documentation for mor
 
 ### Step 4 - Use LdapRecord {#usage}
 
-To begin, you may either use the built-in [models that LdapRecord comes with](/docs/laravel/v1/models#predefined-models),
+To begin, you may either use the built-in [models that LdapRecord comes with](/docs/core/v1/models#predefined-models),
 or you may create your own models that reference the connection you have created in your `config/ldap.php` file.
 
 Call the below command to create a new LdapRecord model:

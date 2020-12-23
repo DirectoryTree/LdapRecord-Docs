@@ -78,7 +78,7 @@ with a user who has already been imported into your local applications database.
 ## Using an Organizational Unit {#using-organizational-unit}
 
 To use an Organizational Unit which contains your users that you want to
-allow sign in to your application, we will leverage LdapRecord [model scopes](/docs/laravel/v1/models#query-scopes).
+allow sign in to your application, we will leverage LdapRecord [model scopes](/docs/core/v1/models#query-scopes).
 
 In our application, we have an Organizational Unit named `Accounting` with the following Distinguished Name:
 
@@ -126,7 +126,7 @@ class OnlyAccountingUsers implements Scope
 
 After modifying the scope, we can now add the scope to our LDAP user model.
 
-If you are using one of the [built-in predefined models](/docs/laravel/v1/models#predefined-models), you 
+If you are using one of the [built-in predefined models](/docs/core/v1/models#predefined-models), you 
 can add the global scope to the model inside your `AuthServiceProvider::boot()` method:
 
 ```php

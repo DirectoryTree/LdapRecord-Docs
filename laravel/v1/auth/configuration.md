@@ -48,7 +48,7 @@ array, and paste the following `ldap` provider:
 
 If your application requires more than one LDAP connection, you must create a new provider for each connection.
 
-This new provider must have its own unique `model` class set which must use your [alternate configured connection](/docs/laravel/v1/models#connections)
+This new provider must have its own unique `model` class set which must use your [alternate configured connection](/docs/core/v1/models#connections)
 using the `$connection` property.
 
 In the scenario of having multiple LDAP connections, it may be helpful to namespace the LDAP models
@@ -66,7 +66,7 @@ The `driver` option must be `ldap` as this is what indicates to Laravel the prop
 
 ### Model {#plain-model}
 
-The `model` option must be the class name of your [LdapRecord model](/docs/laravel/v1/models). This model will be used
+The `model` option must be the class name of your [LdapRecord model](/docs/core/v1/models). This model will be used
 for fetching users from your directory.
 
 ### Rules {#plain-rules}
