@@ -27,7 +27,7 @@ section: content
 
 Before you begin, this guide assumes you have published Laravel's default authentication scaffolding using the `laravel/ui` package.
 
-If you haven't done this yet, please follow Laravel's [auth scaffolding guide](https://laravel.com/docs/laravel/v1/7.x/authentication) 
+If you haven't done this yet, please follow Laravel's [auth scaffolding guide](https://laravel.com/docs/7.x/authentication) 
 to get started, then head back here once done.
 
 ## Debugging {#debugging}
