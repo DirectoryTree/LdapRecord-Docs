@@ -119,7 +119,7 @@ However, the default published migration is not compatible with storing string-b
 
 This means you must change the `user_id` column from an `integer` field to a `uuid`.
 
-From:
+**From**:
 
 ```php
 public function up()
@@ -132,7 +132,7 @@ public function up()
 }
 ```
 
-To:
+**To**:
 
 ```php
 public function up()
