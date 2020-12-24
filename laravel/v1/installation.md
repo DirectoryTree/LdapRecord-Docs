@@ -46,7 +46,7 @@ LDAP_TLS=false
 ```
 
 The `default` connection you specify is the LDAP connection that will be used for
-models you define that do not have a [configured connection](/docs/laravel/v1/models#connections).
+models you define that do not have a [configured connection](/docs/core/v1/models#connections).
 
 If you're using multiple LDAP connections, you will have to manually create and assign
 unique `.env` variables for the above keys and then update the `config/ldap.php`
