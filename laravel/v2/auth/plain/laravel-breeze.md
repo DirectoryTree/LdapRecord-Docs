@@ -46,6 +46,30 @@ we will override the `authenticate` method in the `LoginRequest`, and
 pass in an array with the `mail` key (which is the attribute we are
 wanting to retrieve our LDAP users by) and the users `password`:
 
+<div class="files">
+    <div class="ellipsis"></div>
+
+    <div class="folder folder--open">
+        app
+
+        <div class="folder folder--open">
+            Http
+
+             <div class="folder folder--open">
+                Requests
+
+                <div class="folder folder--open">
+                    Auth
+
+                    <div class="file">LoginRequest.php</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ellipsis"></div>
+</div>
+
 ```php
 // app/Http/Requests/Auth/LoginRequest.php
 
