@@ -15,6 +15,12 @@ section: content
  - [User Migration](#user-migration)
  - [Login Form](#login-form)
  - [Login Request](#login-request)
+- [Fallback Authentication](#fallback-auth)
+- [Eloquent Model Binding](#model-binding)
+- [Displaying LDAP Error Messages](#displaying-ldap-error-messages)
+ - [Changing The Input Field ](#changing-the-input-field)
+ - [Changing The Error Messages](#changing-the-error-messages)
+ - [Altering The Response](#altering-the-response)
 
 ## Introduction {#introduction}
 
@@ -47,6 +53,30 @@ For LdapRecord to properly locate the user in your directory during sign in,
 we will override the `authenticate` method in the `LoginRequest`, and
 pass in an array with the `mail` key (which is the attribute we are
 wanting to retrieve our LDAP users by) and the users `password`:
+
+<div class="files">
+    <div class="ellipsis"></div>
+
+    <div class="folder folder--open">
+        app
+
+        <div class="folder folder--open">
+            Http
+
+             <div class="folder folder--open">
+                Requests
+
+                <div class="folder folder--open">
+                    Auth
+
+                    <div class="file">LoginRequest.php</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ellipsis"></div>
+</div>
 
 ```php
 // app/Http/Requests/Auth/LoginRequest.php
@@ -265,3 +295,282 @@ public function authenticate()
 ```
 
 You are now ready to login LDAP users by their username!
+
+## Fallback Authentication {#fallback-auth}
+
+Database fallback allows the authentication of local database users if:
+
+- LDAP connectivity is not present.
+- **Or**; An LDAP user cannot be found.
+
+For example, given the following `users` database table:
+
+id | name | email | password | guid | domain |
+--- | --- | --- | --- |
+1 | Steve Bauman | sbauman@outlook.com | ... | `null` | `null` |
+
+If a user attempts to login with the above email address and this user does
+not exist inside of your LDAP directory, then standard Eloquent authentication
+will be performed instead.
+
+This feature is ideal for environments where:
+
+- LDAP server connectivity may be intermittent.
+- **Or**; You have regular users registering normally in your application.
+
+To enable this feature, you must define a `fallback` array inside of the `$credentials`
+you pass to the `Auth::attempt()` method inside of your `LoginRequest`:
+
+```php
+// app/Http/Requests/Auth/LoginRequest.php
+
+public function authenticate()
+{
+    $this->ensureIsNotRateLimited();
+
+    $credentials = [
+        'mail' => $this->email,
+        'password' => $this->password,
+        'fallback' => [
+            'email' => $this->email,
+            'password' => $this->password,
+        ],
+    ];
+
+    if (! Auth::attempt($credentials, $this->filled('remember'))) {
+        RateLimiter::hit($this->throttleKey());
+
+        throw ValidationException::withMessages([
+            'email' => __('auth.failed'),
+        ]);
+    }
+
+    RateLimiter::clear($this->throttleKey());
+}
+```
+
+> If you would like your LDAP users to be able to sign in to your application
+> when LDAP connectivity fails or is not present, you must enable the
+> [sync passwords](#database-password-sync) option, so your LDAP
+> users can sign in using their last used password. 
+> <br/><br/>
+> If an LDAP users password has not been synchronized, they will not be able to sign in.
+
+## Eloquent Model Binding {#model-binding}
+
+Model binding allows you to access the currently authenticated user's LdapRecord model
+from their Eloquent model. This grants you access to their LDAP model whenever you need it.
+
+To begin, insert the `LdapRecord\Laravel\Auth\HasLdapUser` trait onto your `User` eloquent model:
+
+```php
+// app/Models/User.php
+
+// ...
+
+use LdapRecord\Laravel\Auth\HasLdapUser;
+use LdapRecord\Laravel\Auth\LdapAuthenticatable;
+use LdapRecord\Laravel\Auth\AuthenticatesWithLdap;
+
+class User extends Authenticatable implements LdapAuthenticatable
+{
+    use HasFactory, Notifiable, AuthenticatesWithLdap, HasLdapUser;
+
+    // ...
+}
+```
+
+Now, after an LDAP user logs into your application, their LdapRecord model will be
+available on their Eloquent model via the `ldap` property:
+
+> If their LDAP model cannot be located, the returned will be `null`.
+
+```php
+// Instance of App\User:
+$user = Auth::user();
+
+// Instance of LdapRecord\Models\Model:
+$user->ldap;
+
+// Get LDAP user attributes:
+echo $user->ldap->getFirstAttribute('cn');
+
+// Get LDAP user relationships:
+$groups = $user->ldap->groups()->get();
+```
+
+> This property uses deferred loading -- which means that the users LDAP model only
+> gets requested from your server when you attempt to access it. This prevents
+> loading the model unnecessarily when it is not needed in your application.
+
+## Displaying LDAP Error Messages {#displaying-ldap-error-messages}
+
+When a user fails LDAP authentication due to their password / account expiring, account
+lockout, or their password requiring to be changed, specific error codes will be sent
+back from your server. LdapRecord can interpret these for you and display
+helpful error messages to users upon failing authentication.
+
+![LDAP Error Message](/docs/laravel/v2/img/ldap-error-message.png "Screenshot of an LDAP error message being displayed")
+
+To enable this feature, you will have to:
+
+1. Navigate to the scaffolded `AuthenticatedSessionController.php`
+2. Insert the  `ListensForLdapBindFailure` trait
+3. Call the `listenForLdapBindFailure()` method in the constructor:
+
+<div class="files">
+    <div class="ellipsis"></div>
+
+    <div class="folder folder--open">
+        app
+
+        <div class="folder folder--open">
+            Http
+
+             <div class="folder folder--open">
+                Controllers
+
+                <div class="folder folder--open">
+                    Auth
+
+                    <div class="file">AuthenticatedSessionController.php</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ellipsis"></div>
+</div>
+
+```php
+// app/Http/Controllers/Auth/AuthenticatedSessionController.php
+
+use LdapRecord\Laravel\Auth\ListensForLdapBindFailure;
+
+class AuthenticatedSessionController extends Controller
+{
+    use ListensForLdapBindFailure;
+
+    public function __construct()
+    {
+        $this->listenForLdapBindFailure();
+    }
+
+    // ...
+}
+```
+
+### Changing The Input Field {#changing-the-input-field}
+
+By default, LdapRecord-Laravel will attach the LDAP error to the `email` input field.
+If you're using a different input field, you can customize it by adding a `username` property to the `AuthenticatedSessionController`:
+
+```php
+use LdapRecord\Laravel\Auth\ListensForLdapBindFailure;
+
+class AuthenticatedSessionController extends Controller
+{
+    use ListensForLdapBindFailure;
+
+    protected $username = 'username';
+
+    public function __construct()
+    {
+        $this->listenForLdapBindFailure();
+    }
+
+    // ...
+}
+```
+
+### Changing The Error Messages {#changing-the-error-messages}
+
+If you need to modify the translations of these error messages, create a new translation
+file named `errors.php` in your `resources` directory at the following path:
+
+> The `vendor` directory (and each sub-directory) will have to be created manually.
+
+<div class="files">
+    <div class="ellipsis"></div>
+
+    <div class="folder folder--open">
+        resources
+
+        <div class="ellipsis"></div>
+        
+        <div class="folder folder--open">
+            lang
+
+            <div class="ellipsis"></div>
+
+            <div class="folder folder--open">
+                vendor
+
+                <div class="folder folder--open">
+                    ldap
+
+                    <div class="folder folder--open">
+                        en
+
+                        <div class="file">errors.php</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ellipsis"></div>
+</div>
+
+Then, paste in the following translations in the file and modify where necessary:
+
+```php
+<?php
+
+return [
+    'user_not_found' => 'User not found.',
+    'user_not_permitted_at_this_time' => 'Not permitted to logon at this time.',
+    'user_not_permitted_to_login' => 'Not permitted to logon at this workstation.',
+    'password_expired' => 'Your password has expired.',
+    'account_disabled' => 'Your account is disabled.',
+    'account_expired' => 'Your account has expired.',
+    'user_must_reset_password' => 'You must reset your password before logging in.',
+    'user_account_locked' => 'Your account is locked.',
+];
+```
+
+### Altering the Response {#altering-the-response}
+
+By default, when an LDAP bind failure occurs, a `ValidationException` will be thrown which will
+redirect users to your login page and display the error. If you would like to modify this
+behaviour, you will need to override the method `handleLdapBindError`.
+
+This method will include the error `$message` as the first parameter and the error `$code` as the second.
+This is useful for checking for specific Active Directory response codes and returning a response:
+
+```php
+use Illuminate\Validation\ValidationException;
+use LdapRecord\Laravel\Auth\ListensForLdapBindFailure;
+
+class AuthenticatedSessionController extends Controller
+{
+    use ListensForLdapBindFailure;
+    
+    protected function handleLdapBindError($message, $code = null)
+    {
+        if ($code == '773') {
+            // The users password has expired. Redirect them.
+            abort(redirect('/password-reset'));
+        }
+    
+        throw ValidationException::withMessages([
+            'email' => "Whoops! LDAP server cannot be reached.",
+        ]);
+    }
+
+    // ...
+}
+```
+
+> Refer to the [Password Policy Errors](/docs/core/v2/active-directory/users#password-policy-errors)
+> documentation to see what each code means.

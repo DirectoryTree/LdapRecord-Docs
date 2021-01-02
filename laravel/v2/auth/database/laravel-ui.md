@@ -14,6 +14,8 @@ section: content
 - [Fallback Authentication](#fallback-auth)
 - [Eloquent Model Binding](#model-binding)
 - [Displaying LDAP Error Messages](#displaying-ldap-error-messages)
+ - [Changing The Error Messages](#changing-the-error-messages)
+ - [Altering The Response](#altering-the-response)
 
 ## Introduction {#introduction}
 
@@ -159,8 +161,25 @@ You can now sign in to your application using usernames instead of email address
 
 ## Fallback Authentication {#fallback-auth}
 
-Database fallback allows the authentication of local database users if **LDAP
-connectivity is not present**, or **an LDAP user cannot be found**.
+Database fallback allows the authentication of local database users if:
+
+- LDAP connectivity is not present.
+- **Or**; An LDAP user cannot be found.
+
+For example, given the following `users` database table:
+
+id | name | email | password | guid | domain |
+--- | --- | --- | --- |
+1 | Steve Bauman | sbauman@outlook.com | ... | `null` | `null` |
+
+If a user attempts to login with the above email address and this user does
+not exist inside of your LDAP directory, then standard Eloquent authentication
+will be performed instead.
+
+This feature is ideal for environments where:
+
+- LDAP server connectivity may be intermittent.
+- **Or**; You have regular users registering normally in your application.
 
 To enable this feature, you must define a `fallback` array inside of the credentials
 you return from the `credentials()` method inside of your `LoginController`:
@@ -179,20 +198,6 @@ protected function credentials(Request $request)
 }
 ```
 
-For example, given the following `users` database table:
-
-id | name | email | password | guid | domain |
---- | --- | --- | --- |
-1 | Steve Bauman | sbauman@outlook.com | ... | `null` | `null` |
-
-If a user attempts to login with the above email address and this user does
-not exist inside of your LDAP directory, then standard Eloquent authentication
-will be performed instead.
-
-This feature is ideal for environments where:
-
-- LDAP server connectivity may be intermittent
-- Or; You have regular users registering normally in your application
 
 > If you would like your LDAP users to be able to sign in to your application
 > when LDAP connectivity fails or is not present, you must enable the
@@ -206,7 +211,7 @@ This feature is ideal for environments where:
 Model binding allows you to access the **currently authenticated user's** LdapRecord model
 from their Eloquent model. This grants you access to their LDAP model whenever you need it.
 
-To begin, insert the `LdapRecord\Laravel\Auth\HasLdapUser` trait onto your User model:
+To begin, insert the `LdapRecord\Laravel\Auth\HasLdapUser` trait onto your `User` eloquent model:
 
 ```php
 // app/User.php
@@ -231,13 +236,13 @@ available on their Eloquent model via the `ldap` property:
 > If their LDAP model cannot be located, the returned will be `null`.
 
 ```php
-// Instance of App\User
+// Instance of App\Models\User:
 $user = Auth::user();
 
-// Instance of App\Ldap\User
+// Instance of LdapRecord\Models\Model:
 $user->ldap;
 
-// Get LDAP user attributes
+// Get LDAP user attributes:
 echo $user->ldap->getFirstAttribute('cn');
 
 // Get LDAP user relationships:
@@ -254,6 +259,8 @@ When a user fails LDAP authentication due to their password / account expiring, 
 lockout, or their password requiring to be changed, specific error codes will be sent
 back from your server. LdapRecord can interpret these for you and display
 helpful error messages to users upon failing authentication.
+
+![LDAP Error Message](/docs/laravel/v2/img/ldap-error-message.png "Screenshot of an LDAP error message being displayed")
 
 To add this functionality, you must add the following trait to your `LoginController`:
 
@@ -285,7 +292,6 @@ you must modify the constructor and add the following method call to register th
 // app/Http/Controllers/Auth/LoginController.php
 
 // ...
-
 use LdapRecord\Laravel\Auth\ListensForLdapBindFailure;
 
 class LoginController extends Controller
@@ -303,47 +309,7 @@ class LoginController extends Controller
 }
 ```
 
-### Altering the Response
-
-By default, when an LDAP bind failure occurs, a `ValidationException` will be thrown which will
-redirect users to your login page and display the error. If you would like to modify this
-behaviour, you will need to override the method `handleLdapBindError`.
-
-This method will include the error message as the first parameter and the error code as the second.
-
-This is useful for checking for specific Active Directory response codes and returning a response:
-
-```php
-// app/Http/Controllers/Auth/LoginController.php
-
-// ...
-
-class LoginController extends Controller
-{
-    // ...
-
-    use ListensForLdapBindFailure {
-        handleLdapBindError as baseHandleLdapBindError;
-    }
-    
-    protected function handleLdapBindError($message, $code = null)
-    {
-        if ($code == '773') {
-            // The users password has expired. Redirect them.
-            abort(redirect('/password-reset'));
-        }
-    
-        $this->baseHandleLdapBindError($message, $code);
-    }
-   
-    // ...
-}
-```
-
-> Refer to the [Password Policy Errors](/docs/core/v2/active-directory/users#password-policy-errors)
-> documentation to see what each code means.
-
-### Changing the Error Messages
+### Changing The Error Messages {#changing-the-error-messages}
 
 If you need to modify the translations of these error messages, create a new translation
 file named `errors.php` in your `resources` directory at the following path:
@@ -398,3 +364,44 @@ return [
     'user_account_locked' => 'Your account is locked.',
 ];
 ```
+
+### Altering The Response {#altering-the-response}
+
+By default, when an LDAP bind failure occurs, a `ValidationException` will be thrown which will
+redirect users to your login page and display the error. If you would like to modify this
+behaviour, you will need to override the method `handleLdapBindError`.
+
+This method will include the error `$message` as the first parameter and the error `$code` as the second.
+This is useful for checking for specific Active Directory response codes and returning a response:
+
+```php
+// app/Http/Controllers/Auth/LoginController.php
+
+// ...
+use Illuminate\Validation\ValidationException;
+use LdapRecord\Laravel\Auth\ListensForLdapBindFailure;
+
+class LoginController extends Controller
+{
+    // ...
+
+    use ListensForLdapBindFailure;
+    
+    protected function handleLdapBindError($message, $code = null)
+    {
+        if ($code == '773') {
+            // The users password has expired. Redirect them.
+            abort(redirect('/password-reset'));
+        }
+    
+       throw ValidationException::withMessages([
+            'email' => "Whoops! LDAP server cannot be reached.",
+        ]);
+    }
+   
+    // ...
+}
+```
+
+> Refer to the [Password Policy Errors](/docs/core/v2/active-directory/users#password-policy-errors)
+> documentation to see what each code means.
