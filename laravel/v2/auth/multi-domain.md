@@ -13,7 +13,6 @@ section: content
  - [Configuring the Authentication Guards](#configuring-auth-guards)
 - [Authentication Approaches](#authentication-approaches)
 - [Updating Your Web Routes](#routes)
-- [Retrieving the Logged In User](#retrieving-the-logged-in-user)
 
 ## Introduction {#introduction}
 
@@ -214,19 +213,30 @@ if (Auth::attempt($credentials)) {
 Having multiple authentication guards means that we need to update the `auth` middleware
 that is covering our protected application routes inside of our `routes/web.php` file.
 
-Luckily, this middleware accepts a list of guards you would like to use. You will need to add
-both of the guards you created above for both LDAP domains to be able to access the same
-protected routes:
+Luckily, this middleware accepts a comma separated list of guards you would like to
+protect your routes by. You will need to add both of the guards you created above:
 
 > By default, if no guards are given to the Laravel `auth` middleware, it will attempt
-> to use the `default` guard configured - **we do not want this behaviour**.
+> to use the `default` guard configured inside of your `config/auth.php` file.
+
+**Before**:
 
 ```php
 // routes/web.php
 
-Route::group(function () {
+Route::middleware('auth')->group(function () {
+    // ...
+})
+```
+
+**After**:
+
+```php
+// routes/web.php
+
+Route::middleware('auth:alpha,bravo')->group(function () {
     // Both alpha and bravo domains can access these routes...
-})->middleware('auth:alpha,bravo');
+});
 ```
 
 If you would like to restrict routes to certain domains, only include
@@ -240,5 +250,8 @@ Route::group(function () {
 })->middleware('auth:alpha');
 ```
 
-This is extremely handy for permission management - as authenticated users from certain domains
-can only access the routes that have been defined for their domain.
+This is extremely handy for permission management - as authenticated
+users from certain domains can only access the routes that have
+been defined for their domain.
+
+You are now ready to authenticate users with multiple domains.
