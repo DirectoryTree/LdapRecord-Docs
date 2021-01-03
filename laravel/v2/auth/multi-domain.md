@@ -242,6 +242,3 @@ Route::group(function () {
 
 This is extremely handy for permission management - as authenticated users from certain domains
 can only access the routes that have been defined for their domain.
-
-## Retrieving the Logged In User {#retrieving-the-logged-in-user}
-
