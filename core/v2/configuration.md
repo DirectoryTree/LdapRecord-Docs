@@ -17,12 +17,15 @@ section: content
 - [Follow Referrals](#follow-referrals)
 - [Options](#options)
 
-To configure your LDAP connections, provide an array with key-value pairs to set various parameters.
+To configure your LDAP connections, you must provide an array to the
+`Connection` class with key-value pairs to set various options.
 
-Here is a list of all parameters.
+Below is a list of all available options:
 
 ```php
-$config = [
+use LdapRecord\Connection;
+
+$connection = new Connection([
     // Mandatory Configuration Options
     'hosts'            => ['192.168.1.1'],
     'base_dn'          => 'dc=local,dc=com',
@@ -42,9 +45,7 @@ $config = [
         // See: http://php.net/ldap_set_option
         LDAP_OPT_X_TLS_REQUIRE_CERT => LDAP_OPT_X_TLS_HARD
     ]
-];
-
-$connection = new Connection($config);
+]);
 ```
 
 ### Hosts {#hosts}
@@ -61,8 +62,9 @@ respond in the configured `timeout`, the same operation will be attempted on the
 This automated fail-over process will continue for each host address, until a successful response is received.
 
 > **Important**:
-> - Do not prepend the `ldap://` or `ldaps://` protocol to your hosts. Use the `use_ssl` configuration option instead.
-> - Do not append your port (`:389`, `:636`, etc.) to your hosts. Use the `port` configuration option instead.
+>
+> - Do not append your port (`:389`, `:636`, etc.) to your hosts. <br/> Use the `port` configuration option instead.
+> - Do not prepend your protocol (`ldap://` or `ldaps://`) to your hosts. <br/> Use the `use_ssl` configuration option instead.
 
 ### Base Distinguished Name {#base-distinguished-name}
 
@@ -88,38 +90,49 @@ An example base DN would be `dc=local,dc=com`.
 This means, that all searches executed with LdapRecord will start at `dc=local,dc=com`
 as the root. This would allow all records *below* it to be retrieved from results.
 
-If you do not define a base DN, you will not retrieve any search results from queries.
-
-> Your base DN is **case insensitive**. You do not need to worry about incorrect casing.
+> **Important**:
+>
+> - If you do not define a base DN, you will not retrieve any search results from queries.
+> - Your base DN is **case insensitive**. You do not need to worry about incorrect casing.
 
 ### Username & Password {#username-amp-password}
 
 To connect to your LDAP server, a username and password is required to be able to query and run operations on your server(s).
 
-Additional Tips |
---- |
-The `username` option must be a users [Distinguished Name](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ldap/distinguished-names). If you are connecting to an Active Directory server, you may use a users [userPrincipalName](https://docs.microsoft.com/en-us/windows/win32/secauthn/user-name-formats#user-principal-name) (`username@domain.com`) or [Down-Level Logon Name](https://docs.microsoft.com/en-us/windows/win32/secauthn/user-name-formats#down-level-logon-name) (`DOMAIN\\username`) instead. |
-To run administration level operations, such as resetting passwords, this account **must** have the permissions to do so on your directory. |
+> **Important**: 
+>
+> - The `username` option **must** be a users [Distinguished Name](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ldap/distinguished-names)
+> - If however you are connecting to an Active Directory server, you may use a:
+>   - [userPrincipalName](https://docs.microsoft.com/en-us/windows/win32/secauthn/user-name-formats#user-principal-name) (`username@domain.com`)
+>   - [Down-Level Logon Name](https://docs.microsoft.com/en-us/windows/win32/secauthn/user-name-formats#down-level-logon-name) (`DOMAIN\\username`)
+> - To run administration level operations, such as resetting passwords, this account **must** have the permissions to do so on your directory.
 
 ### Port {#port}
 
-The port option is used for authenticating and binding to your LDAP server.
+The port option is used for opening a connection and binding to your LDAP server.
 
-The default ports are already used for non SSL and SSL connections (`389` and `636`).
+Default ports are already used for non SSL and SSL connections (`389` and `636`).
 
 Only insert a port if your LDAP server uses a unique port.
 
+> **Important**:
+>
+> - If enabling SSL, and `port` is set to `389`, it will be automatically overridden to use `636`.
+> - If enabling TLS, you must use the default port for your LDAP server (`389`). SSL ports cannot be used.
+
 ### SSL & TLS {#ssl-amp-tls}
 
-These boolean options enable an SSL or TLS connection to your LDAP server.
+These boolean options enable an TLS or SSL connection to your LDAP server.
 
-It is recommended to use one of these options if you have the ability to. This ensures secure connectivity.
+It is recommended to use *one* of these options if you have the ability to. This ensures secure connectivity.
 
-Requirements & Tips |
---- |
-Only **one** can be set to `true`. You must chose either or. |
-You **must** enable SSL or TLS to set / change / reset passwords in Active Directory. |
-**TLS is recommended over SSL**. SSL is labelled as a deprecated mechanism for securely running LDAP operations. |
+> **Important**:
+>
+> - Only **one** can be set to `true`. You must chose either or.
+> - You **must** enable SSL or TLS to set / change / reset passwords in Active Directory.
+> - **TLS is recommended over SSL**. SSL is labelled as a deprecated mechanism for securely running LDAP operations.
+
+#### Debugging {#ssl-amp-tls-debugging}
 
 If you're having connectivity issues over SSL or TLS, you may have to
 create an `ldap.conf` file and add the following inside:
@@ -138,9 +151,10 @@ macOS | `/usr/local/etc/openldap/ldap.conf` |
 
 The above directories may not exist - you will need to create them in such case.
 
-> **Important**: You **must** restart your web server after making changes 
-> to the `ldap.conf` file. In some cases, you may even have to restart
-> your workstation or server for the changes to take effect.
+> **Important**:
+>
+> - You **must** restart your web server after making changes to the `ldap.conf` file.
+> - In some cases, you may even have to restart your workstation or server for the changes to take effect.
 
 If you can connect using `TLS_REQCERT never` inside of your `ldap.conf` file,
 you may want to copy your domain CA certificate to your web server, as it
@@ -180,24 +194,36 @@ TLS_REQCERT hard
 The timeout option allows you to configure the amount of seconds to wait
 until your application receives a response from your LDAP server.
 
-The default is `5` seconds.
+The default is five (`5`) seconds.
+
+> **Important**: If the timeout is reached performing an LDAP operation and
+> you have specified multiple hosts in your configuration,
+> the same timeout will be used for each host.
+> </br></br>
+> This means, if you have three (3) hosts in your configuration and two (2) of
+> them do not respond (or fail), the operation will take ten (10) seconds +
+> the amount of time the third (3rd) host takes to respond.
 
 ### Version {#version}
 
 The LDAP version to use for your connection.
 
-Must be an integer and can either be `2` or `3`.
+Must be an integer, and can either be two (`2`) or three (`3`).
+
+> **Important**: It's heavily recommended to use version three (`3`). You may experience issues using version two (`2`).
 
 ### Follow Referrals {#follow-referrals}
 
-The follow referrals option is a boolean to tell Active Directory to follow a referral to another server on your network if the server queried knows the information your asking for exists, but does not yet contain a copy of it locally.
+The follow referrals option is a boolean to tell Active Directory to
+follow a referral to another server on your network if the server
+queried knows the information your asking for exists, but does
+not yet contain a copy of it locally.
 
 This option is defaulted to `false`.
 
-Disable this option if you're experiencing search / connectivity issues.
-
-For more information, visit:
-[https://technet.microsoft.com/en-us/library/cc978014.aspx](https://technet.microsoft.com/en-us/library/cc978014.aspx)
+> **Important**: Disable this option if you're experiencing search / connectivity issues.
+> </br></br>
+> For more information, visit: [Microsoft Docs - LDAP Referrals](https://technet.microsoft.com/en-us/library/cc978014.aspx)
 
 ### Options {#options}
 
