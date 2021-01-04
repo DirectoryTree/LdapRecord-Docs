@@ -51,9 +51,18 @@ $connection = new Connection($config);
 
 The hosts option is an array of IP addresses or host names located on your network that serve an LDAP directory.
 
-You insert as many servers or as little as you'd like depending on your forest (with the minimum of one of course).
+You insert as many or as little as you'd like depending on your forest (with the minimum of one of course).
 
-> Do not append your port to your IP addresses or host names. Use the `port` configuration option instead.
+The first host in the array will always be used as the primary server. This means, all operations will take place underneath this host.
+
+If the primary host fails to complete an operation (bind, query, modification, etc.), or the server does not
+respond in the configured `timeout`, the same operation will be attempted on the following host in the array.
+
+This automated fail-over process will continue for each host address, until a successful response is received.
+
+> **Important**:
+> - Do not prepend the `ldap://` or `ldaps://` protocol to your hosts. Use the `use_ssl` configuration option instead.
+> - Do not append your port (`:389`, `:636`, etc.) to your hosts. Use the `port` configuration option instead.
 
 ### Base Distinguished Name {#base-distinguished-name}
 
