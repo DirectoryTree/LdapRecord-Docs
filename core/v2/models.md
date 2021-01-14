@@ -643,7 +643,7 @@ var_dump($result);
 
 ### Methods {#methods}
 
-There are several built-in methods on models you may like to utilize:
+There are many built-in methods on models you may utilize.
 
 `Model::getAttributes()`
 
@@ -670,10 +670,8 @@ $group = Group::first();
 
 $members = $group->getAttribute('member');
 
-if ($members) {
-    foreach ($members as $member) {
-        echo $member;
-    }
+foreach ($members ?? [] as $member) {
+    echo $member;
 }
 ```
 
@@ -963,7 +961,7 @@ if ($userAccountsOu->isParentOf($officeOu)) {
 
 ## Events {#events}
 
-LdapRecord models fire several different [event](/docs/core/v2/events) during the creation,
+LdapRecord models fire several different [events](/docs/core/v2/events) during the creation,
 updating and deletion. Here is a list of all the events you can listen for:
 
 | Event |
@@ -983,9 +981,12 @@ to retrieve the dispatcher, then call `listen()` on the returned dispatcher:
 ```php
 <?php
 
-$dispatcher = \LdapRecord\Container::getEventDispatcher();
+use LdapRecord\Container;
+use LdapRecord\Models\Events\Creating;
 
-$dispatcher->listen(\LdapRecord\Models\Events\Creating::class, function ($event) {
+$dispatcher = Container::getEventDispatcher();
+
+$dispatcher->listen(Creating::class, function ($event) {
     $model = $event->getModel();
 });
 ```
