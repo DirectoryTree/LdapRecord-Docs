@@ -119,19 +119,13 @@ To change a user's password, you must either:
 1. Bind to your LDAP server with a user that has **permissions to reset passwords**
 2. Or; **bind as the user** whose password you are trying to change.
 
-There are some prerequisites you must know for changing passwords:
-
-Prerequisites |
---- |
-You must provide the **correct user's old password** |
-You must provide a new password that abides by your **password policy**, such as **history, complexity, and length** |
-You must set the `unicodepwd` attribute with an array containing **two** (2) values (old & new password) |
+> **Important**:
+>
+> - You must provide the **correct user's old password**
+> - You must set the `unicodepwd` attribute with an array containing **two** (2) values (old & new password) 
+> - You must provide a new password that abides by your **password policy**, such as **history, complexity, and length**
 
 Let's walk through an example:
-
-> You must use a try / catch block upon saving. An `LdapRecord\LdapRecordException`
-> will always be thrown when an incorrect old password has been given, or the new
-> password does not abide by your password policy.
 
 ```php
 <?php
@@ -162,6 +156,10 @@ try {
     echo $error->getDiagnosticMessage();
 }
 ```
+
+> You must use a try / catch block upon saving. An `LdapRecord\LdapRecordException`
+> will always be thrown when an incorrect old password has been given, or the new
+> password does not abide by your password policy.
 
 ### Resetting Passwords {#resetting-passwords}
 
