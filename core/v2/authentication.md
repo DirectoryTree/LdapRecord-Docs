@@ -184,7 +184,7 @@ $user = $connection->query()
     ->where('samaccountname', '=', $_POST['username'])
     ->firstOrFail();
 
-if ($connection->auth()->attempt($user['distinguishedname'], $_POST['password'])) {
+if ($connection->auth()->attempt($user['distinguishedname'][0], $_POST['password'])) {
     // User has been successfully authenticated.
 } else {
     // Username or password is incorrect.

@@ -111,7 +111,7 @@ used for creating and retrieving LDAP users from your applications database.
 
 > Be sure to add the required [trait and interface](/docs/laravel/v2/auth/database/installation) to this model as shown in the installation guide.
 
-### Sync Password Column {#database-password-column}
+### Password Column {#database-password-column}
 
 If your application uses a different password column than `password`, then you can configure
 it using the `password_column` key inside of your providers configuration:
