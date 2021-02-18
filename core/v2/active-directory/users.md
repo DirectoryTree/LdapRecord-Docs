@@ -13,8 +13,8 @@ section: content
   - [Changing Passwords](#changing-passwords)
   - [Resetting Passwords](#resetting-passwords)
   - [Password Policy Errors](#password-policy-errors)
-  - [Check if a user is locked out](#checking-user-lockout)
-  - [Getting all locked out users](#getting-locked-out-users)
+  - [Check If A User Is Locked Out](#checking-user-lockout)
+  - [Getting All Locked Out Users](#getting-locked-out-users)
   - [Unlock Locked Out User Account](#unlock-user-account)
   - [Extend User Password Expiration](#password-extension)
   - [User Must Change Password at Next Logon](#password-reset-on-next-login)
@@ -60,6 +60,9 @@ $user->userPrincipalName = 'jdoe@acme.org';
 
 $user->save();
 
+// Sync the created users attributes.
+$user->refresh();
+
 // Enable the user.
 $user->userAccountControl = 512;
 
@@ -70,8 +73,9 @@ try {
 }
 ```
 
-> It is wise to encapsulate saving your user in a try / catch block, so if it 
-> fails you can determine if the cause of failure is due to your domains password policy.
+> It is wise to encapsulate saving your user in a try / catch block,
+> so if it fails you can determine if the cause of failure
+> is due to your domains password policy.
 
 ## Password Management {#password-management}
 
