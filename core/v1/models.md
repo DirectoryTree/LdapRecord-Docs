@@ -1017,14 +1017,14 @@ echo json_encode($user);
 You may want to exclude certain attributes from being included in the
 serialization of your model, such as `userPassword` for OpenLDAP.
 
-To do this, add a `$hides` property to your model:
+To do this, add a `$hidden` property to your model:
 
 ```php
 use LdapRecord\Models\Model;
 
 class User extends Model
 {
-    protected $hides = ['userPassword'];
+    protected $hidden = ['userPassword'];
 }
 ``` 
 
