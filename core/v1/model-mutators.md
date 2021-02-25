@@ -44,23 +44,24 @@ class User extends Model
 {
     public function getThumbnailphotoAttribute($value)
     {
-        // The 'value' will be an array containing the thumbnail data.
-        if ($data = base64_decode($value[0], $strict = true)) {
-            // In case we don't have the file info extension enabled,
-            // we'll set the jpeg mime type as default.
-            $mime = 'image/jpeg';
-            
-            $image = base64_encode($data);
-            
-            if (function_exists('finfo_open')) {
-                $finfo = finfo_open();
-                $mime = finfo_buffer($finfo, $data, FILEINFO_MIME_TYPE);
-                
-                return "data:$mime;base64,$image";
-            }
-            
+        // Due to LDAP's multi-valued nature, all values will be
+        // contained inside of an array. We will attempt to
+        // retrieve the first one, or supply a default.
+        $data = $value[0] ?? file_get_contents('images/default_photo.jpg');
+
+        $image = base64_encode($data);
+
+        $mime = 'image/jpeg';
+
+        if (function_exists('finfo_open')) {
+            $finfo = finfo_open();
+
+            $mime = finfo_buffer($finfo, $data, FILEINFO_MIME_TYPE);
+
             return "data:$mime;base64,$image";
         }
+
+        return "data:$mime;base64,$image";
     }
 }
 ```
