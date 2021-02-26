@@ -70,7 +70,7 @@ $connection->connect();
 ## Binding {#binding}
 
 Using the connection instance, you can execute a bind request
-to perform LDAP authentication to see if a username and 
+to perform LDAP authentication to see if a username and
 password is valid.
 
 ```php
@@ -108,7 +108,7 @@ if ($connection->auth()->attempt($user, $password, $stayBound = true))
 > **Important**: Binding as the user will not persist LDAP connectivity between requests.
 > PHP is stateless - which means a new LDAP connection is created upon every request
 > to your application. LdapRecord **does not and will not store** user credentials
-> to persist connectivity. 
+> to persist connectivity.
 
 ## Container {#container}
 
@@ -119,7 +119,7 @@ they use from this container by their name.
 ### Adding Connections {#container-adding-connections}
 
 ```php
-use LdapRecord\Container;                         
+use LdapRecord\Container;
 use LdapRecord\Connection;
 
 $connection = new Connection(['...']);

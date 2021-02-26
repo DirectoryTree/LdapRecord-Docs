@@ -248,7 +248,7 @@ $query->deleteAttributes($entry, ['member' => [$member]]);
 Prepare a value to be escaped:
 
 > This method accepts the same parameters as the built in PHP
-> [`ldap_escape` method](https://www.php.net/manual/function.ldap-escape.php).
+> `ldap_escape` [method](https://www.php.net/manual/function.ldap-escape.php).
 
 ```php
 $query = $connection->query();
@@ -1031,7 +1031,7 @@ $query
 
 Set the query to read a single search result using the query's base DN (using `ldap_read`):
 
-> Queries executed with `read()` will only return a maximum of *one* result.
+> Queries executed with `read()` will only return a maximum of _one_ result.
 
 ```php
 $query = $connection->query();
@@ -1075,7 +1075,7 @@ $connection->query()->rename(
 
 Set the attributes to return from the directory:
 
-> **Important*: By selecting only the attributes you need, you can
+> **Important**: By selecting only the attributes you need, you can
 > effectively reduce memory usage on large query result sets.
 
 ```php
