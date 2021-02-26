@@ -7,18 +7,7 @@ section: content
 
 # Models: Relationships
 
-- [Introduction](#introduction)
-- [Defining Relationships](#defining-relationships)
- - [Has One](#has-one)
- - [Has Many](#has-many)
- - [Has Many (Inverse)](#has-many-inverse)
- - [Has Many In](#has-many-in)
-- [Querying Relationships](#querying-relationships)
- - [Recursive Queries](#recursive-queries)
-- [Attaching & Detaching Relationships](#attaching-amp-detatching-relationships)
-- [Checking Relationship Existence](#checking-relationship-existence)
-
-## Introduction {#introduction}
+## Introduction
 
 LDAP records often contain attributes that reference other LDAP records in your directory. An
 example of this would be the `member` attribute on LDAP groups that contain a list of
@@ -28,16 +17,16 @@ Using LdapRecord relationships, we can define what models contain references to 
 and easily retrieve the referenced models to perform operations upon. There are several
 relationship types that LdapRecord supports:
 
-Relationship | Type |
---- | --- |
-[Has One](#has-one) | Indicates a one-to-one relation, such as a user having one manager |
-[Has Many](#has-many) | Indicates a one-to-many relation, such as a user having many groups |
-[Has Many (Inverse)](#has-many-inverse) | Indicates an inverse one-to-many relation, such as a group having many members |
-[Has Many In](#has-many-in) | Indicates a one-to-many relation, but with virtual attributes that cannot be modified |
+| Relationship                            | Type                                                                                  |
+| --------------------------------------- | ------------------------------------------------------------------------------------- |
+| [Has One](#has-one)                     | Indicates a one-to-one relation, such as a user having one manager                    |
+| [Has Many](#has-many)                   | Indicates a one-to-many relation, such as a user having many groups                   |
+| [Has Many (Inverse)](#has-many-inverse) | Indicates an inverse one-to-many relation, such as a group having many members        |
+| [Has Many In](#has-many-in)             | Indicates a one-to-many relation, but with virtual attributes that cannot be modified |
 
-## Defining Relationships {#defining-relationships}
+## Defining Relationships
 
-### Has One {#has-one}
+### Has One
 
 A has one relationship is a basic relationship to work with. An example of a "has one" relationship would be
 a `User` having one `manager`. To define this relationship, we place a `manager()` method on our `User`
@@ -61,11 +50,11 @@ class User extends Model
 ```
 
 The first argument that is passed into the relation is the name of the related model.
-The second is the LDAP attribute on the *current* user that contains the
+The second is the LDAP attribute on the _current_ user that contains the
 relationships distinguished name.
 
 If the relationships attribute you are defining does not contain a distinguished name,
-you can alter this and define a *foreign key* using the third parameter. For example,
+you can alter this and define a _foreign key_ using the third parameter. For example,
 if our manager attribute actually contains a `uid`, we can change this so the
 related model is retrieved by a UID, instead of a distinguished name:
 
@@ -86,7 +75,7 @@ class User extends Model
 }
 ```
 
-### Has Many {#has-many}
+### Has Many
 
 Defining a has many relationship indicates that the model can be apart of
 many of the given model.
@@ -126,19 +115,19 @@ group membership, you may change the relation key. For example, you may
 want to use `uniquemember` for this relationship:
 
 ```php
-/**                                                
- * Retrieve the groups the user is apart of.       
- */                                                
-public function groups()                           
-{                                                  
-    return $this->hasMany(Group::class, 'uniquemember'); 
-}                                                  
+/**
+ * Retrieve the groups the user is apart of.
+ */
+public function groups()
+{
+    return $this->hasMany(Group::class, 'uniquemember');
+}
 ```
 
-You may also define a *foreign key* in third parameter if the attribute
+You may also define a _foreign key_ in third parameter if the attribute
 you are using is not a distinguished name.
 
-### Has Many (Inverse) {#has-many-inverse}
+### Has Many (Inverse)
 
 Now that we have setup a `User` model that can access of their groups,
 lets define a `Group` model to be able to access its members.
@@ -193,7 +182,7 @@ When querying the above relationship, LdapRecord will construct the following fi
 (memberof=cn\3dAccounting\2cdc\3dacme\2cdc\3dorg)
 ```
 
-### Has Many In {#has-many-in}
+### Has Many In
 
 The has many in relationship allows you to retrieve related models from
 the given parent models [virtual attribute](https://ldapwiki.com/wiki/Virtual%20Attribute)
@@ -224,7 +213,7 @@ class User extends Model
 #### Important Note for Querying
 
 When using the above relationship from query results, you must ensure
-you select the LDAP property you have defined as the *foreign key*
+you select the LDAP property you have defined as the _foreign key_
 in the relationship. This attribute contains the values needed to
 locate the related models.
 
@@ -239,7 +228,7 @@ $user = User::select(['cn', 'sn'])->find('cn=John Doe,dc=acme,dc=org');
 $groups = $user->groups()->get();
 ```
 
-## Querying Relationships {#querying-relationships}
+## Querying Relationships
 
 LdapRecord relationships also serve as [query builders](/docs/core/v2/searching).
 This means you can chain query builder methods onto relationship methods to add
@@ -276,7 +265,7 @@ $adminGroups = $user->groups()->whereStartsWith('cn', 'Admin')->get();
 
 > By default, querying relations will not include recursive results. More on this below.
 
-### Recursive Queries {#recursive-queries}
+### Recursive Queries
 
 To request all of the relationships results, such as nested groups in groups, call
 the `recursive()` method, prior to retrieving results via `get()`:
@@ -301,12 +290,12 @@ that your user is apart of.
 
 Circular group dependencies are rejected automatically to prevent infinite looping.
 
-## Attaching & Detatching Relationships {#attaching-amp-detatching-relationships}
+## Attaching & Detatching Relationships
 
 Using relationships you define, you can easily attach and detach related models from each other.
 For example, you may want to attach a `Group` to a `User`, or vice-versa.
 
-### Attaching {#attaching}
+### Attaching
 
 Using the above relationship examples, lets walk through attaching a user to a group:
 
@@ -337,7 +326,7 @@ $user->groups()->attachMany($groups);
 
 As you can see above, we took a complex LDAP operation and completed it in just 4 lines of code.
 
-### Detach {#detaching}
+### Detach
 
 Using the above relationship examples, lets walk through detaching a user from a group:
 
@@ -361,7 +350,7 @@ $user = User::find('cn=John Doe,ou=Users,dc=acme,dc=org');
 $user->groups()->detachAll();
 ```
 
-## Checking Relationship Existence {#checking-relationship-existence}
+## Checking Relationship Existence
 
 To check if a model exists inside of a relationship, use the `exists()` relationship method.
 

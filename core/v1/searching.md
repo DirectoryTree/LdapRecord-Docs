@@ -7,24 +7,7 @@ section: content
 
 # Searching
 
-- [Introduction](#introduction)
-- [Selects](#selects)
-- [Executing](#executing-searches)
-- [Limit](#limit)
-- [Wheres](#wheres)
-- [Nested Filters](#nested-filters)
-- [Raw Filters](#raw-filters)
-- [Paginating](#paginating)
-- [Base DN](#base-dn)
-- [Root DSE](#root-dse)
-- [Search Options](#search-options)
- - [Recursive](#recursive)
- - [Listing](#listing)
- - [Read](#read)
- - [Custom Controls](#custom-controls)
-- [Saving the Query](#saving-query)
-
-## Introduction {#introduction}
+## Introduction
 
 Using the LdapRecord query builder makes building LDAP queries feel effortless.
 
@@ -53,7 +36,7 @@ $results = $connection->query()->where('cn', '=', 'John Doe')->get();
 > in a `Collection`. You must query using [models](/docs/core/v1/models#retrieving-models)
 > themselves if you would like them to be returned instead.
 
-## Selects {#selects}
+## Selects
 
 > Fields are case in-sensitive. For example, you can
 > insert `CN`, `cn` or `cN`, they will return the same result.
@@ -68,7 +51,7 @@ $query->select(['cn', 'samaccountname', 'telephone', 'mail']);
 $query->select('cn', 'samaccountname', 'telephone', 'mail');
 ```
 
-## Executing Searches {#executing-searches}
+## Executing Searches
 
 #### Finding a record
 
@@ -79,7 +62,7 @@ and insert the distinguished name of the record you are looking for:
 $record = $query->find('cn=John Doe,dc=acme,dc=org');
 
 if ($record) {
-    // Record was found!    
+    // Record was found!
 } else {
     // Hmm, looks like we couldn't find anything...
 }
@@ -131,7 +114,7 @@ Results will return **the model instance only**.
 
 You can also use `firstOrFail()` to generate an exception when no records are found.
 
-## Limit {#limit}
+## Limit
 
 To limit the results records returned from your LDAP server and increase the
 speed of your queries, you can use the `limit()` method:
@@ -141,7 +124,7 @@ speed of your queries, you can use the `limit()` method:
 $records = $query->where('cn', 'contains', 'John')->limit(5)->get();
 ```
 
-## Wheres {#wheres}
+## Wheres
 
 To perform a where clause on the search object, use the `where()` function:
 
@@ -184,19 +167,19 @@ We could also perform a search for all objects beginning with the common name of
 ```php
 $results = $query->where('cn', 'starts_with', 'John')->get();
 
-// Or use the method whereStartsWith($attribute, $value):
+// Or:
 
 $results = $query->whereStartsWith('cn', 'John')->get();
 ```
 
 #### Where Ends With
-    
+
 We can also search for all objects that end with the common name of `Doe` using the `ends_with` operator:
 
 ```php
 $results = $query->where('cn', 'ends_with', 'Doe')->get();
 
-// Or use the method whereEndsWith($attribute, $value):
+// Or:
 
 $results = $query->whereEndsWith('cn', 'Doe')->get();
 ```
@@ -221,7 +204,7 @@ We can also search for all objects with a common name that contains `John Doe` u
 ```php
 $results = $query->where('cn', 'contains', 'John Doe')->get();
 
-// Or use the method whereContains($attribute, $value):
+// Or:
 
 $results = $query->whereContains('cn', 'John Doe')->get();
 ```
@@ -233,7 +216,7 @@ You can use a 'where not contains' to perform the inverse of a 'where contains':
 ```php
 $results = $query->where('cn', 'not_contains', 'John Doe')->get();
 
-// Or use the method whereNotContains($attribute, $value):
+// Or:
 
 $results = $query->whereNotContains('cn', 'John Doe');
 ```
@@ -245,7 +228,7 @@ Or we can retrieve all objects that have a common name attribute using the wildc
 ```php
 $results = $query->where('cn', '*')->get();
 
-// Or use the method whereHas($field):
+// Or:
 
 $results = $query->whereHas('cn')->get();
 ```
@@ -259,7 +242,7 @@ You can use a 'where not has' to perform the inverse of a 'where has':
 ```php
 $results = $query->where('cn', '!*')->get();
 
-// Or use the method whereNotHas($field):
+// Or:
 
 $results = $query->whereNotHas($field)->get();
 ```
@@ -277,7 +260,7 @@ server in your query results, use the `withDeleted` method:
 
 ```php
 $results = $query->withDeleted()->get();
-``` 
+```
 
 ## Or Wheres
 
@@ -335,7 +318,7 @@ You can even perform multiple dynamic wheres by separating your fields by an `An
 $result = $query->whereGivennameAndSn('John', 'Doe')->first();
 ```
 
-## Nested Filters {#nested-filters}
+## Nested Filters
 
 By default, the LdapRecord query builder automatically wraps your queries in `and` / `or` filters for you.
 However, if any further complexity is required, nested filters allow you
@@ -398,7 +381,7 @@ $query = $query->orFilter(function (LdapRecord\Query\Builder $q) {
 echo $query; // Returns '(&(|(givenname=John)(sn=Doe))(&(department=Accounting)(title=Manager)))'
 ```
 
-## Raw Filters {#raw-filters}
+## Raw Filters
 
 > Raw filters are not escaped. **Do not** accept user input into the raw filter method.
 
@@ -425,7 +408,7 @@ $query = $query->getUnescapedQuery();
 echo $query; // Returns (&(samaccountname=jdoe)(surname=Doe))
 ```
 
-## Paginating {#paginating}
+## Paginating
 
 Paginating your search results will allow you to return more results than your LDAP cap (usually 1000).
 
@@ -443,21 +426,21 @@ foreach ($results as $result) {
 }
 ```
 
-## Base DN {#base-dn}
+## Base DN
 
 To set the base DN of your search you can use one of two methods:
 
 ```php
 // Using the `in()` method:
 $results = $query->in('ou=Accounting,dc=acme,dc=org')->get();
-    
+
 // Using the `setDn()` method:
 $results = $query->setDn('ou=Accounting,dc=acme,dc=org')->get();
 ```
 
 Either option will return the same results. Use which ever method you prefer to be more readable.
 
-## Root DSE {#root-dse}
+## Root DSE
 
 To fetch the [Root DSE](https://ldapwiki.com/wiki/RootDSE) object in your directory, execute the below query:
 
@@ -468,10 +451,10 @@ $rootDse = $query->query()
     ->whereHas('objectclass')
     ->first();
 ```
- 
-## Search Options {#search-options}
 
-#### Recursive {#recursive}
+## Search Options
+
+#### Recursive
 
 By default, all searches performed are recursive.
 
@@ -483,7 +466,7 @@ $result = $query->listing()->get();
 
 This would perform an `ldap_listing()` instead of an `ldap_search()`.
 
-#### Read {#read}
+#### Read
 
 If you'd like to perform a read instead of a listing or a recursive search, use the `read()` method:
 
@@ -493,9 +476,9 @@ $result = $query->read()->where('objectClass', '*')->get();
 
 This would perform an `ldap_read()` instead of an `ldap_listing()` or an `ldap_search()`.
 
-> Performing a `read()` will always return *one* record in your result.
+> Performing a `read()` will always return _one_ record in your result.
 
-#### Custom Controls {#custom-controls}
+#### Custom Controls
 
 If you'd like to [add server controls](https://www.php.net/manual/en/ldap.controls.php) to your query, use the `addControl` method:
 
@@ -503,7 +486,7 @@ If you'd like to [add server controls](https://www.php.net/manual/en/ldap.contro
 $result = $query->addControl('1.2.840.113556.1.4.417', $isCritical = true)->get();
 ```
 
-## Retrieving the ran query {#saving-query}
+## Retrieving the ran query
 
 If you'd like to retrieve the current query to save or run it at another
 time, use the `getQuery()` method on the query builder.

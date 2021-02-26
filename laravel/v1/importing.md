@@ -7,13 +7,7 @@ section: content
 
 # Importing LDAP Objects
 
-- [Introduction](#introduction)
-- [Getting Started](#getting-started)
-- [Creating the Migration](#creating-the-migration)
-- [Setting Up the Eloquent Model](#setting-up-the-eloquent-model)
-- [Running the Import](#running-the-import)
-
-## Introduction {#introduction}
+## Introduction
 
 > If you are looking to import LDAP users into your application,
 > view [this guide](/docs/laravel/v1/auth/importing) instead.
@@ -21,21 +15,21 @@ section: content
 With LdapRecord-Laravel, you can easily import and synchronize LDAP objects into a database table
 using a given Eloquent model. This is useful for importing groups, memberships and more.
 
-## Getting Started {#getting-started}
+## Getting Started
 
 For this example, we will be importing LDAP groups into our applications database table `groups`.
 
 Our groups table simply contains a `name` column, however to import LDAP objects into it,
 we must add two extra database columns:
 
-Column | Reason |
-:---: | --- |
-`guid` | This is for storing your LDAP objects `objectguid`. It is needed for locating and synchronizing your LDAP object to the database. |
-`domain` | This is for storing your LDAP objects connection name. It is needed for storing your configured LDAP connection name of the object. |
+|  Column  | Reason                                                                                                                              |
+| :------: | ----------------------------------------------------------------------------------------------------------------------------------- |
+|  `guid`  | This is for storing your LDAP objects `objectguid`. It is needed for locating and synchronizing your LDAP object to the database.   |
+| `domain` | This is for storing your LDAP objects connection name. It is needed for storing your configured LDAP connection name of the object. |
 
 > For brevity, we will not be showing the creation of the `groups` database table migration.
 
-## Creating the Migration {#creating-the-migration}
+## Creating the Migration
 
 Generate a migration to add these columns onto our `groups` table:
 
@@ -77,15 +71,15 @@ After finishing setting up the above migration, make sure you run it:
 php artisan migrate
 ```
 
-## Setting Up the Eloquent Model {#setting-up-the-eloquent-model}
+## Setting Up the Eloquent Model
 
 For the importer to be able to properly interface with your Eloquent model, you must apply the
 following trait and interface onto your Eloquent model you are using to perform the import.
 
-Type | |
-:---: | --- |
-Interface | `LdapRecord\Laravel\LdapImportable` |
-Trait | `LdapRecord\Laravel\ImportableFromLdap` |
+|   Type    |                                         |
+| :-------: | --------------------------------------- |
+| Interface | `LdapRecord\Laravel\LdapImportable`     |
+|   Trait   | `LdapRecord\Laravel\ImportableFromLdap` |
 
 ```php
 // app/Group.php
@@ -105,7 +99,7 @@ class Group extends Authenticatable implements LdapImportable
 
 Your model is now ready for importing.
 
-## Running the Import {#running-the-import}
+## Running the Import
 
 ### Defining Sync Attributes
 

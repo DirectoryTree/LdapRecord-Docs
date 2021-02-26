@@ -7,11 +7,7 @@ section: content
 
 # Debugging
 
-- [Connectivity](#connectivity)
- - [TLS & SSL](#tls-and-ssl)
-- [Logging In](#logging-in)
-
-## Connectivity {#connectivity}
+## Connectivity
 
 LdapRecord-Laravel comes with a built-in command to test connectivity to your
 LDAP servers. The exception message, error code, and diagnostic message are
@@ -38,26 +34,26 @@ Testing LDAP connection [default]...
 The returned error codes and diagnostic messages can help you greatly
 when attempting to debug SSL and TLS connectivity issues.
 
-### TLS & SSL {#tls-and-ssl}
+### TLS & SSL
 
-TLS and SSL can be very tricky to get up and running. You will most likely have 
+TLS and SSL can be very tricky to get up and running. You will most likely have
 to place an `ldap.conf` file onto your local / production server to indicate
-that you would like to either *bypass* TLS / SSL certificate verification,
+that you would like to either _bypass_ TLS / SSL certificate verification,
 or use a valid certificate that you have retrieved from your LDAP server.
 
 This process is fully documented on the [configuration](/docs/core/v2/configuration#ssl-amp-tls)
 documentation. It includes per OS level instructions on where your `ldap.conf` file
 is located (or where it must be created), as well as what it must contain.
 
-> **Important**: You **must** restart your web server after making changes 
+> **Important**: You **must** restart your web server after making changes
 > to the `ldap.conf` file. In some cases, you may even have to restart
 > your workstation or server for the changes to take effect.
 
-## Logging In {#logging-in}
+## Logging In
 
 To debug issues logging in, its recommended to first complete the following steps:
 
-1. Enabled logging via the `logging` key inside of your `config/ldap.php` file <br/> 
+1. Enabled logging via the `logging` key inside of your `config/ldap.php` file <br/>
    (or by enabling it via your `.env` by using the `LDAP_LOGGING` key)
 2. Clear your configurations cache (if enabled) by running the `php artisan config:clear` command
 3. Add the `ListensForLdapBindFailure` [trait](/docs/laravel/v2/auth/setup/#displaying-ldap-error-messages) onto your `LoginController`

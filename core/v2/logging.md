@@ -5,7 +5,7 @@ extends: _layouts.core.page
 section: content
 ---
 
-# Logging {#logging}
+# Logging
 
 LdapRecord includes an implementation of PSR's widely supported [Logger](https://github.com/php-fig/log) interface.
 
@@ -13,7 +13,7 @@ By default, all of LdapRecord's [events](/docs/core/v2/events) will call the log
 
 > LdapRecord does not include a file / text logger. You must implement your own.
 
-## Registering & Enabling a Logger {#enabling-logger}
+## Registering & Enabling a Logger
 
 To register a logger call `LdapRecord\Container::setLogger()`. The logger must implement the `Psr\Log\LoggerInterface`.
 
@@ -21,7 +21,7 @@ To register a logger call `LdapRecord\Container::setLogger()`. The logger must i
 \LdapRecord\Container::setLogger($myLogger);
 ```
 
-## Disabling Logging {#disabling-logger}
+## Disabling Logging
 
 If you need to disable the event logger after a certain set of operations, simply pass in `null` and logging will be disabled:
 
@@ -32,7 +32,7 @@ $connection = new \LdapRecord\Connection(['...']);
 
 try {
     $connection->connect();
-    
+
     // Disable logging anything else.
     \LdapRecord\Container::setLogger(null);
 } catch (\LdapRecord\Auth\BindException $e) {
@@ -40,7 +40,7 @@ try {
 }
 ```
 
-## Logged Information {#logged}
+## Logged Information
 
 After enabling LdapRecord logging, the following events are logged:
 

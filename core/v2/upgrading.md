@@ -5,18 +5,11 @@ extends: _layouts.core.page
 section: content
 ---
 
-# Upgrading from v1
+# Upgrading to Version 2
 
-- [Model Changes](#model-changes)
-  - [Exception Handling](#model-exception-handling)
-  - [Synchronize renamed to Refresh](#model-synchronize-renamed)
-  - [asDateTime parameter order](#model-asdatetime-param-order)
-- [Query Builder Changes](#query-builder-changes)
-  - [Not Found Exeptions](#query-not-found-exceptions)
+### Models
 
-### Models {#model-changes}
-
-#### Exception Handling {#model-exception-handling}
+#### Exception Handling
 
 Models will now **always** throw the following exception after failure of creation/modification:
 
@@ -43,17 +36,17 @@ Due to the above change, the following methods **will throw an exception** upon 
 // Before...
 try {
   if ($model->save()) {
-    // 
+    //
   }
 } catch (\LdapRecord\LdapRecordException $ex) {
-  // 
+  //
 }
 
 // After...
 try {
   $model->save();
 } catch (\LdapRecord\LdapRecordException $ex) {
-  // 
+  //
 }
 ```
 
@@ -64,7 +57,7 @@ The follwowing static methods **will also throw an exception** upon failure:
 - `Model::create()`
 - `Model::destroy()`
 
-#### Synchronize renamed to Refresh {#model-synchronize-renamed}
+#### Synchronize renamed to Refresh
 
 The `$model->synchronize()` method has been renamed to follow Laravel's
 Eloquent method name for the same purpose: `$model->refresh()`.
@@ -107,7 +100,7 @@ $user->refresh();
 $user->getConvertedGuid();
 ```
 
-#### asDateTime Parameter Order {#model-asdatetime-param-order}
+#### asDateTime Parameter Order
 
 If you were casting an LDAP timestamp manually using the `$model->asDateTime()` method, the parameter order has been swapped:
 
@@ -122,14 +115,14 @@ $carbon = $model->asDateTime($type, $timestamp);
 $carbon = $model->asDateTime($timestamp, $type);
 ```
 
-### Query Builder {#query-builder-changes}
+### Query Builder
 
-#### Not Found Exceptions {#query-not-found-exceptions}
+#### Not Found Exceptions
 
 Previously in v1 of LdapRecord, when using `orFail()` methods directly on
 raw `Connection` queries, a `ModelNotFoundException` would be thrown.
 
-This didn't make much sense, since models are not returned from raw queries. 
+This didn't make much sense, since models are not returned from raw queries.
 
 A new exception has been introduced to alleviate any confusion:
 

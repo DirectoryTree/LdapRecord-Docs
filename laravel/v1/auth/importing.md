@@ -7,26 +7,7 @@ section: content
 
 # Importing LDAP Users
 
-- [Introduction](#introduction)
-- [Attribute Synchronization](#attribute-synchronization)
-- [Synchronizing Existing Records](#syncing-existing-records)
-- [Running the command](#running-the-command)
-- [Scheduling the command](#scheduling-the-command)
-- [Programmatically Executing](#programmatically-executing)
-- [Command Arguments](#command-args)
-  - [Provider](#argument-provider)
-  - [User](#argument-user)
-- [Command Options](#command-options)
- - [Filter](#option-filter)
- - [Attributes](#option-attributes)
- - [Delete](#option-delete)
- - [Delete Missing](#option-delete-missing)
- - [Restore](#option-restore)
- - [No Logging](#option-no-logging)
- - [No Interaction](#option-no-interaction)
-- [Additional Tips](#tips)
-
-## Introduction {#introduction}
+## Introduction
 
 LdapRecord-Laravel allows you to import users from your LDAP directories into your local database.
 This is done by executing the `php artisan ldap:import` command and is only available to LDAP
@@ -35,7 +16,7 @@ authentication providers you configure with [database synchronization](/docs/lar
 As it is with signing users into your application, the Eloquent database model you specify in your
 `config/auth.php` file is used for the creation and retrieval of users in your database.
 
-## Attribute Synchronization {#attribute-synchronization}
+## Attribute Synchronization
 
 The `sync_attributes` you define inside of your `config/auth.php` file for your provider will be used
 for importing and synchronizing users.
@@ -43,16 +24,16 @@ for importing and synchronizing users.
 Be sure to look at the [documentation](/docs/laravel/v1/auth/configuration/#database-sync-attributes)
 to get a further understanding on what is possible with this option.
 
-## Syncing Existing Records {#syncing-existing-records}
+## Syncing Existing Records
 
 The `sync_existing` array you define inside of your `config/auth.php` will be used to synchronize existing database records with your LDAP users.
 
 Be sure to look at the [documentation](/docs/laravel/v1/auth/configuration/#database-sync-existing)
 to get a further understanding on what is possible with this option.
 
-## Password Synchronization {#password-synchronization}
+## Password Synchronization
 
-The `sync_passwords` option you define inside of your `config/auth.php` file is used when importing 
+The `sync_passwords` option you define inside of your `config/auth.php` file is used when importing
 and synchronizing users. However, there are some main takeaways you must be aware of:
 
 - **Passwords cannot be retrieved from users who are being imported from your LDAP server.**
@@ -64,7 +45,7 @@ and synchronizing users. However, there are some main takeaways you must be awar
   hashed 16 character random string using `Str::random`.
 - **Passwords will not be set** if you have defined `false` for `password_column`.
 
-## Running the command {#running-the-command}
+## Running the command
 
 To run the command you must insert the `provider` name that you have setup for LDAP database synchronization
 inside of your `config/auth.php` file. Let's walk through an example.
@@ -121,7 +102,7 @@ Then, you will be asked to import the users shown and the import will begin:
 Successfully imported / synchronized 2 user(s).
 ```
 
-## Scheduling the command {#scheduling-the-command}
+## Scheduling the command
 
 To run the import as a scheduled job, place the following in your `app/Console/Kernel.php` in the command scheduler:
 
@@ -149,7 +130,7 @@ The above scheduled import command will:
 > option on your configured authentication LdapRecord model so LDAP users signing into your
 > application are applied the same search filter.
 
-## Programmatically Executing {#programmatically-executing}
+## Programmatically Executing
 
 You can call the `ldap:import` command using Laravel's [Artisan](https://laravel.com/docs/laravel/v1/artisan#programmatically-executing-commands)
 facade to programmatically execute the import inside of your application wherever you'd like:
@@ -173,9 +154,9 @@ Artisan::call('ldap:import', [
 ]);
 ```
 
-## Command Arguments {#command-args}
+## Command Arguments
 
-### Provider {#argument-provider}
+### Provider
 
 To execute the import command, you **must** supply an [authentication provider](https://ldaprecord.com/docs/laravel/v1/auth/configuration/#database)
 name. This will retrieve the users from your configured LdapRecord model, and import them using your configured Eloquent model.
@@ -186,7 +167,7 @@ For example, if you have kept the default `users` authentication provider name i
 php artisan ldap:import users
 ```
 
-### User {#argument-user}
+### User
 
 To import or synchronize a single user, insert one of their attributes (such as `mail`, `samaccountname`, `cn`)
 and LdapRecord will try to locate the user for you using Ambiguous Name Resolution. If your LDAP server
@@ -207,9 +188,9 @@ Would you like to display the user(s) to be imported / synchronized? (yes/no) [n
 > y
 ```
 
-## Command Options {#command-options}
+## Command Options
 
-### Filter {#option-filter}
+### Filter
 
 The `--filter` (or `-f`) option allows you to apply a raw filter to further narrow down the users who are imported:
 
@@ -232,7 +213,7 @@ php artisan ldap:import ldap --filter "(cn=Doe\, John)"
 
 If this is not done, you will receive a `Bad search filter` exception during import.
 
-### Attributes {#option-attributes}
+### Attributes
 
 The `--attributes` (or `-a`) option allows you to specify the attributes that should be returned from your LDAP server.
 
@@ -246,7 +227,7 @@ This option is great for reducing memory usage for large imports, since all attr
 php artisan ldap:import ldap --attributes "cn,mail,sn,givenname,samaccountname"
 ```
 
-### Delete {#option-delete}
+### Delete
 
 > This option is only available on Active Directory models.
 
@@ -257,7 +238,7 @@ will be deleted if your `User` Eloquent model does not have soft-deletes enabled
 php artisan ldap:import ldap --delete
 ```
 
-### Delete Missing {#option-delete-missing}
+### Delete Missing
 
 > This option is available for **all LDAP directories**.
 
@@ -281,7 +262,7 @@ If an executed import does not successfully import any users, no users will be s
 **Only users that belong to the domain you are importing will be soft-deleted.**
 
 This means, all other users will be left untouched, such as local database
-users  that were not imported from an LDAP server, as well as users
+users that were not imported from an LDAP server, as well as users
 that were imported from another domain.
 
 **Soft-deleted users are reported in the log.**
@@ -315,17 +296,17 @@ class UsersDeletedFromImport
     {
         // \Illuminate\Support\Collection
         $event->ids;
-        
+
         // \LdapRecord\Models\ActiveDirectory\User
         $event->ldap;
-        
+
         // \App\User
         $event->eloquent;
     }
 }
 ```
 
-### Restore {#option-restore}
+### Restore
 
 > This option is only available on Active Directory models.
 
@@ -338,7 +319,7 @@ php artisan ldap:import ldap --restore
 > Typically, the `--restore` and `--delete` options would be used together to
 > allow full synchronization of user disablements and restoration.
 
-### No Logging {#option-no-logging}
+### No Logging
 
 The `--no-log` option allows you to disable logging during the command.
 
@@ -348,7 +329,7 @@ php artisan ldap:import ldap --no-log
 
 By default this is enabled, regardless if `logging` is disabled in your `config/ldap.php` file.
 
-### No Interaction {#option-no-interaction}
+### No Interaction
 
 To run the import command via a schedule, use the `--no-interaction` flag:
 
@@ -378,7 +359,7 @@ $schedule->command('ldap:import ldap', ['--no-interaction', '--filter' => $filte
     ->everyMinute();
 ```
 
-### Additional Tips {#tips}
+### Additional Tips
 
 - Users who already exist inside your database will be updated with your configured providers `sync_attributes`.
 - Users **will never be force deleted** from the import command. You will need to delete users manually
@@ -386,10 +367,13 @@ $schedule->command('ldap:import ldap', ['--no-interaction', '--filter' => $filte
 - If you have a password mutator (setter) on your `User` Eloquent model, it will not override it.
   This allows you to hash the random 16 character passwords in your own way.
 - Imported (new) users will be reported in your log files:
+
 ```text
 [2020-01-29 14:51:51] local.INFO: Imported user johndoe
 ```
+
 - Users that fail to be imported are also reported in your log files, alongside the message of the exception that caused the failure:
+
 ```text
 [2020-01-29 14:51:51] local.ERROR: Unable to import user janedoe. SQLSTATE[23000]: Integrity constraint violation: 1048
 ```

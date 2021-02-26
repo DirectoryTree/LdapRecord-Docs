@@ -7,21 +7,14 @@ section: content
 
 # Testing
 
-- [Introduction](#introduction)
-- [Getting Started](#getting-started)
-- [Creating the test](#creating-the-test)
-- [Scopes](#scopes)
-- [Rules](#rules)
-- [SSO / Windows Authentication](#sso)
-
-## Introduction {#introduction}
+## Introduction
 
 LdapRecord-Laravel prides itself on giving you a great and easy testing experience using
 the [Directory Emulator](/docs/laravel/v1/testing#directory-emulator). Using it, we can
 test authentication [rules](/docs/laravel/v1/auth/configuration#rules),
-[scopes](/docs/core/v1/models#query-scopes) and group memberships. 
+[scopes](/docs/core/v1/models#query-scopes) and group memberships.
 
-## Getting Started {#getting-started}
+## Getting Started
 
 Before we begin, you must require the `doctrine/dbal` into your composers `require-dev` for testing.
 This is due to the `$table->dropColumns(['guid', 'domain'])` call inside of the additional
@@ -36,7 +29,7 @@ To do so, run the following command:
 composer require doctrine/dbal --dev
 ```
 
-## Creating the test {#creating-the-test}
+## Creating the test
 
 Let's whip up a test by running the following command:
 
@@ -177,7 +170,7 @@ Finally, we'll check to make sure we can retrieve the successfully authenticated
 user and that their attributes were successfully synchronized into our Eloquent
 database model.
 
-## Scopes {#scopes}
+## Scopes
 
 To test scopes that you apply to the LdapRecord model you are using for authentication,
 you will need to apply the attributes to the fake user you create to test that
@@ -204,7 +197,7 @@ class AdministratorsScope implements Scope
     public function apply(Builder $query, Model $model)
     {
         $ou = OrganizationalUnit::where('ou', '=', 'Accounting')->first();
-        
+
         $query->in($ou);
     }
 }
@@ -223,7 +216,7 @@ class User extends Model
     protected static function boot()
     {
         parent::boot();
-        
+
         static::addGlobalScope(new AdministratorsScope());
     }
 }
@@ -240,7 +233,7 @@ public function test_auth_works()
     $ou = OrganizationalUnit::create(['ou' => 'Administrators']);
 
     $ldapUser = (new User)->inside($ou);
-    
+
     $ldapUser->save([
         'mail' => $this->faker->email,
         'cn' => $this->faker->name,
@@ -294,7 +287,7 @@ created.
 We have also modified our redirect assertion to instead validate that the `email` session
 key contains errors. This key will contain the `Invalid credentials` message.
 
-## Rules {#rules}
+## Rules
 
 As with testing scopes, to test rules we must either apply or omit data on
 our fake user to test our LDAP authentication rules.
@@ -331,7 +324,7 @@ This rule has also been added into our providers configuration inside our `confi
 
 'providers' => [
     // ...
-    
+
     'ldap' => [
         // ...
         'rules' => [
@@ -396,7 +389,7 @@ public function test_auth_fails()
         'email' => $ldapUser->mail[0],
         'password' => 'secret',
     ])->assertSessionHasErrors('email');
-      
+
     $this->assertFalse(Auth::check());
 }
 ```
@@ -404,7 +397,7 @@ public function test_auth_fails()
 The above test passes because we have not added our LDAP user into any groups -
 so the `exists()` check inside of our rule returns `false`.
 
-## SSO / Windows Authentication {#sso}
+## SSO / Windows Authentication
 
 To test Sigle-Sign-On (or Windows Authentication) for your Laravel application, you must
 set the authenticating users [down-level logon name](https://docs.microsoft.com/en-us/windows/win32/secauthn/user-name-formats#down-level-logon-name)
@@ -426,7 +419,7 @@ public function test_windows_authentication_works()
         'objectguid' => $this->faker->uuid,
         'samaccountname' => $this->faker->userName,
     ]);
-    
+
     // Replace 'DOMAIN' with your domain from your configured LDAP
     // `base_dn`. For example, if your `base_dn` is equal to
     // 'dc=company,dc=com', then you would use 'COMPANY'.
@@ -438,10 +431,10 @@ public function test_windows_authentication_works()
     $this->withServerVariables([
         WindowsAuthenticate::$serverKey => $authUser
     ]);
-    
+
     // Attempt accessing a protected page:
     $this->get('/dashboard')->assertOk();
-    
+
     // Ensure the user was authenticated:
     $this->assertTrue(Auth::check());
 }

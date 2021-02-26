@@ -7,99 +7,9 @@ section: content
 
 # Available Search Methods (API)
 
-<div class="api-method-list">
-<p>
-<a href="#addControl">addControl</a>
-<a href="#addFilter">addFilter</a>
-<a href="#addSelect">addSelect</a>
-<a href="#andFilter">andFilter</a>
-<a href="#cache">cache</a>
-<a href="#clearFilters">clearFilters</a>
-<a href="#delete">delete</a>
-<a href="#deleteAttributes">deleteAttributes</a>
-<a href="#escape">escape</a>
-<a href="#find">find</a>
-<a href="#findBy">findBy</a>
-<a href="#findByOrFail">findByOrFail</a>
-<a href="#findMany">findMany</a>
-<a href="#findManyBy">findManyBy</a>
-<a href="#findOrFail">findOrFail</a>
-<a href="#first">first</a>
-<a href="#firstOrFail">firstOrFail</a>
-<a href="#get">get</a>
-<a href="#getCache">getCache</a>
-<a href="#getConnection">getConnection</a>
-<a href="#getDn">getDn</a>
-<a href="#getFilters">getFilters</a>
-<a href="#getGrammar">getGrammar</a>
-<a href="#getQuery">getQuery</a>
-<a href="#getSelects">getSelects</a>
-<a href="#getType">getType</a>
-<a href="#getUnescapedQuery">getUnescapedQuery</a>
-<a href="#hasControl">hasControl</a>
-<a href="#hasSelects">hasSelects</a>
-<a href="#in">in</a>
-<a href="#insert">insert</a>
-<a href="#insertAttributes">insertAttributes</a>
-<a href="#isNested">isNested</a>
-<a href="#isPaginated">isPaginated</a>
-<a href="#limit">limit</a>
-<a href="#listing">listing</a>
-<a href="#model">model</a>
-<a href="#nested">nested</a>
-<a href="#newInstance">newInstance</a>
-<a href="#newNestedInstance">newNestedInstance</a>
-<a href="#notFilter">notFilter</a>
-<a href="#orFilter">orFilter</a>
-<a href="#orWhere">orWhere</a>
-<a href="#orWhereApproximatelyEquals">orWhereApproximatelyEquals</a>
-<a href="#orWhereContains">orWhereContains</a>
-<a href="#orWhereEndsWith">orWhereEndsWith</a>
-<a href="#orWhereEquals">orWhereEquals</a>
-<a href="#orWhereHas">orWhereHas</a>
-<a href="#orWhereNotContains">orWhereNotContains</a>
-<a href="#orWhereNotEndsWith">orWhereNotEndsWith</a>
-<a href="#orWhereNotEquals">orWhereNotEquals</a>
-<a href="#orWhereNotHas">orWhereNotHas</a>
-<a href="#orWhereNotStartsWith">orWhereNotStartsWith</a>
-<a href="#orWhereRaw">orWhereRaw</a>
-<a href="#orWhereStartsWith">orWhereStartsWith</a>
-<a href="#paginate">paginate</a>
-<a href="#query">query</a>
-<a href="#rawFilter">rawFilter</a>
-<a href="#read">read</a>
-<a href="#recursive">recursive</a>
-<a href="#rename">rename</a>
-<a href="#select">select</a>
-<a href="#setCache">setCache</a>
-<a href="#setConnection">setConnection</a>
-<a href="#setDn">setDn</a>
-<a href="#setGrammar">setGrammar</a>
-<a href="#update">update</a>
-<a href="#updateAttributes">updateAttributes</a>
-<a href="#where">where</a>
-<a href="#whereApproximatelyEquals">whereApproximatelyEquals</a>
-<a href="#whereBetween">whereBetween</a>
-<a href="#whereContains">whereContains</a>
-<a href="#whereDeleted">whereDeleted</a>
-<a href="#whereEndsWith">whereEndsWith</a>
-<a href="#whereEquals">whereEquals</a>
-<a href="#whereHas">whereHas</a>
-<a href="#whereIn">whereIn</a>
-<a href="#whereNotContains">whereNotContains</a>
-<a href="#whereNotEndsWith">whereNotEndsWith</a>
-<a href="#whereNotEquals">whereNotEquals</a>
-<a href="#whereNotHas">whereNotHas</a>
-<a href="#whereNotStartsWith">whereNotStartsWith</a>
-<a href="#whereRaw">whereRaw</a>
-<a href="#whereStartsWith">whereStartsWith</a>
-<a href="#withDeleted">withDeleted</a>
-</p>
-</div>
-
 ## Method Listing
 
-#### `addControl` {#addControl}
+#### `addControl`
 
 Add a server control to be executed with the LDAP search query:
 
@@ -120,7 +30,7 @@ $query->addControl(
 var_dump($query->controls);
 ```
 
-#### `addFilter` {#addFilter}
+#### `addFilter`
 
 Add a filter with its bindings to the query:
 
@@ -138,7 +48,7 @@ $bindings = [
 $query->addFilter($type = 'and', $bindings);
 ```
 
-#### `addSelect` {#addSelect}
+#### `addSelect`
 
 Add an attribute to be selected for the query:
 
@@ -164,7 +74,7 @@ $query->addSelect(['sn', 'givenname']);
 var_dump($query->getSelects());
 ```
 
-#### `andFilter` {#andFilter}
+#### `andFilter`
 
 Add a nested "and" filter to the query:
 
@@ -180,7 +90,7 @@ $query->andFilter(function (\LdapRecord\Query\Builder $q) {
 echo $query->getUnescapedQuery();
 ```
 
-#### `cache` {#cache}
+#### `cache`
 
 Cache the executed query until the given date has passed:
 
@@ -194,7 +104,7 @@ $until = new \DateTime('+1 day');
 $query->cache($until, $flush = false);
 ```
 
-#### `clearFilters` {#clearFilters}
+#### `clearFilters`
 
 Reset / clear all filters that have been added to the query:
 
@@ -213,7 +123,7 @@ $query->clearFilters();
 var_dump($query->getFilters());
 ```
 
-#### `delete` {#delete}
+#### `delete`
 
 Delete an entry from the directory:
 
@@ -223,7 +133,7 @@ $query = $connection->query();
 $query->delete('cn=John Doe,ou=Users,dc=local,dc=com');
 ```
 
-#### `deleteAttributes` {#deleteAttributes}
+#### `deleteAttributes`
 
 Delete an attributes values from the directory:
 
@@ -243,7 +153,7 @@ $member = 'cn=John Doe,ou=Users,dc=local,dc=com';
 $query->deleteAttributes($entry, ['member' => [$member]]);
 ```
 
-#### `escape` {#escape}
+#### `escape`
 
 Prepare a value to be escaped:
 
@@ -276,7 +186,7 @@ $value->get();
 (string) $value;
 ```
 
-#### `find` {#find}
+#### `find`
 
 Find an entry in the directory by its distinguished name:
 
@@ -290,7 +200,7 @@ if ($entry = $query->find('cn=John Doe,dc=local,dc=com')) {
 }
 ```
 
-#### `findBy` {#findBy}
+#### `findBy`
 
 Find the first matching entry in the directory by the given attribute and value:
 
@@ -304,7 +214,7 @@ if ($entry = $query->findBy('samaccountname', 'johndoe')) {
 }
 ```
 
-#### `findByOrFail` {#findByOrFail}
+#### `findByOrFail`
 
 Find the first matching entry in the directory by the given attribute and value **or fail**:
 
@@ -318,7 +228,7 @@ try {
 }
 ```
 
-#### `findMany` {#findMany}
+#### `findMany`
 
 Find many entries in the directory by an array of Distinguished Names:
 
@@ -331,7 +241,7 @@ $entries = $query->findMany([
 ]);
 ```
 
-#### `findManyBy` {#findManyBy}
+#### `findManyBy`
 
 Find many entries in the directory by the given attribute and values:
 
@@ -341,7 +251,7 @@ $query = $connection->query();
 $entries = $query->findManyBy('samaccountname', ['johndoe', 'janedoe', 'sbauman']);
 ```
 
-#### `findOrFail` {#findOrFail}
+#### `findOrFail`
 
 Find an entry in the directory by its distinguished name **or fail**:
 
@@ -355,7 +265,7 @@ try {
 }
 ```
 
-#### `first` {#first}
+#### `first`
 
 Get the first resulting entry of a query from the directory:
 
@@ -365,7 +275,7 @@ $query = $connection->query();
 $entry = $query->whereStartsWith('cn', 'Steve')->first();
 ```
 
-#### `firstOrFail` {#firstOrFail}
+#### `firstOrFail`
 
 Get the first resulting entry of a query from the directory **or fail**:
 
@@ -379,7 +289,7 @@ try {
 }
 ```
 
-#### `get` {#get}
+#### `get`
 
 Get the resulting entries of a query from the directory:
 
@@ -393,7 +303,7 @@ $query = $connection->query();
 $entries = $query->where('company', '=', 'Acme')->get();
 ```
 
-#### `getCache` {#getCache}
+#### `getCache`
 
 Get the query cache (if set):
 
@@ -404,7 +314,7 @@ $query = $connection->query();
 $cache = $query->getCache();
 ```
 
-#### `getConnection` {#getConnection}
+#### `getConnection`
 
 Get the underlying connection the query is executing on:
 
@@ -415,7 +325,7 @@ $query = $connection->query();
 $conn = $query->getConnection();
 ```
 
-#### `getDn` {#getDn}
+#### `getDn`
 
 Get the base Distinguished Name that the query is executing on:
 
@@ -428,7 +338,7 @@ $query->setDn('ou=Users,dc=local,dc=com');
 $base = $query->getDn();
 ```
 
-#### `getFilters` {#getFilters}
+#### `getFilters`
 
 Get the filters that have been added to the query:
 
@@ -442,7 +352,7 @@ $query->where('company', '=', 'Acme');
 //     0 => array:3 [▼
 //       "field" => "company"
 //       "operator" => "="
-//       "value" => LdapRecord\Models\Attributes\EscapedValue {#17 ▶}
+//       "value" => LdapRecord\Models\Attributes\EscapedValue
 //     ]
 //   ]
 //   "or" => []
@@ -451,7 +361,7 @@ $query->where('company', '=', 'Acme');
 var_dump($query->getFilters());
 ```
 
-#### `getGrammar` {#getGrammar}
+#### `getGrammar`
 
 Get the underlying query grammar instance:
 
@@ -462,7 +372,7 @@ $query = $connection->query();
 $grammar = $query->getGrammar();
 ```
 
-#### `getQuery` {#getQuery}
+#### `getQuery`
 
 Get the raw, **escaped** LDAP query filter:
 
@@ -475,7 +385,7 @@ $query->where('company', '=', 'Acme');
 $filter = $query->getQuery();
 ```
 
-#### `getSelects` {#getSelects}
+#### `getSelects`
 
 Get the selected attributes of the query:
 
@@ -500,7 +410,7 @@ $query->select(['cn', 'mail', 'givenname']);
 var_dump($query->getSelects());
 ```
 
-#### `getType` {#getType}
+#### `getType`
 
 Get the type of LDAP query to be executed, either `search`, `listing` or `read`:
 
@@ -517,7 +427,7 @@ $query->listing()->getType();
 $query->read()->getType();
 ```
 
-#### `getUnescapedQuery` {#getUnescapedQuery}
+#### `getUnescapedQuery`
 
 Get the raw, **unescaped** LDAP query filter:
 
@@ -530,7 +440,7 @@ $query->where('company', '=', 'Acme');
 $filter = $query->getUnescapedQuery();
 ```
 
-#### `hasControl` {#hasControl}
+#### `hasControl`
 
 Determine if the query has a specific LDAP control OID added:
 
@@ -542,7 +452,7 @@ if ($query->hasControl($oid = '1.2.840.113556.1.4.417')) {
 }
 ```
 
-#### `hasSelects` {#hasSelects}
+#### `hasSelects`
 
 Determine if the query has any selects added:
 
@@ -558,7 +468,7 @@ $query->select(['cn', 'sn']);
 $query->hasSelects();
 ```
 
-#### `in` {#in}
+#### `in`
 
 Sets the base Distinguished Name to perform a search upon.
 
@@ -571,7 +481,7 @@ $query = $connection->query();
 $query->in('ou=Users,dc=local,dc=com')->get();
 ```
 
-#### `insert` {#insert}
+#### `insert`
 
 Insert a new entry in the directory:
 
@@ -593,7 +503,7 @@ $attributes = [
 $query->insert($dn, $attributes);
 ```
 
-#### `insertAttributes` {#insertAttributes}
+#### `insertAttributes`
 
 Create attributes on an existing entry in the directory:
 
@@ -609,7 +519,7 @@ $attributes = [
 $query->insertAttributes($dn, $attributes);
 ```
 
-#### `isNested` {#isNested}
+#### `isNested`
 
 Determine if a query builder is nested:
 
@@ -625,7 +535,7 @@ $query->andFilter(function ($q) {
 });
 ```
 
-#### `isPaginated` {#isPaginated}
+#### `isPaginated`
 
 Determine if a query builder has been paginated:
 
@@ -641,7 +551,7 @@ $results = $query->paginate();
 $query->isPaginated();
 ```
 
-#### `limit` {#limit}
+#### `limit`
 
 Set the maxmimum number of entries to be returned from the directory:
 
@@ -651,7 +561,7 @@ $query = $connection->query();
 $results = $query->whereHas('cn')->limit(200)->get();
 ```
 
-#### `listing` {#listing}
+#### `listing`
 
 Perform an LDAP `listing` operation, requesting only immediate children / leaf nodes of the query base:
 
@@ -662,7 +572,7 @@ $query = $connection->query();
 $groups = $query->in('ou=Groups,dc=local,dc=com')->listing()->get();
 ```
 
-#### `model` {#model}
+#### `model`
 
 Create a new query builder instance for the given model:
 
@@ -674,7 +584,7 @@ $query = $connection->query();
 $modelQuery = $query->model(new User);
 ```
 
-#### `nested` {#nested}
+#### `nested`
 
 Whether to mark the current query as nested:
 
@@ -696,7 +606,7 @@ $query->nested(false)
     ->getUnescapedQuery();
 ```
 
-#### `newInstance` {#newInstance}
+#### `newInstance`
 
 Create a new query instance:
 
@@ -710,7 +620,7 @@ $newQuery = $query->newInstace();
 $newQuery = $query->newInstace('ou=Users,dc=local,dc=com');
 ```
 
-#### `newNestedInstance` {#newNestedInstance}
+#### `newNestedInstance`
 
 Create a new nested query instance:
 
@@ -726,7 +636,7 @@ $nested = $query->newNestedInstance(function (Builder $query) {
 });
 ```
 
-#### `notFilter` {#notFilter}
+#### `notFilter`
 
 Add a nested 'not' filter to the current query:
 
@@ -739,7 +649,7 @@ $query->notFilter(function ($query) {
 })->getUnescapedQuery();
 ```
 
-#### `orFilter` {#orFilter}
+#### `orFilter`
 
 Add a nested 'or' filter to the current query:
 
@@ -752,7 +662,7 @@ $query->orFilter(function ($query) {
 })->getUnescapedQuery();
 ```
 
-#### `orWhere` {#orWhere}
+#### `orWhere`
 
 Add an 'or where' clause to the query:
 
@@ -772,7 +682,7 @@ $connection->query()
     ->getUnescapedQuery();
 ```
 
-#### `orWhereApproximatelyEquals` {#orWhereApproximatelyEqual}
+#### `orWhereApproximatelyEquals`
 
 Add an 'or where approximately equals' clause to the query:
 
@@ -789,7 +699,7 @@ $connection->query()
     ->getUnescapedQuery();
 ```
 
-#### `orWhereContains` {#orWhereContains}
+#### `orWhereContains`
 
 Add an 'or where contains' clause to the query:
 
@@ -806,7 +716,7 @@ $connection->query()
     ->getUnescapedQuery();
 ```
 
-#### `orWhereEndsWith` {#orWhereEndsWith}
+#### `orWhereEndsWith`
 
 Add an 'or where ends with' clause to the query:
 
@@ -823,7 +733,7 @@ $connection->query()
     ->getUnescapedQuery();
 ```
 
-#### `orWhereEquals` {#orWhereEquals}
+#### `orWhereEquals`
 
 Add an 'or where equals' clause to the query:
 
@@ -840,7 +750,7 @@ $connection->query()
     ->getUnescapedQuery();
 ```
 
-#### `orWhereHas` {#orWhereHas}
+#### `orWhereHas`
 
 Add an 'or where has' clause to the query:
 
@@ -857,7 +767,7 @@ $connection->query()
     ->getUnescapedQuery();
 ```
 
-#### `orWhereNotContains` {#orWhereNotContains}
+#### `orWhereNotContains`
 
 Add an 'or where not contains' clause to the query:
 
@@ -874,7 +784,7 @@ $connection->query()
     ->getUnescapedQuery();
 ```
 
-#### `orWhereNotEndsWith` {#orWhereNotEndsWith}
+#### `orWhereNotEndsWith`
 
 Add an 'or where not ends with' clause to the query:
 
@@ -891,7 +801,7 @@ $connection->query()
     ->getUnescapedQuery();
 ```
 
-#### `orWhereNotEquals` {#orWhereNotEquals}
+#### `orWhereNotEquals`
 
 Add an 'or where not equals' clause to the query:
 
@@ -908,7 +818,7 @@ $connection->query()
     ->getUnescapedQuery();
 ```
 
-#### `orWhereNotHas` {#orWhereNotHas}
+#### `orWhereNotHas`
 
 Add an 'or where not has' clause to the query:
 
@@ -925,7 +835,7 @@ $connection->query()
     ->getUnescapedQuery();
 ```
 
-#### `orWhereNotStartsWith` {#orWhereNotStartsWith}
+#### `orWhereNotStartsWith`
 
 Add an 'or where not starts with' clause to the query:
 
@@ -942,7 +852,7 @@ $connection->query()
     ->getUnescapedQuery();
 ```
 
-#### `orWhereRaw` {#orWhereRaw}
+#### `orWhereRaw`
 
 Add a "or where" clause to the query without escaping the value, useful
 when values can contain distinguished names or GUIDs:
@@ -970,7 +880,7 @@ $connection->query()
     ->getUnescapedQuery();
 ```
 
-#### `orWhereStartsWith` {#orWhereStartsWith}
+#### `orWhereStartsWith`
 
 Add an 'or where starts with' clause to the query:
 
@@ -987,7 +897,7 @@ $connection->query()
     ->getUnescapedQuery();
 ```
 
-#### `paginate` {#paginate}
+#### `paginate`
 
 Paginate the query by the given limit, returning all results from the LDAP directory:
 
@@ -1003,7 +913,7 @@ $results = $query->paginate();
 $results = $query->paginate(500);
 ```
 
-#### `query` {#query}
+#### `query`
 
 Execute a raw filter query on the connection:
 
@@ -1013,7 +923,7 @@ $query = $connection->query();
 $results = $query->query('(cn=John Doe)');
 ```
 
-#### `rawFilter` {#rawFilter}
+#### `rawFilter`
 
 Add a raw LDAP search filter to the query:
 
@@ -1027,7 +937,7 @@ $query
     ->getUnescapedQuery();
 ```
 
-#### `read` {#read}
+#### `read`
 
 Set the query to read a single search result using the query's base DN (using `ldap_read`):
 
@@ -1039,7 +949,7 @@ $query = $connection->query();
 $entry = $query->setDn('cn=John Doe,dc=local,dc=com')->read()->first();
 ```
 
-#### `recursive` {#recursive}
+#### `recursive`
 
 Set the query to include recursive search results (using `ldap_search`):
 
@@ -1051,7 +961,7 @@ $query = $connection->query();
 $results = $query->recursive()->get();
 ```
 
-#### `rename` {#rename}
+#### `rename`
 
 Rename or move an object. Performs an `ldap_rename` under the hood:
 
@@ -1071,7 +981,7 @@ $connection->query()->rename(
 );
 ```
 
-#### `select` {#select}
+#### `select`
 
 Set the attributes to return from the directory:
 
@@ -1085,7 +995,7 @@ $query = $connection->query();
 $query->select(['cn', 'sn'])->get();
 ```
 
-#### `setCache` {#setCache}
+#### `setCache`
 
 Set the cache instance to use for the query:
 
@@ -1097,7 +1007,7 @@ $query = $connection->query();
 $query->setCache($cache);
 ```
 
-#### `setConnection` {#setConnection}
+#### `setConnection`
 
 Set the connection instance to use for the query:
 
@@ -1109,7 +1019,7 @@ $newConnection = new Connection($config = ['...']);
 $query->setConnection($newConnection);
 ```
 
-#### `setDn` {#setDn}
+#### `setDn`
 
 Sets the base Distinguished Name to perform a search upon.
 
@@ -1120,7 +1030,7 @@ $query = $connection->query();
 $query->setDn('ou=Users,dc=local,dc=com')->get();
 ```
 
-#### `setGrammar` {#setGrammar}
+#### `setGrammar`
 
 Set the underlying query `Grammar` instance:
 
@@ -1134,7 +1044,7 @@ $myGrammarInstance = new Grammar();
 $query->setGrammar($myGrammarInstance);
 ```
 
-#### `update` {#update}
+#### `update`
 
 Update an entry with the given modifications. Performs an `ldap_modify_batch` under the hood:
 
@@ -1154,7 +1064,7 @@ $modifs = [
 $query->update($dn, $modifs);
 ```
 
-#### `updateAttributes` {#updateAttributes}
+#### `updateAttributes`
 
 Update / replace an entry's attribute with the given values. Performs an `ldap_mod_replace` under the hood:
 
@@ -1170,7 +1080,7 @@ $query->updateAttributes($dn, ['telephoneNumber' => []]);
 $query->updateAttributes($dn, ['telephoneNumber' => ['+1 555 555 1717']]);
 ```
 
-#### `where` {#where}
+#### `where`
 
 Add a "where" clause to the query, searching for objects using the given attribute, operator, and value:
 
@@ -1181,7 +1091,7 @@ $query = $connection->query();
 $query->where('cn', '=', 'John Doe')->getUnescapedQuery();
 ```
 
-#### `whereApproximatelyEquals` {#whereApproximatelyEquals}
+#### `whereApproximatelyEquals`
 
 Add a "where approximately equals" clause to the query, searching for objects where the attribute is around the given value:
 
@@ -1198,7 +1108,7 @@ The approximately equals operator is great for performing "sounds like" search o
 
 For example, the above query would match entries with `givenName` values of either `John` or `Jon`.
 
-#### `whereBetween` {#whereBetween}
+#### `whereBetween`
 
 Add a "where between" clause to the query, searching for objects where the attribute is between the given values:
 
@@ -1214,7 +1124,7 @@ $query->whereBetween('whencreated', [$from, $to]);
 $query->getUnescapedQuery();
 ```
 
-#### `whereContains` {#whereContains}
+#### `whereContains`
 
 Add a "where contains" clause to the query, searching for objects where the attribute contains the given value:
 
@@ -1225,7 +1135,7 @@ $query = $connection->query();
 $query->whereContains('title', 'Accountant')->getUnescapedQuery();
 ```
 
-#### `whereDeleted` {#whereDeleted}
+#### `whereDeleted`
 
 Set an OID server control that will be sent with the query to instruct the LDAP server
 to include deleted objects in the result set, and add a `(isDeleted=TRUE)` clause
@@ -1237,7 +1147,7 @@ $query = $connection->query();
 $onlyDeleted = $query->whereDeleted()->get();
 ```
 
-#### `whereEndsWith` {#whereEndsWith}
+#### `whereEndsWith`
 
 Add a "where ends with" clause to the query, searching for objects where the attribute ends with the given value:
 
@@ -1248,7 +1158,7 @@ $query = $connection->query();
 $query->whereEndsWith('title', 'Accountant')->getUnescapedQuery();
 ```
 
-#### `whereEquals` {#whereEquals}
+#### `whereEquals`
 
 Add a "where equals" clause to the query, searching for objects where the attribute equals the given value:
 
@@ -1259,7 +1169,7 @@ $query = $connection->query();
 $query->whereEquals('department', 'Accounting')->getUnescapedQuery();
 ```
 
-#### `whereHas` {#whereHas}
+#### `whereHas`
 
 Add a "where has" clause to the query, searching for objects where the attribute exists, or is not empty:
 
@@ -1270,7 +1180,7 @@ $query = $connection->query();
 $query->whereHas('department')->getUnescapedQuery();
 ```
 
-#### `whereIn` {#whereIn}
+#### `whereIn`
 
 Add a "where in" clause to the query, searching for objects where the attribute does not contain any of the one given values:
 
@@ -1281,7 +1191,7 @@ $query = $connection->query();
 $query->whereIn('name', ['john', 'mary', 'sue'])->getUnescapedQuery();
 ```
 
-#### `whereNotContains` {#whereNotContains}
+#### `whereNotContains`
 
 Add a "where doesn't contain" clause to the query, searching for objects where the attribute does not contain the given value:
 
@@ -1292,7 +1202,7 @@ $query = $connection->query();
 $query->whereNotContains('telephoneNumber', '555')->getUnescapedQuery();
 ```
 
-#### `whereNotEndsWith` {#whereNotEndsWith}
+#### `whereNotEndsWith`
 
 Add a "where doesn't end with" clause to the query, searching for objects where the attribute does not end with the given value:
 
@@ -1303,7 +1213,7 @@ $query = $connection->query();
 $query->whereNotEndsWith('mail', '@local.com')->getUnescapedQuery();
 ```
 
-#### `whereNotEquals` {#whereNotEquals}
+#### `whereNotEquals`
 
 Add a "where doesn't equal" clause to the query, searching for objects where the attribute does not contain the given value:
 
@@ -1314,7 +1224,7 @@ $query = $connection->query();
 $query->whereNotEquals('department', 'Accounting')->getUnescapedQuery();
 ```
 
-#### `whereNotHas` {#whereNotHas}
+#### `whereNotHas`
 
 Add a "where doesn't have" clause to the query, searching for objects where the attribute does not exist, or is empty:
 
@@ -1325,7 +1235,7 @@ $query = $connection->query();
 $query->whereNotHas('mail')->getUnescapedQuery();
 ```
 
-#### `whereNotStartsWith` {#whereNotStartsWith}
+#### `whereNotStartsWith`
 
 Add a "where doesn't start with" clause to the query, searching for objects where the attribute does not start with the given value:
 
@@ -1336,7 +1246,7 @@ $query = $connection->query();
 $query->whereNotStartsWith('cn', 'John')->getUnescapedQuery();
 ```
 
-#### `whereRaw` {#whereRaw}
+#### `whereRaw`
 
 Add a "where" clause to the query without escaping the value, useful
 when values can contain distinguished names or GUIDs:
@@ -1347,7 +1257,7 @@ $query = $connection->query();
 $query->whereRaw('objectguid', '=', '270db4d0-249d-46a7-9cc5-eb695d9af9ac');
 ```
 
-#### `whereStartsWith` {#whereStartsWith}
+#### `whereStartsWith`
 
 Add a "starts with" clause to the query, searching for objects where the attribute starts with the given value:
 
@@ -1358,7 +1268,7 @@ $query = $connection->query();
 $query->whereStartsWith('cn', 'John')->getUnescapedQuery();
 ```
 
-#### `withDeleted` {#withDeleted}
+#### `withDeleted`
 
 Set an OID server control that will be sent with the query to instruct
 the LDAP server to include deleted objects in the result set:

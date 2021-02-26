@@ -7,19 +7,14 @@ section: content
 
 # Database Authentication Installation
 
-- [Introduction](#introduction)
-- [Publishing The Required Migration](#publishing-required-migration)
-- [Add The Required Trait and Interface](#add-required-trait-and-interface)
-- [Migration Customization](#migration-customization)
-
-## Introduction {#introduction}
+## Introduction
 
 Database authentication requires the addition of two (2) database columns inside of your `users` database table:
 
 - **`guid`** <br/> This is for storing your LDAP users `objectguid`. It is used for locating and synchronizing your LDAP user.<br/><br/>
 - **`domain`** <br/> This is for storing your LDAP users connection name. It is used to identify users from different domains.
 
-## Publishing The Required Migration {#publishing-required-migration}
+## Publishing The Required Migration
 
 Publish the migration using the below command:
 
@@ -33,7 +28,7 @@ Then run the migration using the below command:
 php artisan migrate
 ```
 
-## Add The Required Trait and Interface {#add-required-trait-and-interface}
+## Add The Required Trait and Interface
 
 Add the following interface and trait to your `User` Eloquent model:
 
@@ -81,7 +76,7 @@ class User extends Authenticatable implements LdapAuthenticatable
     {
         return 'my_domain_column';
     }
-    
+
     public function getLdapGuidColumn()
     {
         return 'my_guid_column';

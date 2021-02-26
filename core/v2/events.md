@@ -5,16 +5,9 @@ extends: _layouts.core.page
 section: content
 ---
 
-# Events {#events}
+# Events
 
-- [Introduction](#introduction)
-- [Registering Listeners](#registering-listeners)
-- [Model Events](#model-events)
-- [Wildcard Event Listeners](#wildcard-event-listeners)
-- [Determining the event connection](#determining-the-connection)
-- [List of Events](#list-of-events)
-
-## Introduction {#introduction}
+## Introduction
 
 LdapRecord events provide a method of listening for certain LDAP actions
 that are called and execute tasks for that specific event.
@@ -26,7 +19,7 @@ that would be required with implementing those features.
 
 If you've worked with Laravel's event system before, this will feel very familiar.
 
-## Registering Listeners {#registering-listeners}
+## Registering Listeners
 
 Before we get to registering listeners, it's crucial to know that events throughout
 LdapRecord are fired irrespective of the current connection or provider in use.
@@ -41,7 +34,7 @@ To register a listener on an event, retrieve the event dispatcher and call the `
 ```php
 $dispatcher = \LdapRecord\Container::getEventDispatcher();
 
-$dispatcher->listen(Binding::class, function (Binding $event) {    
+$dispatcher->listen(Binding::class, function (Binding $event) {
     $event->connection; // LdapRecord\Connections\Ldap instance
     $event->username; // 'jdoe@acme.org'
     $event->password; // 'super-secret'
@@ -75,7 +68,7 @@ class BindingEventHandler
 }
 ```
 
-## Model Events {#model-events}
+## Model Events
 
 Model events are handled the same way as authentication events.
 
@@ -87,14 +80,14 @@ use LdapRecord\Models\Events\Saving;
 
 $dispatcher = Container::getEventDispatcher();
 
-$dispatcher->listen(Saving::class, function (Saving $event) {    
+$dispatcher->listen(Saving::class, function (Saving $event) {
     // Returns the model instance being saved,
     // eg. `LdapRecord\Models\Entry`
     $event->getModel();
 });
 ```
 
-## Wildcard Event Listeners {#wildcard-event-listeners}
+## Wildcard Event Listeners
 
 You can register listeners using the `*` as a wildcard parameter to catch multiple events with the same listener.
 
@@ -123,7 +116,7 @@ $user->company = 'New Company';
 $user->save();
 ```
 
-## Determining the Connection {#determining-the-connection}
+## Determining the Connection
 
 If you're using multiple LDAP connections and you require the ability to determine which events belong
 to a certain connection, you can do so by verifying the host of the LDAP connection.
@@ -138,9 +131,9 @@ $dispatcher = Container::getEventDispatcher();
 
 $dispatcher->listen(Creating::class, function ($event) {
     $connection = $event->model->getConnection();
-    
+
     $host = $connection->getHost();
-    
+
     echo $host; // Displays 'ldap://192.168.1.1:386'
 });
 ```
@@ -155,14 +148,14 @@ $dispatcher = Container::getEventDispatcher();
 
 $dispatcher->listen(Binding::class, function ($event) {
     $connection = $event->connection;
-    
+
     $host = $connection->getHost();
-    
+
     echo $host; // Displays 'ldap://192.168.1.1:386'
 });
 ```
 
-## List of Events {#list-of-events}
+## List of Events
 
 ### Authentication Events
 

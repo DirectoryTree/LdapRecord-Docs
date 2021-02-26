@@ -7,19 +7,7 @@ section: content
 
 # Authentication Quickstart
 
-- [Introduction](#introduction)
-- [Debugging](#debugging)
-- [Plain Authentication](#plain)
- - [Step 1 - Configure the driver](#configure-plain-auth)
- - [Step 2 - Setting up your LoginController](#plain-controller-setup)
- - [Step 3 - Modifying your Blade views](#plain-view-setup)
-- [Synchronized Database Authentication](#database-sync)
- - [Step 1 - Publish the database migration](#publish-migration)
- - [Step 2 - Configure the driver](#configure-database-auth)
- - [Step 3 - Setting up your database user model](#database-user-model-setup)
- - [Step 4 - Setting up your LoginController](#database-controller-setup)
-
-## Introduction {#introduction}
+## Introduction
 
 > Please complete the [LdapRecord-Laravel quickstart guide](/docs/laravel/v1/quickstart)
 > to install LdapRecord and configure your LDAP connection prior to setting up
@@ -27,10 +15,10 @@ section: content
 
 Before you begin, this guide assumes you have published Laravel's default authentication scaffolding using the `laravel/ui` package.
 
-If you haven't done this yet, please follow Laravel's [auth scaffolding guide](https://laravel.com/docs/7.x/authentication) 
+If you haven't done this yet, please follow Laravel's [auth scaffolding guide](https://laravel.com/docs/7.x/authentication)
 to get started, then head back here once done.
 
-## Debugging {#debugging}
+## Debugging
 
 Inside of your `config/ldap.php` file, ensure you have `logging` enabled during the setup of authentication.
 Doing this will help you immensely in debugging connectivity and authentication issues.
@@ -44,9 +32,9 @@ In addition, you may also run the below artisan command to test connectivity to 
 php artisan ldap:test
 ```
 
-## Plain LDAP Authentication {#plain}
+## Plain LDAP Authentication
 
-### Step 1 - Configure the Authentication Driver {#configure-plain-auth}
+### Step 1 - Configure the Authentication Driver
 
 Inside of your `config/auth.php` file, we must add a new provider in the `providers` array.
 
@@ -88,7 +76,7 @@ Once you have setup your `ldap` provider, you must update the `provider` value i
 ],
 ```
 
-### Step 2 - Setting up your LoginController {#plain-controller-setup}
+### Step 2 - Setting up your LoginController
 
 Now we must change our `LoginController` to allow LdapRecord to properly
 locate users who are attempting to sign into our application. We do
@@ -112,7 +100,7 @@ use Illuminate\Http\Request;
 class LoginController extends Controller
 {
     // ...
-    
+
     protected function credentials(Request $request)
     {
         return [
@@ -123,7 +111,7 @@ class LoginController extends Controller
 }
 ```
 
-### Step 3 - Modifying The Layout Blade View {#plain-view-setup}
+### Step 3 - Modifying The Layout Blade View
 
 When we use plain LDAP authentication, an instance of the LdapRecord `model` you have
 configured for authentication will be returned when calling the `Auth::user()`
@@ -145,16 +133,16 @@ You must change the syntax to the following:
 
 Once you've updated the syntax, your application is now ready to authenticate LDAP users.
 
-## Synchronized Database Authentication {#database-sync}
+## Synchronized Database Authentication
 
-### Step 1 - Publish the Migration {#publish-migration}
+### Step 1 - Publish the Migration
 
 LdapRecord requires you to have two additional user database columns.
 
-Column | Reason |
---- | --- |
-`guid` | This is for storing your LDAP users `objectguid`. It is needed for locating and synchronizing your LDAP user to the database. |
-`domain` | This is for storing your LDAP users connection name. It is needed for storing your configured LDAP connection name of the user. |
+| Column   | Reason                                                                                                                          |
+| -------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `guid`   | This is for storing your LDAP users `objectguid`. It is needed for locating and synchronizing your LDAP user to the database.   |
+| `domain` | This is for storing your LDAP users connection name. It is needed for storing your configured LDAP connection name of the user. |
 
 Go ahead and publish the migration using the below command:
 
@@ -168,7 +156,7 @@ Then, run the migrations with the `artisan migrate` command:
 php artisan migrate
 ```
 
-### Step 2 - Configure the Authentication Driver {#configure-database-auth}
+### Step 2 - Configure the Authentication Driver
 
 Inside of your `config/auth.php` file, we must add a new provider in the `providers` array.
 
@@ -219,17 +207,16 @@ Once you have setup your `ldap` provider, you must update the `provider` value i
 ],
 ```
 
-### Step 3 - Setting up your database user model {#database-user-model-setup}
+### Step 3 - Setting up your database user model
 
 Now, we must add the following trait and interface to our `User` Eloquent model:
 
-Type | Name |
---- |
-Interface | `LdapRecord\Laravel\Auth\LdapAuthenticatable` |
-Trait | `LdapRecord\Laravel\Auth\AuthenticatesWithLdap` |
+| Type      | Name                                            |
+| --------- | ----------------------------------------------- |
+| Interface | `LdapRecord\Laravel\Auth\LdapAuthenticatable`   |
+| Trait     | `LdapRecord\Laravel\Auth\AuthenticatesWithLdap` |
 
-
-```````php
+```php
 // app/User.php
 
 // ...
@@ -242,18 +229,18 @@ class User extends Authenticatable implements LdapAuthenticatable
 
     // ...
 }
-```````
+```
 
 These are required so LdapRecord can set and retrieve your users `domain` and `guid` database columns.
 
 If you would like to override the database column names that are used, you can override the following methods:
 
-Methods |
---- |
-`User::getLdapDomainColumn()` |
-`User::getLdapGuidColumn()` |
+| Methods                       |
+| ----------------------------- |
+| `User::getLdapDomainColumn()` |
+| `User::getLdapGuidColumn()`   |
 
-### Step 4 - Setting up your LoginController: {#database-controller-setup}
+### Step 4 - Setting up your LoginController:
 
 Now we must change our `LoginController` to allow LdapRecord to properly
 locate users who are attempting to sign into our application. We do
@@ -277,7 +264,7 @@ use Illuminate\Http\Request;
 class LoginController extends Controller
 {
     // ...
-    
+
     protected function credentials(Request $request)
     {
         return [

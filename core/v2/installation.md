@@ -5,15 +5,15 @@ extends: _layouts.core.page
 section: content
 ---
 
-# Installation {#installation}
+# Installation
 
 LdapRecord requires the following:
 
-Requirements |
---- |
-PHP >= 7.2 |
-PHP LDAP extension enabled |
-An LDAP server (Active Directory, OpenLDAP, FreeIPA etc.) |
+| Requirements                                              |
+| --------------------------------------------------------- |
+| PHP >= 7.2                                                |
+| PHP LDAP extension enabled                                |
+| An LDAP server (Active Directory, OpenLDAP, FreeIPA etc.) |
 
 LdapRecord uses [Composer](https://getcomposer.org) for installation.
 

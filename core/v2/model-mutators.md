@@ -7,26 +7,16 @@ section: content
 
 # Models: Accessors & Mutators
 
-- [Introduction](#introduction)
-- [Accessors & Mutators](#accessors-amp-mutators)
- - [Defining Accessors](#defining-an-accessor)
- - [Defining Mutators](#defining-a-mutator)
- - [Date Mutators](#date-mutators)
-      - [LDAP Timestamp](#ldap-date-type)
-      - [Windows Timestamp](#windows-date-type)
-      - [Windows Integer Timestamp](#windows-int-date-type)
-- [Attribute Casting](#attribute-casting)
-
-## Introduction {#introduction}
+## Introduction
 
 Accessors and mutators allow you to modify attribute values when you
-retrieve or set them on model instances. If you'd ever used 
+retrieve or set them on model instances. If you'd ever used
 [Laravel accessors or mutators](https://laravel.com/docs/eloquent-mutators),
 you'll feel right at home.
 
-## Accessors & Mutators {#accessors-amp-mutators}
+## Accessors & Mutators
 
-### Defining An Accessor {#defining-an-accessor}
+### Defining An Accessor
 
 For an example, lets say we are working with Active Directory and we
 want to encode the `thumbnailPhoto` attribute whenever we retrieve it
@@ -95,7 +85,7 @@ class User extends Model
 As you can see, alternate casing indicates to LdapRecord that
 the attribute we are looking for contains hyphens.
 
-### Defining A Mutator {#defining-a-mutator}
+### Defining A Mutator
 
 A mutator does the opposite of an accessor. A mutator is a function
 you define that accepts the value of the attribute you are setting
@@ -130,7 +120,7 @@ $user = new User();
 $user->unicodepwd = 'secret';
 ```
 
-### Date Mutators {#date-mutators}
+### Date Mutators
 
 By default, LdapRecord will convert the attributes `createtimestamp` and
 `modifytimestamp` to instances of [Carbon](https://github.com/briannesbitt/Carbon).
@@ -190,7 +180,7 @@ if ($user->accountexpires->isPast()) {
 }
 ```
 
-#### Available Types {#available-date-types}
+#### Available Types
 
 Currently, there are 3 built-in date mutator types. They are:
 
@@ -198,21 +188,21 @@ Currently, there are 3 built-in date mutator types. They are:
 - `windows`
 - `windows-int`
 
-#### LDAP Type {#ldap-date-type}
+#### LDAP Type
 
 The `ldap` type is the most common format for LDAP timestamps -
 outside of Active Directory. This format converts LDAP timestamps
 in the format of `YYYYMMDDHHMMSST`. T is the time zone which
 is usually 'Z' (Zulu Time Zone = UTC/GMT).
 
-#### Windows Type {#windows-date-type}
+#### Windows Type
 
 The `windows` type is similar to the `ldap` type, however it
 differs slightly so it requires its own conversion type. Its
 timestamp is in the format of `YYYYMMDDHHMMSS.0T`. T is the
 time zone which is usually 'Z' (Zulu Time Zone = UTC/GMT).
 
-#### Windows Integer Type {#windows-int-date-type}
+#### Windows Integer Type
 
 The `windows-int` type handles the 18-digit Active Directory timestamp
 format, also named 'Windows NT time format', 'Win32 FILETIME or
@@ -229,7 +219,7 @@ Which equals:
 Monday, September 16, 2019 4:24:01 PM
 ```
 
-## Attribute Casting {#attribute-casting}
+## Attribute Casting
 
 Similarly with Laravel's Eloquent, the `$casts` property on your model provides
 a convenient method of converting attributes to common data types. The `$casts`

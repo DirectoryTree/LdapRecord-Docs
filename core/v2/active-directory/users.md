@@ -7,42 +7,20 @@ section: content
 
 # User Management (Active Directory)
 
-- [Creation](#creation)
-- [Password Management](#password-management)
-  - [Setting Passwords](#setting-passwords)
-  - [Changing Passwords](#changing-passwords)
-  - [Resetting Passwords](#resetting-passwords)
-  - [Password Policy Errors](#password-policy-errors)
-  - [Check If A User Is Locked Out](#checking-user-lockout)
-  - [Getting All Locked Out Users](#getting-locked-out-users)
-  - [Unlock Locked Out User Account](#unlock-user-account)
-  - [Extend User Password Expiration](#password-extension)
-  - [User Must Change Password at Next Logon](#password-reset-on-next-login)
-- [User Account Control](#uac)
-  - [Usage](#uac-usage)
-  - [Available Constants](#uac-constants)
-  - [Available Methods](#uac-methods)
-- [Group Management](#group-management)
-  - [Getting Groups](#getting-groups)
-  - [Filtering Groups](#filtering-groups)
-  - [Checking Existence](#checking-group-existence)
-  - [Adding Groups](#adding-groups)
-  - [Removing Groups](#removing-groups)
-
-## Creation {#creation}
+## Creation
 
 Let's walk through the basics of user creation for Active Directory. There
 are some requirements you must know prior to creation:
 
-Requirement |
---- |
-You must connect to your server via TLS or SSL if you set the the users password (`unicodepwd`) attribute |
-You must connect to your server with an account that has permission to create users |
-You must set a common name (`cn`) for the user |
-You must set the `unicodePwd` attribute as a non-encoded string (more on this below) |
-To set the users `userAccountControl`, it must be set **after** the user has been created |
+| Requirement                                                                                               |
+| --------------------------------------------------------------------------------------------------------- |
+| You must connect to your server via TLS or SSL if you set the the users password (`unicodepwd`) attribute |
+| You must connect to your server with an account that has permission to create users                       |
+| You must set a common name (`cn`) for the user                                                            |
+| You must set the `unicodePwd` attribute as a non-encoded string (more on this below)                      |
+| To set the users `userAccountControl`, it must be set **after** the user has been created                 |
 
-> Attributes that are set below can be cased in *any* manor. They can be
+> Attributes that are set below can be cased in _any_ manor. They can be
 > `UPPERCASED`, `lowercased`, `camelCased`, etc. Use whichever casing
 > you prefer to be most readable in your application.
 
@@ -77,9 +55,9 @@ try {
 > so if it fails you can determine if the cause of failure
 > is due to your domains password policy.
 
-## Password Management {#password-management}
+## Password Management
 
-### Setting Passwords {#setting-passwords}
+### Setting Passwords
 
 Using the included `LdapRecord\Models\ActiveDirectory\User` model, an attribute
 [mutator](/docs/core/v2/model-mutators) has been added that assists in the setting
@@ -116,7 +94,7 @@ var_dump($modification);
 As you can see, a batch modification has been automatically generated for
 the user. Upon calling `save()`, it will be sent to your LDAP server.
 
-### Changing Passwords {#changing-passwords}
+### Changing Passwords
 
 To change a user's password, you must either:
 
@@ -126,7 +104,7 @@ To change a user's password, you must either:
 > **Important**:
 >
 > - You must provide the **correct user's old password**
-> - You must set the `unicodepwd` attribute with an array containing **two** (2) values (old & new password) 
+> - You must set the `unicodepwd` attribute with an array containing **two** (2) values (old & new password)
 > - You must provide a new password that abides by your **password policy**, such as **history, complexity, and length**
 
 Let's walk through an example:
@@ -165,7 +143,7 @@ try {
 > will always be thrown when an incorrect old password has been given, or the new
 > password does not abide by your password policy.
 
-### Resetting Passwords {#resetting-passwords}
+### Resetting Passwords
 
 To reset a users password, you must be bound to your LDAP directory with a user whom has permission to do so on your directory.
 
@@ -202,23 +180,23 @@ try {
 }
 ```
 
-### Password Policy Errors {#password-policy-errors}
+### Password Policy Errors
 
 Active Directory will return diagnostic error codes when a password modification fails.
 
 To determine the cause, you can check this diagnostic message to see if it contains any of the following codes:
 
-Code | Meaning |
---- | --- |
-`525` | User not found |
-`52e` | Invalid credentials |
-`530` | Not permitted to logon at this time |
-`531` | Not permitted to logon at this workstation |
-`532` | Password expired |
-`533` | Account disabled |
-`701` | Account expired |
-`773` | User must reset password |
-`775` | User account locked |
+| Code  | Meaning                                    |
+| ----- | ------------------------------------------ |
+| `525` | User not found                             |
+| `52e` | Invalid credentials                        |
+| `530` | Not permitted to logon at this time        |
+| `531` | Not permitted to logon at this workstation |
+| `532` | Password expired                           |
+| `533` | Account disabled                           |
+| `701` | Account expired                            |
+| `773` | User must reset password                   |
+| `775` | User account locked                        |
 
 ```php
 <?php
@@ -248,7 +226,7 @@ try {
 }
 ```
 
-### Check if a user is locked out {#checking-user-lockout}
+### Check if a user is locked out
 
 To check if a user is locked out, verify that the `lockouttime` attribute is greater than `0` (zero):
 
@@ -264,7 +242,7 @@ if ($user->getFirstAttribute('lockouttime') > 0) {
 }
 ```
 
-### Getting all locked out users {#getting-locked-out-users}
+### Getting all locked out users
 
 To retrieve all currently locked out users, query for all users with a `lockouttime` greater or equal to `1` (one):
 
@@ -272,13 +250,13 @@ To retrieve all currently locked out users, query for all users with a `lockoutt
 $lockedOutUsers = User::where('lockouttime', '>=', '1')->get();
 ```
 
-### Unlock Locked Out User Account  {#unlock-user-account}
+### Unlock Locked Out User Account
 
 If a user has been locked out, set the `lockouttime` attribute to `0` (zero):
 
 > Updating this attribute in Active Directory will also
-> reset the users `badPwdCount` attribute to `0` (zero). 
-> For more information, see the [Microsoft Documentation](https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc775412(v=ws.10)?redirectedfrom=MSDN#account-lockout-values).
+> reset the users `badPwdCount` attribute to `0` (zero).
+> For more information, see the [Microsoft Documentation](<https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc775412(v=ws.10)?redirectedfrom=MSDN#account-lockout-values>).
 
 ```php
 $user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
@@ -286,7 +264,7 @@ $user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
 $user->update(['lockouttime' => 0]);
 ```
 
-### Extend User Password Expiration {#password-extension}
+### Extend User Password Expiration
 
 Sometimes you may wish to extend a user's password expiration for the full duration of your domains password expiry time.
 
@@ -304,16 +282,16 @@ $user->update(['pwdlastset' => -1]);
 // User password expiration successfully extended.
 ```
 
-### User Must Change Password at Next Logon {#password-reset-on-next-login}
+### User Must Change Password at Next Logon
 
-To toggle the "*User Must Change Password at Next Logon*" checkbox that is
+To toggle the "_User Must Change Password at Next Logon_" checkbox that is
 available in the Active Directory GUI - you must set the `pwdlastset`
 attribute to one of the below values:
 
-Value | Meaning |
---- | --- |
-`0` | **Toggled on**. The user will be required to change their password. |
-`-1` | **Toggled off**. The user will not be required to change their password. |
+| Value | Meaning                                                                  |
+| ----- | ------------------------------------------------------------------------ |
+| `0`   | **Toggled on**. The user will be required to change their password.      |
+| `-1`  | **Toggled off**. The user will not be required to change their password. |
 
 > **Important**:
 >
@@ -328,10 +306,10 @@ $user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
 $user->update(['pwdlastset' => 0]);
 ```
 
-## User Account Control {#uac}
+## User Account Control
 
 A users `userAccountControl` attribute stores an integer value.
- 
+
 This integer value contains the sums of various integer flags. These flags control the
 accessibility and behaviour of an Active Directory user account, such as account
 disablement, password expiry, the ability to change passwords, and more.
@@ -343,9 +321,9 @@ Setting it to `2`, would mean the account has been disabled.
 Combining both to `514` (`512 + 2 = 514`) would mean the users
 account is a typical user account, that is also disabled.
 
-### Usage {#uac-usage}
+### Usage
 
-You can manipulate a users `userAccountControl` manually by simply setting the 
+You can manipulate a users `userAccountControl` manually by simply setting the
 `userAccountControl` property on an existing user using the raw integer value,
 or you can use the account control builder `LdapRecord\Models\Attributes\AccountControl`:
 
@@ -410,71 +388,70 @@ if ($uac->doesntHave(AccountControl::LOCKOUT)) {
 }
 ```
 
-### Available Constants {#uac-constants}
+### Available Constants
 
 The Account Control builder has constants for every possible value:
 
-Constant | Value |
---- | -- |
-`AccountControl::SCRIPT` | `1` |
-`AccountControl::ACCOUNTDISABLE`| `2` |
-`AccountControl::HOMEDIR_REQUIRED` |`8` |
-`AccountControl::LOCKOUT` | `16` |
-`AccountControl::PASSWD_NOTREQD` | `32` |
-`AccountControl::PASSWD_CANT_CHANGE` | `64` |
-`AccountControl::ENCRYPTED_TEXT_PWD_ALLOWED` | `128` |
-`AccountControl::TEMP_DUPLICATE_ACCOUNT` | `256` |
-`AccountControl::NORMAL_ACCOUNT` | `512` |
-`AccountControl::INTERDOMAIN_TRUST_ACCOUNT` | `2048` |
-`AccountControl::WORKSTATION_TRUST_ACCOUNT` | `4096`|
-`AccountControl::SERVER_TRUST_ACCOUNT` | `8192` |
-`AccountControl::DONT_EXPIRE_PASSWORD` | `65536` |
-`AccountControl::MNS_LOGON_ACCOUNT` | `131072` |
-`AccountControl::SMARTCARD_REQUIRED` | `262144` |
-`AccountControl::TRUSTED_FOR_DELEGATION` | `524288` |
-`AccountControl::NOT_DELEGATED` | `1048576` |
-`AccountControl::USE_DES_KEY_ONLY` | `2097152` |
-`AccountControl::DONT_REQ_PREAUTH` | `4194304` |
-`AccountControl::PASSWORD_EXPIRED` | `8388608` |
-`AccountControl::TRUSTED_TO_AUTH_FOR_DELEGATION` | `16777216` |
-`AccountControl::PARTIAL_SECRETS_ACCOUNT` | `67108864` |
+| Constant                                         | Value      |
+| ------------------------------------------------ | ---------- |
+| `AccountControl::SCRIPT`                         | `1`        |
+| `AccountControl::ACCOUNTDISABLE`                 | `2`        |
+| `AccountControl::HOMEDIR_REQUIRED`               | `8`        |
+| `AccountControl::LOCKOUT`                        | `16`       |
+| `AccountControl::PASSWD_NOTREQD`                 | `32`       |
+| `AccountControl::PASSWD_CANT_CHANGE`             | `64`       |
+| `AccountControl::ENCRYPTED_TEXT_PWD_ALLOWED`     | `128`      |
+| `AccountControl::TEMP_DUPLICATE_ACCOUNT`         | `256`      |
+| `AccountControl::NORMAL_ACCOUNT`                 | `512`      |
+| `AccountControl::INTERDOMAIN_TRUST_ACCOUNT`      | `2048`     |
+| `AccountControl::WORKSTATION_TRUST_ACCOUNT`      | `4096`     |
+| `AccountControl::SERVER_TRUST_ACCOUNT`           | `8192`     |
+| `AccountControl::DONT_EXPIRE_PASSWORD`           | `65536`    |
+| `AccountControl::MNS_LOGON_ACCOUNT`              | `131072`   |
+| `AccountControl::SMARTCARD_REQUIRED`             | `262144`   |
+| `AccountControl::TRUSTED_FOR_DELEGATION`         | `524288`   |
+| `AccountControl::NOT_DELEGATED`                  | `1048576`  |
+| `AccountControl::USE_DES_KEY_ONLY`               | `2097152`  |
+| `AccountControl::DONT_REQ_PREAUTH`               | `4194304`  |
+| `AccountControl::PASSWORD_EXPIRED`               | `8388608`  |
+| `AccountControl::TRUSTED_TO_AUTH_FOR_DELEGATION` | `16777216` |
+| `AccountControl::PARTIAL_SECRETS_ACCOUNT`        | `67108864` |
 
-### Available Methods {#uac-methods}
+### Available Methods
 
 The Account Control builder has methods to apply every possible value:
 
-Method | Constant Applied |
---- | -- |
-`AccountControl::runLoginScript()` | `AccountControl::SCRIPT` |
-`AccountControl::accountIsDisabled()` | `AccountControl::ACCOUNTDISABLE` |
-`AccountControl::homeFolderIsRequired()` | `AccountControl::HOMEDIR_REQUIRED` |
-`AccountControl::accountIsLocked()` | `AccountControl::LOCKOUT` |
-`AccountControl::passwordIsNotRequired()` | `AccountControl::PASSWD_NOTREQD` |
-`AccountControl::passwordCannotBeChanged()` | `AccountControl::PASSWD_CANT_CHANGE` |
-`AccountControl::allowEncryptedTextPassword()` | `AccountControl::ENCRYPTED_TEXT_PWD_ALLOWED` |
-`AccountControl::accountIsTemporary()` | `AccountControl::TEMP_DUPLICATE_ACCOUNT` |
-`AccountControl::accountIsNormal()` | `AccountControl::NORMAL_ACCOUNT` |
-`AccountControl::accountIsForInterdomain()` | `AccountControl::INTERDOMAIN_TRUST_ACCOUNT` |
-`AccountControl::accountIsForWorkstation()` | `AccountControl::WORKSTATION_TRUST_ACCOUNT` |
-`AccountControl::accountIsForServer()` | `AccountControl::SERVER_TRUST_ACCOUNT` |
-`AccountControl::passwordDoesNotExpire()` | `AccountControl::DONT_EXPIRE_PASSWORD` |
-`AccountControl::accountIsMnsLogon()` | `AccountControl::MNS_LOGON_ACCOUNT` |
-`AccountControl::accountRequiresSmartCard()` | `AccountControl::SMARTCARD_REQUIRED` |
-`AccountControl::trustForDelegation()` | `AccountControl::TRUSTED_FOR_DELEGATION` |
-`AccountControl::doNotTrustForDelegation()` | `AccountControl::NOT_DELEGATED` |
-`AccountControl::useDesKeyOnly()` | `AccountControl::USE_DES_KEY_ONLY` |
-`AccountControl::accountDoesNotRequirePreAuth()` | `AccountControl::DONT_REQ_PREAUTH` |
-`AccountControl::passwordIsExpired()` | `AccountControl::PASSWORD_EXPIRED` |
-`AccountControl::trustToAuthForDelegation()` | `AccountControl::TRUSTED_TO_AUTH_FOR_DELEGATION` |
-`AccountControl::accountIsReadOnly()` | `AccountControl::PARTIAL_SECRETS_ACCOUNT` |
+| Method                                           | Constant Applied                                 |
+| ------------------------------------------------ | ------------------------------------------------ |
+| `AccountControl::runLoginScript()`               | `AccountControl::SCRIPT`                         |
+| `AccountControl::accountIsDisabled()`            | `AccountControl::ACCOUNTDISABLE`                 |
+| `AccountControl::homeFolderIsRequired()`         | `AccountControl::HOMEDIR_REQUIRED`               |
+| `AccountControl::accountIsLocked()`              | `AccountControl::LOCKOUT`                        |
+| `AccountControl::passwordIsNotRequired()`        | `AccountControl::PASSWD_NOTREQD`                 |
+| `AccountControl::passwordCannotBeChanged()`      | `AccountControl::PASSWD_CANT_CHANGE`             |
+| `AccountControl::allowEncryptedTextPassword()`   | `AccountControl::ENCRYPTED_TEXT_PWD_ALLOWED`     |
+| `AccountControl::accountIsTemporary()`           | `AccountControl::TEMP_DUPLICATE_ACCOUNT`         |
+| `AccountControl::accountIsNormal()`              | `AccountControl::NORMAL_ACCOUNT`                 |
+| `AccountControl::accountIsForInterdomain()`      | `AccountControl::INTERDOMAIN_TRUST_ACCOUNT`      |
+| `AccountControl::accountIsForWorkstation()`      | `AccountControl::WORKSTATION_TRUST_ACCOUNT`      |
+| `AccountControl::accountIsForServer()`           | `AccountControl::SERVER_TRUST_ACCOUNT`           |
+| `AccountControl::passwordDoesNotExpire()`        | `AccountControl::DONT_EXPIRE_PASSWORD`           |
+| `AccountControl::accountIsMnsLogon()`            | `AccountControl::MNS_LOGON_ACCOUNT`              |
+| `AccountControl::accountRequiresSmartCard()`     | `AccountControl::SMARTCARD_REQUIRED`             |
+| `AccountControl::trustForDelegation()`           | `AccountControl::TRUSTED_FOR_DELEGATION`         |
+| `AccountControl::doNotTrustForDelegation()`      | `AccountControl::NOT_DELEGATED`                  |
+| `AccountControl::useDesKeyOnly()`                | `AccountControl::USE_DES_KEY_ONLY`               |
+| `AccountControl::accountDoesNotRequirePreAuth()` | `AccountControl::DONT_REQ_PREAUTH`               |
+| `AccountControl::passwordIsExpired()`            | `AccountControl::PASSWORD_EXPIRED`               |
+| `AccountControl::trustToAuthForDelegation()`     | `AccountControl::TRUSTED_TO_AUTH_FOR_DELEGATION` |
+| `AccountControl::accountIsReadOnly()`            | `AccountControl::PARTIAL_SECRETS_ACCOUNT`        |
 
-
-## Group Management {#group-management}
+## Group Management
 
 If you are utilizing the included `LdapRecord\Models\ActiveDirectory\User` model, the
 `groups()` relationship exists for easily removing / adding groups to users.
 
-### Getting Groups {#getting-groups}
+### Getting Groups
 
 To get the groups that a user is a member of, call the `groups()` relationship method.
 This will return the immediate groups that the user is a member of:
@@ -494,7 +471,7 @@ foreach ($groups as $group) {
 }
 ```
 
-You may also want to retrieve groups that are *members* of groups that the user is apart of.
+You may also want to retrieve groups that are _members_ of groups that the user is apart of.
 This is called a [recursive relationship query](/docs/core/v2/model-relationships/#recursive-queries).
 
 To retrieve groups of groups, call the `recursive()` method following the `groups()` relation call:
@@ -514,7 +491,7 @@ foreach ($groups as $group) {
 }
 ```
 
-### Filtering Groups {#filtering-groups}
+### Filtering Groups
 
 Relations in LdapRecord act as query builders, so you can chain query methods on the `groups()` relation itself:
 
@@ -532,9 +509,9 @@ $groups = $user->groups()->whereContains('cn', 'Accounting')->get();
 $groups = $user->groups()->whereMemberOf('cn=Office,ou=Groups,dc=local,dc=com')->get();
 ```
 
-### Checking Existence {#checking-group-existence}
+### Checking Existence
 
-To check if a user is a member of *any* group, call the `exists()` method on the `groups()` relationship:
+To check if a user is a member of _any_ group, call the `exists()` method on the `groups()` relationship:
 
 ```php
 <?php
@@ -583,7 +560,7 @@ if ($user->groups()->recursive()->exists($group)) {
 }
 ```
 
-### Adding Groups {#adding-groups}
+### Adding Groups
 
 To add groups to a user, call the `groups()` relationship method, then `attach()`:
 
@@ -602,7 +579,7 @@ if ($user->groups()->attach($group)) {
 }
 ```
 
-### Removing Groups {#removing-groups}
+### Removing Groups
 
 To remove groups on user, call the `groups()` relationship method, then `detach()`:
 

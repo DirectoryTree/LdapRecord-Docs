@@ -7,12 +7,7 @@ section: content
 
 # Query Caching
 
-- [Introduction](#introduction)
-- [Requirements](#requirements)
-- [Getting Started](#getting-started)
-- [Usage](#usage)
-
-## Introduction {#introduction}
+## Introduction
 
 LdapRecord supports caching LDAP search operations. This is useful when running
 expensive queries. A `pagination` query on the root of your LDAP directory
@@ -21,14 +16,14 @@ may take several seconds to complete.
 Caching allows you to store the entire result so it is not retrieved again
 from the server until the cache is set to expire.
 
-## Requirements {#requirements}
+## Requirements
 
-Your application must have a caching implementation that uses the 
+Your application must have a caching implementation that uses the
 [PSR Simple Cache](https://github.com/php-fig/simple-cache) interface.
 
 For example, the Laravel cache system implements this interface.
 
-## Getting Started {#getting-started}
+## Getting Started
 
 To setup caching, you must add your cache implementation to your LDAP connection instance.
 
@@ -42,7 +37,7 @@ $connection = new Connection(['...']);
 $connection->setCache($myAppCache);
 ```
 
-## Usage {#usage}
+## Usage
 
 Once you've added your caching implementation to your LdapRecord connection, you
 can start caching queries on plain queries or queries on LdapRecord models.

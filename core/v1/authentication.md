@@ -7,21 +7,13 @@ section: content
 
 # Authentication
 
-- [Introduction](#introduction)
-- [Basic Authentication](#basic)
- - [Determining Auth / Bind Failure Cause](#determining-bind-failure)
-- [Using Other Attributes](#other-attributes)
-- [Restricting Authentication](#restricting)
- - [Group Memberships](#group-memberships)
- - [Organizational Units](#organizational-units)
-
-## Introduction {#introduction}
+## Introduction
 
 Before we get started, it's paramount to know that LdapRecord does not set
 up any sort of PHP session that persists through every request. This is up
 to you to implement, as every project may vary with session usage.
 
-## Basic Authentication {#basic}
+## Basic Authentication
 
 The most widely used feature of any LDAP library is authentication. Let's walk through this step by step using LdapRecord.
 
@@ -29,7 +21,7 @@ Firstly, we need to define a `Connection` for your LDAP server that you would li
 we will call the `auth()->attempt()` method:
 
 > If you only need to authenticate users against your LDAP server, you do not need to
-> provide a `base_dn`.  This is only used for performing searches on your directory.
+> provide a `base_dn`. This is only used for performing searches on your directory.
 > <br/><br/>
 > Similarly with the `username` and `password` configuration options, these are only
 > used for performing operations on your LDAP server that require permission - such
@@ -48,14 +40,14 @@ if ($connection->auth()->attempt('cn=john doe,dc=acme,dc=org', 'p@ssw0rd', $stay
 ```
 
 As you can see from the above, the first parameter of the `attempt()` method is the users Distinguished Name.
-If you're running Active Directory, you can use the users `userPrincipalName` instead, which (in the case 
+If you're running Active Directory, you can use the users `userPrincipalName` instead, which (in the case
 above) would be in the format of `jdoe@acme.org`.
 
 You may have also noticed we added a third parameter named `$stayAuthenticated = true`. This means, that throughout
-the entire lifecycle of the current request, you can perform further operations on your LDAP server *as* the
+the entire lifecycle of the current request, you can perform further operations on your LDAP server _as_ the
 successfully authenticated user.
 
-### Determining Auth / Bind Failure Cause {#determining-bind-failure}
+### Determining Auth / Bind Failure Cause
 
 > This will only work when binding to an Active Directory server.
 
@@ -125,13 +117,13 @@ try {
 
 > However, please be aware of the differences of the above methods as
 > described in the [connection binding documentation](/docs/core/v1/connections/#binding):
-> 
+>
 > - `auth()->attempt()` will automatically rebind the user you have in your configuration,
->  unless you have specified `true` in the third parameter to stay bound. </br></br>
+>   unless you have specified `true` in the third parameter to stay bound. </br></br>
 > - `auth()->bind()` **will not** automatically rebind the user you have in your configuration,
->  and will allow `null` usernames and passwords (anonymous binds).
+>   and will allow `null` usernames and passwords (anonymous binds).
 
-## Authenticating with other username attributes {#other-attributes}
+## Authenticating with other username attributes
 
 No user wants to type in their full Distinguished Name to login to an application. It's
 cumbersome, and will likely change over the years due to IT administrators moving
@@ -191,11 +183,11 @@ if ($connection->auth()->attempt($user['distinguishedname'], $_POST['password'])
 }
 ```
 
-## Restricting Authentication {#restricting}
+## Restricting Authentication
 
 Sometimes you only want certain users allowed to login to your application. You can do this in a couple ways.
 
-### Group Memberships {#group-memberships}
+### Group Memberships
 
 To restrict who can authenticate in your application using groups that users will be members
 of, we will perform the same as above, except we will check if the returned `memberof`
@@ -218,7 +210,7 @@ $userGroups = $user['memberof'];
 // Set up our allowed groups.
 $allowed = [
     'cn=Accounting,ou=Groups,dc=acme,dc=org',
-    'cn=IT,ou=Groups,dc=acme,dc=org',    
+    'cn=IT,ou=Groups,dc=acme,dc=org',
 ];
 
 // Normalize the group distinguished names and determine if
@@ -241,7 +233,7 @@ if (count($difference) > 0) {
 // User is not a member of any of the allowed groups.
 ```
 
-### Organizational Units {#organizational-units}
+### Organizational Units
 
 Using Organizational Units to determine which users are allowed to authenticate is easier than using groups.
 

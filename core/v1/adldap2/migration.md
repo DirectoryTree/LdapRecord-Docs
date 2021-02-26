@@ -7,21 +7,6 @@ section: content
 
 # Migrating from Adldap2
 
-- [Introduction](#introduction)
-- [High Impact Changes](#high-impact-changes)
-  - [Adldap to Container](#adldap-to-container)
-  - [Providers to Connections](#providers-to-connections)
-  - [Adldap Interface Removal](#adldap-interface-removal)
-  - [Schema Interface Removal](#schema-interface-removal)
-  - [Query Builder](#query-builder)
-  - [Exceptions](#exceptions)
-  - [Models](#)
-- [Medium Impact Changes](#medium-impact-changes)
-  - [Configuration](#configuration)
-- [Low Impact Changes](#)
-  - [Authentication](#)
-  - [Query Builder](#)
-
 ## Introduction
 
 This guide will cover the largest changes that have been made during the development of LdapRecord.
@@ -30,15 +15,16 @@ This guide will cover the largest changes that have been made during the develop
 > LdapRecord was not meant to be a drop-in replacement of Adldap2. It is a brand new project
 > -- but keeps some similarities with the Adldap2 library.
 
-## High Impact Changes {#high-impact-changes}
+## High Impact Changes
 
-### Adldap to Container {#adldap-to-container}
+### Adldap to Container
 
 The `Adldap\Adldap` class is responsible for storing connections.
 
 This has been replaced with the `LdapRecord\Container` class:
 
 **Adldap2**:
+
 ```php
 use Adldap\Adldap;
 
@@ -50,6 +36,7 @@ $ad->addProvider($config, $name = 'default');
 ```
 
 **LdapRecord**:
+
 ```php
 use LdapRecord\Container;
 
@@ -58,7 +45,7 @@ $config = ['...'];
 Container::addConnection($config, $name = 'default');
 ```
 
-### Providers to Connections {#providers-to-connections}
+### Providers to Connections
 
 The `Adldap\Connections\Provider` has been replaced with `LdapRecord\Connection`.
 
@@ -68,6 +55,7 @@ Here is an example:
 > Most options have been carried over.
 
 **Adldap2**:
+
 ```php
 use Adldap\Connections\Provider;
 
@@ -78,6 +66,7 @@ $provider = new Provider([
 ```
 
 **LdapRecord**:
+
 ```php
 use LdapRecord\Connection;
 
@@ -90,6 +79,7 @@ $connection = new Connection([
 #### Connecting
 
 **Adldap2**:
+
 ```php
 // With configured username / password:
 $provider->connect();
@@ -99,6 +89,7 @@ $provider->connect('cn=user,dc=local,dc=com', 'secret');
 ```
 
 **LdapRecord**:
+
 ```php
 // With configured username / password:
 $connection->connect();
@@ -109,11 +100,11 @@ $connection->connect('cn=user,dc=local,dc=com', 'secret');
 
 #### Methods
 
-### Adldap Interface Removal {#adldap-interface-removal}
+### Adldap Interface Removal
 
 The `Adldap\AdldapInterface` has been removed. There is no equivalent in LdapRecord.
 
-### Schema Interface Removal {#schema-interface-removal}
+### Schema Interface Removal
 
 The Adldap2 schema interface and classes have been completely removed. There is no equivalent in LdapRecord.
 
@@ -129,7 +120,7 @@ All attributes you were using from the schema must accessed directly on models.
 
 See why this change has occurred [here](https://stevebauman.ca/posts/why-ldap-record/).
 
-### Query Builder {#query-builder}
+### Query Builder
 
 The following methods have been removed:
 
@@ -150,21 +141,21 @@ The following methods have been removed:
 
 The following exceptions have been renamed:
 
-From | To |
---- | --- |
-`Adldap\AdldapException` | `LdapRecord\LdapRecordException` |
-`Adldap\Auth\BindException` | `LdapRecord\Auth\BindException` |
-`Adldap\Connections\ConnectionException` | `LdapRecord\ConnectionException` |
-`Adldap\Auth\UsernameRequiredException` | `LdapRecord\Auth\UsernameRequiredException` |
-`Adldap\Auth\PasswordRequiredException` | `LdapRecord\Auth\PasswordRequiredException` |
-`Adldap\Models\ModelNotFoundException` | `LdapRecord\Models\ModelNotFoundException` |
-`Adldap\Models\ModelDoesNotExistException` | `LdapRecord\Models\ModelDoesNotExistException` |
+| From                                       | To                                             |
+| ------------------------------------------ | ---------------------------------------------- |
+| `Adldap\AdldapException`                   | `LdapRecord\LdapRecordException`               |
+| `Adldap\Auth\BindException`                | `LdapRecord\Auth\BindException`                |
+| `Adldap\Connections\ConnectionException`   | `LdapRecord\ConnectionException`               |
+| `Adldap\Auth\UsernameRequiredException`    | `LdapRecord\Auth\UsernameRequiredException`    |
+| `Adldap\Auth\PasswordRequiredException`    | `LdapRecord\Auth\PasswordRequiredException`    |
+| `Adldap\Models\ModelNotFoundException`     | `LdapRecord\Models\ModelNotFoundException`     |
+| `Adldap\Models\ModelDoesNotExistException` | `LdapRecord\Models\ModelDoesNotExistException` |
 
 ### Models
 
-## Medium Impact Changes {#medium-impact-changes}
+## Medium Impact Changes
 
-### Configuration {#configuration}
+### Configuration
 
 The following configuration options have been removed:
 
@@ -177,6 +168,7 @@ The following configuration options have been removed:
 If you require the same functionality, simply append / prepend a string to the users username:
 
 **Adldap2**:
+
 ```php
 $config = [
     'account_prefix' => 'cn=',
@@ -192,6 +184,7 @@ if ($provider->auth()->attempt($username, $password)) {
 ```
 
 **LdapRecord**:
+
 ```php
 $username = 'jdoe';
 $password = 'secret';
@@ -204,8 +197,6 @@ if ($connection->auth()->attempt($prefix.$username.$suffix, $password)) {
 }
 ```
 
-## Low Impact Changes {#low-impact-changes}
-
+## Low Impact Changes
 
 ### Authentication
-

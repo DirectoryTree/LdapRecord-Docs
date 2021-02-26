@@ -5,7 +5,7 @@ extends: _layouts.laravel.page
 section: content
 ---
 
-# Pass-through / SSO Authentication {#sso-authentication}
+# Pass-through / SSO Authentication
 
 Pass-through authentication allows your users to be automatically signed in when they access your
 application on a Windows domain joined computer. This feature is ideal for in-house corporate

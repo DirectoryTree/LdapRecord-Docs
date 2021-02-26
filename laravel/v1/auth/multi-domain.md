@@ -5,28 +5,21 @@ extends: _layouts.laravel.page
 section: content
 ---
 
-# Multi-Domain Authentication {#multi-domain-authentication}
+# Multi-Domain Authentication
 
-- [Introduction](#introduction)
-- [Step 1 - Configuration](#configuration)
- - [Configuring the LDAP Connections](#configuring-ldap-connections)
- - [Configuring the Authentication Guards](#configuring-auth-guards)
-- [Step 2 - Login Controller Setup](#authenticating)
-- [Step 3 - Updating Your Web Routes](#routes)
-
-## Introduction {#introduction}
+## Introduction
 
 LdapRecord-Laravel allows you to authenticate users from as many LDAP directories as you'd like.
 
 This useful when you have separate domains that are not joined in a trust.
 
-## Step 1 - Configuration {#configuration}
+## Step 1 - Configuration
 
 To begin, you must create two separate LdapRecord models for each of your domains.
 
 Having two separate models allows you to configure their connections independently.
 
-### Configuring the LDAP Connections {#configuring-ldap-connections}
+### Configuring the LDAP Connections
 
 For this guide, we will have two example domains named `Alpha` and `Bravo`. We first
 need to set up these domain connections in our `ldap.php` configuration file:
@@ -40,7 +33,7 @@ need to set up these domain connections in our `ldap.php` configuration file:
     'alpha' => [
         // ...
     ],
-    
+
     'bravo' => [
         // ...
     ],
@@ -91,7 +84,7 @@ class User extends Model
 > You may want these models to extend the [built-in models](/docs/core/v1/models/#predefined-models), as they
 > include functionality that you do not need to build yourself. It's completely up to you.
 
-### Configuring the Authentication Guards {#configuring-auth-guards}
+### Configuring the Authentication Guards
 
 For each of our LDAP connections, we will setup new [authentication providers](/docs/laravel/v1/auth/configuration),
 as well as their own guard inside of our `config/auth.php` file:
@@ -104,7 +97,7 @@ as well as their own guard inside of our `config/auth.php` file:
         'driver' => 'session',
         'provider' => 'alpha',
     ],
-    
+
     'bravo' => [
         'driver' => 'session',
         'provider' => 'bravo',
@@ -116,17 +109,17 @@ as well as their own guard inside of our `config/auth.php` file:
 
     'alpha' => [
         // ...
-        'model' => App\Ldap\Alpha\User::class,        
+        'model' => App\Ldap\Alpha\User::class,
     ],
 
     'bravo' => [
         // ...
-        'model' => App\Ldap\Bravo\User::class,        
+        'model' => App\Ldap\Bravo\User::class,
     ],
 ],
 ```
 
-## Step 2 - Login Controller Setup {#authenticating}
+## Step 2 - Login Controller Setup
 
 To start authenticating users from both of your LDAP domains, we need to modify our `LoginController`.
 
@@ -154,12 +147,12 @@ so we can tell Laravel which guard to use for authenticating the user.
 
 Let's walk through two examples of how we can determine their domain:
 
-Example | Description |
---- | --- |
-[Domain Selection](#authenticating-domain-selection) | Using a `<select>` dropdown |
-[Email Address Suffix](#authenticating-email-suffix) | Using the users email address suffx / hostname (eg. `@domain.com`) |
+| Example                                              | Description                                                        |
+| ---------------------------------------------------- | ------------------------------------------------------------------ |
+| [Domain Selection](#authenticating-domain-selection) | Using a `<select>` dropdown                                        |
+| [Email Address Suffix](#authenticating-email-suffix) | Using the users email address suffx / hostname (eg. `@domain.com`) |
 
-### Domain Selection {#authenticating-domain-selection}
+### Domain Selection
 
 In this example, we will add an HTML `<select>` input containing an `<option>` for each
 domain we want to allow users to login to. This allows the user to select the domain
@@ -222,7 +215,7 @@ public function getLdapGuardFromRequest(Request $request)
 }
 ```
 
-### Email Address Suffix {#authenticating-email-suffix}
+### Email Address Suffix
 
 In this example, we will be determining the users domain from their email addresses host name (eg. `@alpha.com` and `@bravo.com`).
 
@@ -247,8 +240,8 @@ public function getLdapGuardFromRequest(Request $request)
     ];
 
     $domain = explode('@', $request->get('email'))[1];
-    
-    return $guards[$domain] ?? 'alpha'; 
+
+    return $guards[$domain] ?? 'alpha';
 }
 ```
 
@@ -266,7 +259,7 @@ to our `alpha` domain.
 > You may wish to add a request validation rule instead to prevent users from signing
 > in with invalid email domain. The way you implement this is totally up to you.
 
-## Step 3 - Updating Your Web Routes {#routes}
+## Step 3 - Updating Your Web Routes
 
 Having multiple authentication guards means that we need to update the `auth` middleware
 that is covering our protected application routes inside of our `routes/web.php` file.
@@ -277,7 +270,6 @@ protected routes:
 
 > By default, if no guards are given to the Laravel `auth` middleware, it will attempt
 > to use the `default` guard configured - **we do not want this behaviour**.
-
 
 ```php
 // routes/web.php

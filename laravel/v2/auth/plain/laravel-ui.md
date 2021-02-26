@@ -7,13 +7,7 @@ section: content
 
 # Laravel UI
 
-- [Introduction](#introduction)
-- [Debugging](#debugging)
-- [Login Controller](#login-controller)
-- [Updating Blade Views](#updating-blade-views)
-- [Displaying LDAP Error Messages](#displaying-ldap-error-messages)
-
-## Introduction {#introduction}
+## Introduction
 
 > **Important**: Before getting started, please complete the authentication [configuration](/docs/laravel/v2/auth/plain/configuration) guide.
 
@@ -21,7 +15,7 @@ section: content
 
 This guide will show you how to integrate LdapRecord-Laravel using this scaffolding.
 
-## Debugging {#debugging}
+## Debugging
 
 Inside of your `config/ldap.php` file, ensure you have `logging` enabled during the setup of authentication.
 Doing this will help you immensely in debugging connectivity and authentication issues.
@@ -35,7 +29,7 @@ In addition, you may also run the below artisan command to test connectivity to 
 php artisan ldap:test
 ```
 
-## Login Controller {#login-controller}
+## Login Controller
 
 For this example application, we will authenticate our LDAP users with their email address using the LDAP attribute `mail`.
 
@@ -68,7 +62,7 @@ login page normally with the "Invalid credentials" error message.
 > You may also add extra key => value pairs in the `credentials` array to further scope the
 > LDAP query. The `password` key is automatically ignored by LdapRecord.
 
-## Updating Blade Views {#updating-blade-views}
+## Updating Blade Views
 
 Since an LdapRecord model instance will be returned when calling `Auth::user()` instead
 of an Eloquent model, you must change any references from:
@@ -83,7 +77,7 @@ To:
 Auth::user()->getName()
 ```
 
-## Using Usernames {#using-usernames}
+## Using Usernames
 
 In corporate environments, users are often used to signing into their computers with their username.
 You can certainly keep this flow easy for them - we just need to change a couple things.
@@ -94,10 +88,28 @@ First, let's jump into our `auth/login.blade.php` view and update our input fiel
 <!-- resources/views/auth/login.blade.php -->
 
 <!-- Before... -->
-<input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+<input
+  id="email"
+  type="email"
+  class="form-control @error('email') is-invalid @enderror"
+  name="email"
+  value="{{ old('email') }}"
+  required
+  autocomplete="email"
+  autofocus
+/>
 
 <!-- After... -->
-<input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
+<input
+  id="username"
+  type="text"
+  class="form-control @error('username') is-invalid @enderror"
+  name="username"
+  value="{{ old('username') }}"
+  required
+  autocomplete="username"
+  autofocus
+/>
 ```
 
 After changing the HTML input, we now must modify our `LoginController` to use this new field.
@@ -124,7 +136,7 @@ protected function credentials(Request $request)
 
 You can now sign in to your application using usernames instead of email addresses.
 
-## Displaying LDAP Error Messages {#displaying-ldap-error-messages}
+## Displaying LDAP Error Messages
 
 When a user fails LDAP authentication due to their password / account expiring, account
 lockout, or their password requiring to be changed, specific error codes will be sent
@@ -171,7 +183,7 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-    
+
         $this->listenForLdapBindFailure();
     }
 
@@ -201,17 +213,17 @@ class LoginController extends Controller
     use ListensForLdapBindFailure {
         handleLdapBindError as baseHandleLdapBindError;
     }
-    
+
     protected function handleLdapBindError($message, $code = null)
     {
         if ($code == '773') {
             // The users password has expired. Redirect them.
             abort(redirect('/password-reset'));
         }
-    
+
         $this->baseHandleLdapBindError($message, $code);
     }
-   
+
     // ...
 }
 ```
@@ -233,7 +245,7 @@ file named `errors.php` in your `resources` directory at the following path:
         resources
 
         <div class="ellipsis"></div>
-        
+
         <div class="folder folder--open">
             lang
 
@@ -256,6 +268,7 @@ file named `errors.php` in your `resources` directory at the following path:
     </div>
 
     <div class="ellipsis"></div>
+
 </div>
 
 Then, paste in the following translations in the file and modify where necessary:

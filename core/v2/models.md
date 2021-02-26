@@ -7,34 +7,7 @@ section: content
 
 # Models: Getting Started
 
-- [Introduction](#introduction)
- - [Defining Models](#defining-models)
- - [Predefined Models](#predefined-models)
- - [Connections](#connections)
- - [Distinguished Names](#distinguished-names)
- - [Object GUIDs](#object-guids)
- - [Default Attribute Values](#default-attribute-values)
-- [Retrieving Models](#retrieving-models)
- - [Collections](#collections)
-- [Retrieving Single Models](#retrieving-single-models)
-- [Creating & Updating Models](#creating-amp-updating-models)
- - [Creating](#creating)
- - [Updating](#updating)
- - [Moving](#moving)
- - [Renaming](#renaming)
-- [Restoring Deleted Models](#restoring)
-- [Attributes](#attributes)
- - [Methods](#methods)
- - [Array Conversion](#array-conversion)
- - [Checking Existence](#determining-attribute-existence)
- - [Casing & Hyphens](#casing-amp-hyphens)
-- [Deleting Models](#deleting-models)
-- [Comparing Models](#comparing-models)
-- [Events](#events)
-- [Serialization](#serialization)
- - [Hiding Attributes](#hiding-attributes)
-
-## Introduction {#introduction}
+## Introduction
 
 The LdapRecord ORM provides a beautiful and simple ActiveRecord implementation for working with your LDAP server.
 Each "Model" represents a type of LDAP object that resides in your directory.
@@ -46,7 +19,7 @@ Before getting started, ensure you've added at least one connection to the [cont
 By default, there are models included with LdapRecord for popular LDAP directories (namely Active Directory &
 OpenLDAP) so you can get up and running as fast as possible. More on this [below](#predefined-models).
 
-### Defining Models {#defining-models}
+### Defining Models
 
 To get started, you must create a new class that represents the LDAP object you would like to query.
 
@@ -74,7 +47,7 @@ These object classes are used to locate the proper objects in your LDAP director
 
 > If you do not provide any object classes, global directory searches will be performed when retrieving models.
 
-### Predefined Models {#predefined-models}
+### Predefined Models
 
 LdapRecord comes with many predefined models that allow you to get started right away.
 
@@ -88,38 +61,38 @@ Use the `LdapRecord\Models\Entry` model for retrieving all objects from your dir
 
 Each below model references a type of object in Active Directory.
 
-Model |
---- | 
-`LdapRecord\Models\ActiveDirectory\Entry` |
-`LdapRecord\Models\ActiveDirectory\User` |
-`LdapRecord\Models\ActiveDirectory\Group` |
-`LdapRecord\Models\ActiveDirectory\Computer` |
-`LdapRecord\Models\ActiveDirectory\Contact` |
-`LdapRecord\Models\ActiveDirectory\Container` |
-`LdapRecord\Models\ActiveDirectory\OrganizationalUnit` |
-`LdapRecord\Models\ActiveDirectory\Printer` |
-`LdapRecord\Models\ActiveDirectory\ForeignSecurityPrincipal` |
+| Model                                                        |
+| ------------------------------------------------------------ |
+| `LdapRecord\Models\ActiveDirectory\Entry`                    |
+| `LdapRecord\Models\ActiveDirectory\User`                     |
+| `LdapRecord\Models\ActiveDirectory\Group`                    |
+| `LdapRecord\Models\ActiveDirectory\Computer`                 |
+| `LdapRecord\Models\ActiveDirectory\Contact`                  |
+| `LdapRecord\Models\ActiveDirectory\Container`                |
+| `LdapRecord\Models\ActiveDirectory\OrganizationalUnit`       |
+| `LdapRecord\Models\ActiveDirectory\Printer`                  |
+| `LdapRecord\Models\ActiveDirectory\ForeignSecurityPrincipal` |
 
 #### OpenLDAP Models
 
-Model |
---- | 
-`LdapRecord\Models\OpenLdap\Entry` |
-`LdapRecord\Models\OpenLdap\User` |
-`LdapRecord\Models\OpenLdap\Group` |
-`LdapRecord\Models\OpenLdap\OrganizationalUnit` |
+| Model                                           |
+| ----------------------------------------------- |
+| `LdapRecord\Models\OpenLdap\Entry`              |
+| `LdapRecord\Models\OpenLdap\User`               |
+| `LdapRecord\Models\OpenLdap\Group`              |
+| `LdapRecord\Models\OpenLdap\OrganizationalUnit` |
 
 #### FreeIPA Models
 
-Model |
---- | 
-`LdapRecord\Models\FreeIPA\Entry` |
-`LdapRecord\Models\FreeIPA\User` |
-`LdapRecord\Models\FreeIPA\Group` |
+| Model                             |
+| --------------------------------- |
+| `LdapRecord\Models\FreeIPA\Entry` |
+| `LdapRecord\Models\FreeIPA\User`  |
+| `LdapRecord\Models\FreeIPA\Group` |
 
 > Don't see a model for the LDAP server you're using? [Create a pull request!](https://github.com/DirectoryTree/LdapRecord/pulls)
 
-### Connections {#connections}
+### Connections
 
 By default, all models you create will try to use your `default` LDAP connection that resides in the connection
 [container](/docs/core/v2/connections#container). To set your model to use an alternate connection,
@@ -136,7 +109,7 @@ class User extends Model
 }
 ```
 
-### Distinguished Names {#distinguished-names}
+### Distinguished Names
 
 To get an objects full distinguished name call the `getDn` method:
 
@@ -174,7 +147,7 @@ $user = User::find('cn=user,dc=local,dc=com');
 $user->getName();
 ```
 
-### Object GUIDs {#object-guids}
+### Object GUIDs
 
 To retrieve a models Object GUID (globally unique identifier) call the `getConvertedGuid` method.
 
@@ -201,7 +174,7 @@ class User extends Model
 }
 ```
 
-### Default Attribute Values {#default-attribute-values}
+### Default Attribute Values
 
 If you would like to define the default values for some of your model's attributes,
 you may define an `$attributes` property on your model. This helps you to assign
@@ -221,7 +194,7 @@ class User extends Model
 }
 ```
 
-## Retrieving Models {#retrieving-models}
+## Retrieving Models
 
 Once you've created an LdapRecord model you're ready to start retrieving data from your directory.
 If you've used Laravel's [Eloquent ORM](https://laravel.com/docs/eloquent), you'll feel right at home.
@@ -239,7 +212,7 @@ foreach ($users as $user) {
 }
 ```
 
-### Adding Constraints {#adding-constraints}
+### Adding Constraints
 
 Each model serves as a query builder for the object classes you've defined inside.
 You can add constraints to your queries and then call `get()` to retrieve the
@@ -258,11 +231,11 @@ $users = User::whereStartsWith('cn', 'John')
 > [query builder](/docs/core/v2/searching) methods so you can utilize
 > them to their full potential.
 
-### Model Constraints {#model-constraints}
+### Model Constraints
 
 Models come with some built in constraint methods that you may find useful.
 
->  The below constraints will only retrieve the models that are equal
+> The below constraints will only retrieve the models that are equal
 > to the type you have retrieved. For example, retrieving the descendants
 > of an organizational unit will only return organizational units that
 > are direct descendants. <br/><br/>
@@ -270,7 +243,7 @@ Models come with some built in constraint methods that you may find useful.
 > If you would like to avoid this, use the default `LdapRecord\Models\Entry`
 > model, which provides no `objectclass` constraints on queries.
 
-#### Ancestors {#anscestors}
+#### Ancestors
 
 To retrieve the direct ancestors of a model, call the `ancestors()` constraint on a retrieved model:
 
@@ -284,7 +257,7 @@ The above example will execute a `listing` on your LDAP directory in
 the distinguished name `dc=local,dc=com`. This effectively pulls
 the ancestors of the model.
 
-#### Siblings {#siblings}
+#### Siblings
 
 To retrieve the siblings of a model, call the `siblings()` constraint on a retrieved model:
 
@@ -299,7 +272,7 @@ the distinguished name `ou=Users,dc=local,dc=com`. This effectively
 pulls the siblings of the model. The current model will also be
 included in the resulting collection.
 
-#### Descendants {#descendants}
+#### Descendants
 
 To retrieve the descendants of a model, call the `descendants()` constraint on a retrieved model:
 
@@ -313,7 +286,7 @@ The above example will execute a `listing` on your LDAP directory in
 the distinguished name `ou=Accountants,ou=Users,dc=local,dc=com`. This effectively
 pulls the descendants of the model.
 
-#### Refreshing Models {#refreshing-models}
+#### Refreshing Models
 
 To re-retrieve a new model from your directory, call the `fresh()` method.
 Doing so will not affect the existing instance you already have:
@@ -333,7 +306,7 @@ $user = User::where('cn', '=', 'jdoe')->first();
 $user->refresh();
 ```
 
-### Collections {#collections}
+### Collections
 
 When you query your models, returned results will be contained inside of a
 `LdapRecord\Query\Collection`. The `Collection` class directly extends
@@ -350,18 +323,18 @@ $usersWithEmail = $users->filter(function (User $user) {
 });
 ```
 
-## Retrieving Single Models {#retrieving-single-models}
+## Retrieving Single Models
 
 If you would like to retrieve a single model from your directory, you can utilize
 a variety of methods. Here is a list and usage of each:
 
-Method |
---- |
-`first()` |
-`find($distinguishedName)` |
-`findBy($attributeName, $attributeValue)` |
-`findByAnr($attributeValue)` |
-`findByGuid($objectGuid)` |
+| Method                                    |
+| ----------------------------------------- |
+| `first()`                                 |
+| `find($distinguishedName)`                |
+| `findBy($attributeName, $attributeValue)` |
+| `findByAnr($attributeValue)`              |
+| `findByGuid($objectGuid)`                 |
 
 ```php
 // Retrieve the first model of a global LDAP search...
@@ -380,19 +353,19 @@ $user = User::findByAnr('John Doe');
 $user = User::findByGuid('bf9679e7-0de6-11d0-a285-00aa003049e2');
 ```
 
-#### Not Found Exceptions {#not-found-exceptions}
+#### Not Found Exceptions
 
 Occasionally you may want to throw an exception if a specific record you're looking
 for cannot be found on your directory. You can substitute the above methods
 with `OrFail()` variants:
 
-Method |
---- |
-`firstOrFail()` |
-`findOrFail($distinguishedName)` |
-`findByOrFail($attributeName, $attributeValue)` |
-`findByAnrOrFail($attributeValue)` |
-`findByGuidOrFail($objectGuid)` |
+| Method                                          |
+| ----------------------------------------------- |
+| `firstOrFail()`                                 |
+| `findOrFail($distinguishedName)`                |
+| `findByOrFail($attributeName, $attributeValue)` |
+| `findByAnrOrFail($attributeValue)`              |
+| `findByGuidOrFail($objectGuid)`                 |
 
 ```php
 try {
@@ -401,13 +374,13 @@ try {
 
     // Retrieve a model by its distinguished name or fail...
     $user = User::findOrFail('cn=John Doe,dc=acme,dc=org');
-    
+
     // Retrieve the first model that matches the attribute or fail...
     $user = User::findByOrFail('cn', 'John Doe');
-    
+
     // Retrieve the first model that matches an array of ANR attributes or fail...
     $user = User::findByAnrOrFail('John Doe');
-    
+
     // Retrieve a model by its object guid or fail...
     $user = User::findByGuidOrFail('bf9679e7-0de6-11d0-a285-00aa003049e2');
 } catch (\LdapRecord\Models\ModelNotFoundException $e) {
@@ -415,9 +388,9 @@ try {
 }
 ```
 
-## Creating & Updating Models {#creating-amp-updating-models}
+## Creating & Updating Models
 
-### Creating {#creating}
+### Creating
 
 Before we begin it is paramount to know that LDAP objects require a Distinguished Name to be
 created successfully in your LDAP directory. LdapRecord will always attempt to generate a
@@ -450,14 +423,14 @@ $user->cn = 'John Doe';
 $user->save();
 ```
 
-#### Dynamic Distinguished Name Generation {#dynamic-dn-generation}
+#### Dynamic Distinguished Name Generation
 
 LdapRecord generates a models distinguished name via the model method `getCreatableRdn`.
 This method is responsible for generating the "Relative Distinguished Name" which is
 the true name of the object inside of your LDAP directory that does not include
 your base Distinguished Name.
 
-Since *most* LDAP objects require a Common Name (`cn`) this is defaulted to:
+Since _most_ LDAP objects require a Common Name (`cn`) this is defaulted to:
 
 ```php
 /**
@@ -468,7 +441,7 @@ Since *most* LDAP objects require a Common Name (`cn`) this is defaulted to:
 public function getCreatableRdn()
 {
     $name = $this->escape($this->getFirstAttribute('cn'))->dn();
-    
+
     return "cn=$name";
 }
 ```
@@ -524,7 +497,7 @@ The above examples will save the user inside the `Users` OU resulting in the ful
 cn=John Doe,ou=Users,dc=acme,dc=org
 ```
 
-#### Setting A Distinguished Name {#setting-a-distinguished-name}
+#### Setting A Distinguished Name
 
 To set the models distinguished name, call the `setDn()` method on your model and populate it
 with any organization unit or container that you would like it to be created inside:
@@ -539,7 +512,7 @@ $user->setDn('cn=John Doe,ou=Users,dc=acme,dc=org');
 $user->save();
 ```
 
-### Updating {#updating}
+### Updating
 
 Updating models is as easy as creating them. When you have a model returned from a query,
 set its attributes as you would for creating and call the `save()` method:
@@ -555,7 +528,7 @@ $user->displayname = 'Johnathan Doe';
 $user->save();
 ```
 
-### Moving {#moving}
+### Moving
 
 To move existing models into Organizational Units or Containers, call the `move()` method:
 
@@ -574,7 +547,7 @@ $user->move($ou);
 echo $user->getDn();
 ```
 
-### Renaming {#renaming}
+### Renaming
 
 To rename existing models, call the `rename()` method and supply the new objects RDN (relative distinguished name):
 
@@ -591,7 +564,7 @@ $user->rename('cn=Jane Doe');
 echo $user->getDn();
 ```
 
-## Restoring Deleted Models {#restoring}
+## Restoring Deleted Models
 
 > **Important**: This feature is only possible when connecting to an Active Directory server.
 
@@ -639,9 +612,9 @@ $result = $user->restore();
 var_dump($result);
 ```
 
-## Attributes {#attributes}
+## Attributes
 
-### Methods {#methods}
+### Methods
 
 There are many built-in methods on models you may utilize.
 
@@ -717,7 +690,7 @@ $user = User::first();
 echo $user->countAttributes();
 ```
 
-### Array Conversion {#array-conversion}
+### Array Conversion
 
 Attributes you retrieve from an LdapRecord model will **always**
 return and array. This is due to LDAP's multi-valued nature.
@@ -763,7 +736,7 @@ $user = User::find('cn=John Doe,dc=acme,dc=org');
 $user->setFirstAttribute('mail', 'jdoe@acme.org');
 ```
 
-### Determining Attribute Existence {#determining-attribute-existence}
+### Determining Attribute Existence
 
 To check if a model has an attribute, you can use the `hasAttribute()` method:
 
@@ -782,9 +755,9 @@ $user->hasAttribute('samaccountname');
 $user->hasAttribute('sAMAccountname');
 ```
 
-### Casing & Hyphens {#casing-amp-hyphens}
+### Casing & Hyphens
 
-#### Attribute Casing {#attribute-casing}
+#### Attribute Casing
 
 LdapRecord automatically normalizes all attribute keys to lowercase. This
 means when setting or getting model attributes, you can use alternate
@@ -803,7 +776,7 @@ $user->sAMAccountName = 'John Doe';
 $user->samAccountName = 'John Doe';
 ```
 
-#### Attribute Hyphens {#attribute-hyphens}
+#### Attribute Hyphens
 
 Since LDAP does not support underscores in LDAP attributes but does
 support using hyphens, anytime you would like to set an attribute
@@ -829,7 +802,7 @@ echo $user->getAttribute('some-attribute')[0];
 echo $user->getFirstAttribute('some-attribute');
 ```
 
-## Deleting Models {#deleting-models}
+## Deleting Models
 
 To delete a record from your directory, call the `delete()` method on a model you have retrieved:
 
@@ -844,11 +817,11 @@ $user->delete();
 > The account you have configured to bind to your LDAP server must have permission to delete the record
 > you have retrieved. If it does not, you will receive an exception upon deletion.
 
-#### Deleting Models By Distinguished Name {#deleting-models-by-distinguished-name}
+#### Deleting Models By Distinguished Name
 
 In the example above, we are retrieving the record from the directory prior to deletion. However,
 if you'd like to simply delete a model by its distinguished name, call the `destroy()` method.
-The *number* of deleted models will be returned from this method:
+The _number_ of deleted models will be returned from this method:
 
 ```php
 <?php
@@ -866,7 +839,7 @@ $deleted = User::destroy([
 > You may also pass in `true` into the second parameter to recursively delete
 > leaf entries if a record is located by the distinguished name you have given.
 
-#### Recursive Deleting {#recursive-deleting}
+#### Recursive Deleting
 
 Sometimes you will be working with containers or organizational units that contain nested records
 inside of them. Calling `delete()` on these records will generate an exception without first
@@ -881,7 +854,7 @@ $ou = OrganizationalUnit::find('ou=Users,dc=acme,dc=org');
 $ou->delete($recursive = true);
 ```
 
-## Comparing Models {#comparing-models}
+## Comparing Models
 
 If you ever need to compare to models to see if they are the same, call the the `is()` method.
 This method will determine if the models have the same distinguished name and connection:
@@ -926,7 +899,7 @@ $user = User::find('cn=John Doe,ou=Accounting,ou=User Accounts,dc=acme,dc=org');
 
 // This will return true:
 if ($user->isDescendantOf($ou)) {
-    // 
+    //
 }
 
 // This will return true:
@@ -959,21 +932,21 @@ if ($userAccountsOu->isParentOf($officeOu)) {
 }
 ```
 
-## Events {#events}
+## Events
 
 LdapRecord models fire several different [events](/docs/core/v2/events) during the creation,
 updating and deletion. Here is a list of all the events you can listen for:
 
-| Event |
-| --- |
+| Event                               |
+| ----------------------------------- |
 | `LdapRecord\Models\Events\Creating` |
-| `LdapRecord\Models\Events\Created` |
+| `LdapRecord\Models\Events\Created`  |
 | `LdapRecord\Models\Events\Updating` |
-| `LdapRecord\Models\Events\Updated` |
-| `LdapRecord\Models\Events\Saving` |
-| `LdapRecord\Models\Events\Saved` |
+| `LdapRecord\Models\Events\Updated`  |
+| `LdapRecord\Models\Events\Saving`   |
+| `LdapRecord\Models\Events\Saved`    |
 | `LdapRecord\Models\Events\Deleting` |
-| `LdapRecord\Models\Events\Deleted` |
+| `LdapRecord\Models\Events\Deleted`  |
 
 To listen for these events, call the `getEventDispatcher()` on the `LdapRecord\Container`
 to retrieve the dispatcher, then call `listen()` on the returned dispatcher:
@@ -994,7 +967,7 @@ $dispatcher->listen(Creating::class, function ($event) {
 > You will want to setup any listeners prior to making changes to models,
 > otherwise your listener will not be executed due to them not existing yet.
 
-## Serialization {#serialization}
+## Serialization
 
 All model instances can be converted to an array for JSON serialization. To serialize
 a model instance, simply pass the model into `json_encode()`. This calls
@@ -1008,7 +981,7 @@ $user = User::first();
 echo json_encode($user);
 ```
 
-### Hiding Attributes {#hiding-attributes}
+### Hiding Attributes
 
 You may want to exclude certain attributes from being included in the
 serialization of your model, such as `userPassword` for OpenLDAP.
@@ -1022,7 +995,7 @@ class User extends Model
 {
     protected $hidden = ['userPassword'];
 }
-``` 
+```
 
 Now when you `json_encode($model)`, all attributes will be included **except** the `userPassword` attribute.
 
@@ -1036,9 +1009,9 @@ class User extends Model
 {
     protected $visible = ['cn', 'mail', 'sn'];
 }
-``` 
+```
 
-#### Converting Attributes to JSON {#converting-attributes-to-json}
+#### Converting Attributes to JSON
 
 Depending on the type of LDAP directory and model you are working with, you may need
 to convert some attributes to a string before it can be properly serialized.
@@ -1046,7 +1019,7 @@ For example, if you your model is from Active Directory, you will need to
 convert the `objectguid` property to a string since it is in binary,
 otherwise `json_encode()` will throw an exception.
 
-This can be done by adding a `convertAttributesForJson()` method to your model: 
+This can be done by adding a `convertAttributesForJson()` method to your model:
 
 > By default, the `objectguid` and `objectsid` attributes are
 > converted for you when using the built-in Active Directory models.

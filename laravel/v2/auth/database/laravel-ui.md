@@ -7,26 +7,16 @@ section: content
 
 # Laravel UI
 
-- [Introduction](#introduction)
-- [Debugging](#debugging)
-- [Login Controller](#login-controller)
-- [Using Usernames](#using-usernames)
-- [Fallback Authentication](#fallback-auth)
-- [Eloquent Model Binding](#model-binding)
-- [Displaying LDAP Error Messages](#displaying-ldap-error-messages)
- - [Changing The Error Messages](#changing-the-error-messages)
- - [Altering The Response](#altering-the-response)
-
-## Introduction {#introduction}
+## Introduction
 
 > **Important**: Before getting started, please complete the authentication
-[installation](/docs/laravel/v2/auth/database/installation) and [configuration](/docs/laravel/v2/auth/database/configuration) guides.
+> [installation](/docs/laravel/v2/auth/database/installation) and [configuration](/docs/laravel/v2/auth/database/configuration) guides.
 
 [Laravel UI](https://laravel.com/docs/7.x/authentication#authentication-quickstart) provides basic authentication scaffolding out-of-the-box.
 
 This guide will show you how to integrate LdapRecord-Laravel using this scaffolding.
 
-## Debugging {#debugging}
+## Debugging
 
 Inside of your `config/ldap.php` file, ensure you have `logging` enabled during the setup of authentication.
 Doing this will help you immensely in debugging connectivity and authentication issues.
@@ -40,7 +30,7 @@ In addition, you may also run the below artisan command to test connectivity to 
 php artisan ldap:test
 ```
 
-## Login Controller {#login-controller}
+## Login Controller
 
 For this example application, we will authenticate our LDAP users with their email address using the LDAP attribute `mail`.
 
@@ -73,7 +63,7 @@ login page normally with the "Invalid credentials" error message.
 > You may also add extra key => value pairs in the `credentials` array to further scope the
 > LDAP query. The `password` key is automatically ignored by LdapRecord.
 
-## Using Usernames {#using-usernames}
+## Using Usernames
 
 In corporate environments, users are often used to signing into their computers with their username.
 You can certainly keep this flow easy for them - we just need to change a couple things.
@@ -86,16 +76,16 @@ Schema::create('users', function (Blueprint $table) {
     // ...
 
     // Before...
-    $table->string('email')->unique(); 
-    
+    $table->string('email')->unique();
+
     // After...
-    $table->string('username')->unique(); 
+    $table->string('username')->unique();
 });
 ```
 
 > Make sure you run your migrations using `php artisan migrate`.
 
-Once we've changed the name of the column, we'll jump into the `config/auth.php` configuration and modify 
+Once we've changed the name of the column, we'll jump into the `config/auth.php` configuration and modify
 our LDAP user providers `sync_attributes` to synchronize this changed column.
 
 In this example, we will use the users `sAMAccountName` as their username
@@ -109,7 +99,7 @@ which is common in Active Directory environments:
 
     'ldap' => [
         // ...
-        
+
         'database' => [
             // ...
 
@@ -129,10 +119,28 @@ we need to modify our HTML login form to reflect this. Let's jump into our `auth
 <!-- resources/views/auth/login.blade.php -->
 
 <!-- Before... -->
-<input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+<input
+  id="email"
+  type="email"
+  class="form-control @error('email') is-invalid @enderror"
+  name="email"
+  value="{{ old('email') }}"
+  required
+  autocomplete="email"
+  autofocus
+/>
 
 <!-- After... -->
-<input id="username" type="text" class="form-control @error('username') is-invalid @enderror" name="username" value="{{ old('username') }}" required autocomplete="username" autofocus>
+<input
+  id="username"
+  type="text"
+  class="form-control @error('username') is-invalid @enderror"
+  name="username"
+  value="{{ old('username') }}"
+  required
+  autocomplete="username"
+  autofocus
+/>
 ```
 
 After changing the HTML input, we now must modify our `LoginController` to use this new field.
@@ -159,7 +167,7 @@ protected function credentials(Request $request)
 
 You can now sign in to your application using usernames instead of email addresses.
 
-## Fallback Authentication {#fallback-auth}
+## Fallback Authentication
 
 Database fallback allows the authentication of local database users if:
 
@@ -168,9 +176,9 @@ Database fallback allows the authentication of local database users if:
 
 For example, given the following `users` database table:
 
-id | name | email | password | guid | domain |
---- | --- | --- | --- |
-1 | Steve Bauman | sbauman@outlook.com | ... | `null` | `null` |
+| id  | name         | email               | password | guid   | domain |
+| --- | ------------ | ------------------- | -------- | ------ | ------ |
+| 1   | Steve Bauman | sbauman@outlook.com | ...      | `null` | `null` |
 
 If a user attempts to login with the above email address and this user does
 not exist inside of your LDAP directory, then standard Eloquent authentication
@@ -198,15 +206,14 @@ protected function credentials(Request $request)
 }
 ```
 
-
 > If you would like your LDAP users to be able to sign in to your application
 > when LDAP connectivity fails or is not present, you must enable the
 > [sync passwords](#database-password-sync) option, so your LDAP
-> users can sign in using their last used password. 
+> users can sign in using their last used password.
 > <br/><br/>
 > If an LDAP users password has not been synchronized, they will not be able to sign in.
 
-## Eloquent Model Binding {#model-binding}
+## Eloquent Model Binding
 
 Model binding allows you to access the **currently authenticated user's** LdapRecord model
 from their Eloquent model. This grants you access to their LDAP model whenever you need it.
@@ -253,7 +260,7 @@ $groups = $user->ldap->groups()->get();
 > gets requested from your server when you attempt to access it. This prevents
 > loading the model unnecessarily when it is not needed in your application.
 
-## Displaying LDAP Error Messages {#displaying-ldap-error-messages}
+## Displaying LDAP Error Messages
 
 When a user fails LDAP authentication due to their password / account expiring, account
 lockout, or their password requiring to be changed, specific error codes will be sent
@@ -301,7 +308,7 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-    
+
         $this->listenForLdapBindFailure();
     }
 
@@ -309,7 +316,7 @@ class LoginController extends Controller
 }
 ```
 
-### Changing The Error Messages {#changing-the-error-messages}
+### Changing The Error Messages
 
 If you need to modify the translations of these error messages, create a new translation
 file named `errors.php` in your `resources` directory at the following path:
@@ -323,7 +330,7 @@ file named `errors.php` in your `resources` directory at the following path:
         resources
 
         <div class="ellipsis"></div>
-        
+
         <div class="folder folder--open">
             lang
 
@@ -346,6 +353,7 @@ file named `errors.php` in your `resources` directory at the following path:
     </div>
 
     <div class="ellipsis"></div>
+
 </div>
 
 Then, paste in the following translations in the file and modify where necessary:
@@ -365,7 +373,7 @@ return [
 ];
 ```
 
-### Altering The Response {#altering-the-response}
+### Altering The Response
 
 By default, when an LDAP bind failure occurs, a `ValidationException` will be thrown which will
 redirect users to your login page and display the error. If you would like to modify this
@@ -386,19 +394,19 @@ class LoginController extends Controller
     // ...
 
     use ListensForLdapBindFailure;
-    
+
     protected function handleLdapBindError($message, $code = null)
     {
         if ($code == '773') {
             // The users password has expired. Redirect them.
             abort(redirect('/password-reset'));
         }
-    
+
        throw ValidationException::withMessages([
             'email' => "Whoops! LDAP server cannot be reached.",
         ]);
     }
-   
+
     // ...
 }
 ```

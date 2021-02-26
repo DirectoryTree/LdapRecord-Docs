@@ -7,18 +7,14 @@ section: content
 
 # Testing
 
-- [Introduction](#introduction)
-- [Test Case Setup](#setup)
-- [Responses and Error Codes](#response-codes)
-
-## Introduction {#introduction}
+## Introduction
 
 LdapRecord comes with a utility that allow you to test bind attempts
 against a fake server and return custom error codes & responses.
 
 This allows you to test how your application responds to authentication failures and error messages.
 
-## Test Case Setup {#setup}
+## Test Case Setup
 
 To begin, initialize the fake directory using the `DirectoryFake::setup` method. This method
 accepts the name of your LDAP connection that you initialize in your application.
@@ -48,11 +44,11 @@ class AuthController
 
         $username = $_POST['username'];
         $password = $_POST['password'];
-        
+
         if ($connection->auth()->attempt($username, $password)) {
-            return "Your password is valid!";   
+            return "Your password is valid!";
         }
-        
+
         return "Username or password is incorrect.";
     }
 }
@@ -70,9 +66,9 @@ class LoginTest extends TestCase
         $user = 'cn=User,dc=local,dc=com';
 
         DirectoryFake::setup()->actingAs($user);
-    
+
         // Execute HTTP post request somehow in your testing framework...
-        
+
         $this->post('/login', [
             'username' => $user,
             'password' => 'secret',
@@ -88,7 +84,7 @@ class LoginTest extends TestCase
 
 This is a small example of how you can test bind attempts to your LDAP server.
 
-## Responses and Error Codes {#response-codes}
+## Responses and Error Codes
 
 When testing connectivity to your LDAP server, you may wish to test error codes and
 messages that may be returned when a bind attempt fails. To do this, you can
@@ -119,9 +115,9 @@ class AuthController
 
         $username = $_POST['username'];
         $password = $_POST['password'];
-        
+
         if ($connection->auth()->attempt($username, $password)) {
-            return "Your password is valid!";   
+            return "Your password is valid!";
         }
 
         $error = $connection->getLdapConnection()->getDiagnosticMessage();
@@ -135,7 +131,7 @@ class AuthController
         } elseif (strpos($error, '775') !== false) {
              return "Your account is locked.";
         }
-        
+
         return "Username or password is incorrect.";
     }
 }
@@ -159,9 +155,9 @@ class LoginTest extends TestCase
         $fake = DirectoryFake::setup()->actingAs($user);
 
         $fake->getLdapConnection()->shouldReturnDiagnosticMessage('Failed: 775');
-        
+
         // Execute HTTP post request somehow in your testing framework...
-        
+
         $this->post('/login', [
             'username' => $user,
             'password' => 'secret',

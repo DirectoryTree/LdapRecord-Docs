@@ -7,13 +7,6 @@ section: content
 
 # Plain Auth Configuration
 
-- [Introduction](#introduction)
-- [Driver](#driver)
-- [Model](#model)
-- [Rules](#rules)
- - [Overview](#rule-overview)
- - [Creating Rules](#rule-creation)
-
 ## Introduction
 
 To configure a plain LDAP authentication provider, navigate to the `providers` array
@@ -26,7 +19,7 @@ inside of your `config/auth.php` file, and paste the following `users` provider:
 
 'providers' => [
     // ...
-    
+
     'users' => [
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
@@ -51,20 +44,20 @@ App\Ldap\DomainAlpha\User
 
 This will allow you to segregate scopes, rules and other classes to their relating connection.
 
-## Driver {#driver}
+## Driver
 
 The `driver` option must be `ldap` as this is what indicates to Laravel the proper authentication driver to use.
 
-## Model {#model}
+## Model
 
 The `model` option must be the class name of your [LdapRecord model](/docs/core/v2/models). This model will be used
 for fetching users from your directory.
 
-## Rules {#rules}
+## Rules
 
 The `rules` option must be an array of [authentication rule](#rules) class names.
 
-### Overview {#rule-overview}
+### Overview
 
 LDAP authentication rules give you the ability to allow or deny users from signing into your
 application using a condition you would like to apply. These rules are executed **after**
@@ -74,7 +67,7 @@ Think of them as a final authorization gate before they are allowed in.
 
 > Authentication rules are never executed if a user fails LDAP authentication.
 
-### Creating Rules {#rule-creation}
+### Creating Rules
 
 Let's create an LDAP rule that only allows members of our domain `Administrators` group.
 
@@ -124,7 +117,7 @@ class OnlyAdministrators extends Rule
     public function isValid()
     {
         $administrators = Group::find('cn=Administrators,dc=local,dc=com');
-    
+
         return $this->user->groups()->recursive()->exists($administrators);
     }
 }
@@ -138,7 +131,7 @@ Once we have our rule defined, we will add it into our authentication provider i
 ```php
 'providers' => [
     // ...
-  
+
     'ldap' => [
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,

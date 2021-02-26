@@ -7,25 +7,20 @@ section: content
 
 # LdapRecord-Lumen
 
-- [Introduction](#introduction)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
-
-## Introduction {#introduction}
+## Introduction
 
 LdapRecord-Lumen gives you the features of LdapRecord-Laravel using Lumen.
 
-## Installation {#installation}
+## Installation
 
 LdapRecord-Lumen requires the following:
 
-Requirements |
---- |
-PHP >= 7.2 |
-Lumen >= 5.6 |
-PHP LDAP extension enabled |
-An LDAP server (Active Directory, OpenLDAP, FreeIPA etc.) |
+| Requirements                                              |
+| --------------------------------------------------------- |
+| PHP >= 7.2                                                |
+| Lumen >= 5.6                                              |
+| PHP LDAP extension enabled                                |
+| An LDAP server (Active Directory, OpenLDAP, FreeIPA etc.) |
 
 Require LdapRecord-Laravel via [composer](https://getcomposer.org/):
 
@@ -41,7 +36,7 @@ Once composer completes, register the `LdapServiceProvider` inside of your `boot
 $app->register(\LdapRecord\Lumen\LdapServiceProvider::class);
 ```
 
-## Configuration {#configuration}
+## Configuration
 
 Publish the `ldap.php` configuration file via the `make:ldap-config` command:
 
@@ -66,7 +61,7 @@ LDAP_SSL=false
 LDAP_TLS=false
 ```
 
-## Usage {#usage}
+## Usage
 
 You can now begin using LdapRecord inside of your Lumen application:
 

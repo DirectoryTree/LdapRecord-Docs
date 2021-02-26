@@ -7,16 +7,6 @@ section: content
 
 # Configuration
 
-- [Hosts](#hosts)
-- [Base DN](#base-distinguished-name)
-- [Username & Password](#username-amp-password)
-- [Port](#port)
-- [SSL & TLS](#ssl-amp-tls)
-- [Timeout](#timeout)
-- [Version](#version)
-- [Follow Referrals](#follow-referrals)
-- [Options](#options)
-
 To configure your LDAP connections, you must provide an array to the
 `Connection` class with key-value pairs to set various options.
 
@@ -48,7 +38,7 @@ $connection = new Connection([
 ]);
 ```
 
-### Hosts {#hosts}
+### Hosts
 
 The hosts option is an array of IP addresses or host names located on your network that serve an LDAP directory.
 
@@ -66,7 +56,7 @@ This automated fail-over process will continue for each host address, until a su
 > - Do not append your port (`:389`, `:636`, etc.) to your hosts. <br/> Use the `port` configuration option instead.
 > - Do not prepend your protocol (`ldap://` or `ldaps://`) to your hosts. <br/> Use the `use_ssl` configuration option instead.
 
-### Base Distinguished Name {#base-distinguished-name}
+### Base Distinguished Name
 
 A 'Distinguished Name' is a string based identifier in LDAP that is used to indicate hierarchy.
 
@@ -76,11 +66,11 @@ An example Distinguished Name would be `cn=John Doe,ou=Users,dc=local,dc=com`.
 
 The above can be broken into the following 'Relative Distinguished Names' (RDN for short):
 
-RDN | Meaning |
---- | --- |
-`cn=John Doe` | The object has a 'Common Name' of `John Doe` |
-`ou=Users` | The object resides in the 'Organizational Unit' `Users` |
-`dc=local,dc=com` | The object resides in the 'Domain' `local.com` |
+| RDN               | Meaning                                                 |
+| ----------------- | ------------------------------------------------------- |
+| `cn=John Doe`     | The object has a 'Common Name' of `John Doe`            |
+| `ou=Users`        | The object resides in the 'Organizational Unit' `Users` |
+| `dc=local,dc=com` | The object resides in the 'Domain' `local.com`          |
 
 A 'Base Distinguished Name' is the distinguished name that you would like to
 be used as the root of all searches and object creations using LdapRecord.
@@ -88,18 +78,18 @@ be used as the root of all searches and object creations using LdapRecord.
 An example base DN would be `dc=local,dc=com`.
 
 This means, that all searches executed with LdapRecord will start at `dc=local,dc=com`
-as the root. This would allow all records *below* it to be retrieved from results.
+as the root. This would allow all records _below_ it to be retrieved from results.
 
 > **Important**:
 >
 > - If you do not define a base DN, you will not retrieve any search results from queries.
 > - Your base DN is **case insensitive**. You do not need to worry about incorrect casing.
 
-### Username & Password {#username-amp-password}
+### Username & Password
 
 To connect to your LDAP server, a username and password is required to be able to query and run operations on your server(s).
 
-> **Important**: 
+> **Important**:
 >
 > - The `username` option **must** be a users [Distinguished Name](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ldap/distinguished-names)
 > - If however you are connecting to an Active Directory server, you may use a:
@@ -107,7 +97,7 @@ To connect to your LDAP server, a username and password is required to be able t
 >   - [Down-Level Logon Name](https://docs.microsoft.com/en-us/windows/win32/secauthn/user-name-formats#down-level-logon-name) (`DOMAIN\\username`)
 > - To run administration level operations, such as resetting passwords, this account **must** have the permissions to do so on your directory.
 
-### Port {#port}
+### Port
 
 The port option is used for opening a connection and binding to your LDAP server.
 
@@ -120,11 +110,11 @@ Only insert a port if your LDAP server uses a unique port.
 > - If enabling SSL, and `port` is set to `389`, it will be automatically overridden to use `636`.
 > - If enabling TLS, you must use the default port for your LDAP server (`389`). SSL ports cannot be used.
 
-### SSL & TLS {#ssl-amp-tls}
+### SSL & TLS
 
 These boolean options enable an TLS or SSL connection to your LDAP server.
 
-It is recommended to use *one* of these options if you have the ability to. This ensures secure connectivity.
+It is recommended to use _one_ of these options if you have the ability to. This ensures secure connectivity.
 
 > **Important**:
 >
@@ -132,7 +122,7 @@ It is recommended to use *one* of these options if you have the ability to. This
 > - You **must** enable SSL or TLS to set / change / reset passwords in Active Directory.
 > - **TLS is recommended over SSL**. SSL is labelled as a deprecated mechanism for securely running LDAP operations.
 
-#### Debugging {#ssl-amp-tls-debugging}
+#### Debugging
 
 If you're having connectivity issues over SSL or TLS, you may have to
 create an `ldap.conf` file and add the following inside:
@@ -143,11 +133,11 @@ TLS_REQCERT never
 
 The `ldap.conf` file will likely not exist by default. Create it inside the location for your OS:
 
-OS | Location |
---- | --- |
-Windows | `C:\OpenLDAP\sysconf\ldap.conf` | 
-Linux | `/etc/ldap/ldap.conf` |
-macOS | `/usr/local/etc/openldap/ldap.conf` |
+| OS      | Location                            |
+| ------- | ----------------------------------- |
+| Windows | `C:\OpenLDAP\sysconf\ldap.conf`     |
+| Linux   | `/etc/ldap/ldap.conf`               |
+| macOS   | `/usr/local/etc/openldap/ldap.conf` |
 
 The above directories may not exist - you will need to create them in such case.
 
@@ -162,10 +152,10 @@ can be a bit of a security risk as it will ignore invalid certificates.
 
 Copy your domain CA certificate to the following location:
 
-OS | Location |
---- | --- |
-Windows | `C:\OpenLDAP\sysconf` | 
-Linux / macOS | `/etc/ssl/certs` |
+| OS            | Location              |
+| ------------- | --------------------- |
+| Windows       | `C:\OpenLDAP\sysconf` |
+| Linux / macOS | `/etc/ssl/certs`      |
 
 Then, reference it in your `ldap.conf` with the full file path using (replace
 `my-custom-path` with the location of the file):
@@ -189,7 +179,7 @@ TLS_CACERT /etc/ssl/certs/ca.pem
 TLS_REQCERT hard
 ```
 
-### Timeout {#timeout}
+### Timeout
 
 The timeout option allows you to configure the amount of seconds to wait
 until your application receives a response from your LDAP server.
@@ -204,7 +194,7 @@ The default is five (`5`) seconds.
 > them do not respond (or fail), the operation will take ten (10) seconds +
 > the amount of time the third (3rd) host takes to respond.
 
-### Version {#version}
+### Version
 
 The LDAP version to use for your connection.
 
@@ -212,7 +202,7 @@ Must be an integer, and can either be two (`2`) or three (`3`).
 
 > **Important**: It's heavily recommended to use version three (`3`). You may experience issues using version two (`2`).
 
-### Follow Referrals {#follow-referrals}
+### Follow Referrals
 
 The follow referrals option is a boolean to tell Active Directory to
 follow a referral to another server on your network if the server
@@ -225,15 +215,15 @@ This option is defaulted to `false`.
 > </br></br>
 > For more information, visit: [Microsoft Docs - LDAP Referrals](https://technet.microsoft.com/en-us/library/cc978014.aspx)
 
-### Options {#options}
+### Options
 
 Arbitrary options can be set for the connection to fine-tune TLS and connection behavior.
 
 > **Important**: The following options will be ignored if set:
 >
->  - `LDAP_OPT_PROTOCOL_VERSION`
->  - `LDAP_OPT_NETWORK_TIMEOUT`
->  - `LDAP_OPT_REFERRALS`
+> - `LDAP_OPT_PROTOCOL_VERSION`
+> - `LDAP_OPT_NETWORK_TIMEOUT`
+> - `LDAP_OPT_REFERRALS`
 >
 > These are instead set with the `version`, `timeout` and `follow_referrals` keys.
 

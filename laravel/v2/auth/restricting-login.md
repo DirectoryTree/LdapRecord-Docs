@@ -7,17 +7,12 @@ section: content
 
 # Restricting Login
 
-- [Introduction](#introduction)
-- [Using a Group Membership](#using-group-membership)
-- [Using an Organizational Unit](#using-organizational-unit)
-- [Using Only Manually Imported Users](#using-only-imported-users)
-
-## Introduction {#introduction}
+## Introduction
 
 LdapRecord-Laravel provides various ways you can prevent certain users
 from logging into your application. Let's walk through some approaches.
 
-## Using a Group Membership {#using-group-membership}
+## Using a Group Membership
 
 To use a group membership for authorizing signing in to your application, we
 will use an [authentication rule](/docs/laravel/v2/auth/configuration#rules).
@@ -148,7 +143,7 @@ public function isValid()
 }
 ```
 
-Using the above example without the `recursive` call, it will fail to 
+Using the above example without the `recursive` call, it will fail to
 determine the users group membership, since LdapRecord is only
 searching for immediate memberships of the user:
 
@@ -160,7 +155,7 @@ public function isValid()
 }
 ```
 
-## Using an Organizational Unit {#using-organizational-unit}
+## Using an Organizational Unit
 
 To use an Organizational Unit which contains your users that you want to
 allow sign in to your application, we will leverage LdapRecord [model scopes](/docs/core/v2/models#query-scopes).
@@ -202,7 +197,7 @@ class OnlyAccountingUsers implements Scope
     public function apply(Builder $query, Model $model)
     {
         $query->in('ou=Accounting,ou=Users,dc=local,dc=com');
-        
+
         // You can also make this "environment aware" if needed:
         // $query->in(env('LDAP_USER_SCOPE'));
     }
@@ -211,7 +206,7 @@ class OnlyAccountingUsers implements Scope
 
 After modifying the scope, we can now add the scope to our LDAP user model.
 
-If you are using one of the [built-in predefined models](/docs/core/v2/models#predefined-models), you 
+If you are using one of the [built-in predefined models](/docs/core/v2/models#predefined-models), you
 can add the global scope to the model inside your `AuthServiceProvider::boot()` method:
 
 ```php
@@ -225,7 +220,7 @@ can add the global scope to the model inside your `AuthServiceProvider::boot()` 
 public function boot()
 {
     $this->registerPolicies();
-    
+
     \LdapRecord\Models\ActiveDirectory\User::addGlobalScope(
         new OnlyAccountingUsers
     );
@@ -261,7 +256,7 @@ class User extends Model
 Now when you attempt to sign in to your application, only users who are
 contained inside the `Accounting` OU will be allowed to authenticate.
 
-## Using Only Manually Imported Users {#using-only-imported-users}
+## Using Only Manually Imported Users
 
 To allow only [manually imported LDAP users](/docs/laravel/v2/importing) who exist inside of your
 database to sign in to your application, you must create an [authentication rule](/docs/laravel/v2/auth/configuration#rules).
@@ -322,5 +317,5 @@ file where your LDAP user provider has been configured:
 
 > Make sure you run `php artisan config:clear` if you are caching your configuration files.
 
-Now when you attempt to sign in to your application, you will only be able to sign in 
+Now when you attempt to sign in to your application, you will only be able to sign in
 with a user who has already been imported into your local applications database.

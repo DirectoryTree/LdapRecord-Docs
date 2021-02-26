@@ -5,11 +5,11 @@ extends: _layouts.laravel.page
 section: content
 ---
 
-# Authentication Overview {#overview}
+# Authentication Overview
 
 LdapRecord-Laravel comes with two ways to authenticate LDAP users into your application.
 
-## Plain Authentication {#plain}
+## Plain Authentication
 
 If you have an application that doesn't require any user data to be synchronized to your database,
 then you can utilize plain LDAP authentication.
@@ -21,7 +21,7 @@ It is paramount to understand that upon every request a logged in user makes to 
 an LDAP search request will be made to retrieve them. If you do not want this to occur, you must
 use synchronized database authentication.
 
-## Synchronized Database Authentication {#database}
+## Synchronized Database Authentication
 
 Synchronized Database LDAP Authentication means that an LDAP user that has successfully passed LDAP authentication
 is created & synchronized to your local applications database. This is helpful as you can attach typical

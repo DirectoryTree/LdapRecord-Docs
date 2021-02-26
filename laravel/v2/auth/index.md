@@ -5,7 +5,7 @@ extends: _layouts.laravel.page
 section: content
 ---
 
-# Authentication Overview {#overview}
+# Authentication Overview
 
 LdapRecord-Laravel comes with two ways to authenticate LDAP users into your application.
 Read each use case below and select one that best suits your needs.

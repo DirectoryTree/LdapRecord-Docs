@@ -7,11 +7,7 @@ section: content
 
 # Models: Scopes
 
-- [Introduction](#introduction)
-- [Local Scopes](#local-query-scopes)
-- [Global Scopes](#global-query-scopes)
-
-## Introduction {#introduction}
+## Introduction
 
 Model "scoping" allows you to define functions or classes that dynamically add
 filters to a model query. There are two types of scopes you may add to
@@ -27,9 +23,9 @@ models, and there are benefits and drawbacks to each type:
 - Applied globally on model queries
 - Cannot accept parameters
 
-### Local Query Scopes {#local-query-scopes}
+### Local Query Scopes
 
-#### Creating a local scope {#creating-local-scope}
+#### Creating a local scope
 
 Local scopes allow you to add constraints to LDAP queries created from models dynamically.
 
@@ -50,9 +46,9 @@ class User extends Model
 
     /**
      * Apply the scope to the query.
-     * 
+     *
      * @param Builder $builder
-     * 
+     *
      * @return Builder
      */
     public function scopeLockedOut(Builder $query)
@@ -62,7 +58,7 @@ class User extends Model
 }
 ```
 
-#### Using a local scope {#using-local-scope}
+#### Using a local scope
 
 Now that we have defined a local scope inside of our model, we can call it like so:
 
@@ -96,13 +92,13 @@ $users = User::company('acme')->lockedOut()->get();
 
 Local scopes are very powerful, allowing you to generate readable, understandable queries!
 
-### Global Query Scopes {#global-query-scopes}
+### Global Query Scopes
 
 Global scopes allow you to add constraints to all LDAP queries that are created on a particular model.
 Writing a query scope allows you to be certain that a particular filter is always applied, rather
 than adding constraints every time you query the model.
 
-#### Creating a global scope {#creating-global-scope}
+#### Creating a global scope
 
 To create a global query scope, create a class in your application that implements
 the `LdapRecord\Models\Scope` interface. This interface will require you to add
@@ -126,7 +122,7 @@ class CompanyScope implements Scope
 {
     /**
      * Apply the scope to the query.
-     * 
+     *
      * @param Builder $builder
      * @param Model   $model
      */
@@ -134,14 +130,14 @@ class CompanyScope implements Scope
     {
         $builder->where('company', '=', 'Acme Company');
     }
-} 
+}
 ```
 
 > If you are looking to select additional attributes in your scope
 > using the `select` method, use `addSelect` instead so your
 > query selects are not overwritten.
 
-#### Apply the global scope {#apply-global-scope}
+#### Apply the global scope
 
 Now that we've written our global scope, we can apply it to our users model.
 
@@ -185,7 +181,7 @@ Which your LDAP server will read as:
 
 This is due to all values being automatically escaped using the LdapRecord query builder.
 
-#### Anonymous global scopes {#anonymous-global-scope}
+#### Anonymous global scopes
 
 Instead of creating a class scope, you may also define global scopes using Closures.
 This is useful for simple scopes that do not warrant a separate class:
@@ -216,7 +212,7 @@ class User extends Model
 }
 ```
 
-#### Removing Global Scopes {#remove-global-scope}
+#### Removing Global Scopes
 
 If you would like to remove a global scope for a particular query, you may use
 the `withoutGlobalScope` method. The method accepts the class name of the

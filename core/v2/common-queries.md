@@ -9,7 +9,7 @@ section: content
 
 Most applications will require retrieving certain set / type of objects from a directory.
 
-## Using Models {#using-models}
+## Using Models
 
 Utilizing LdapRecord's built in models allow you to easily query specific types of objects in your directory.
 
@@ -73,7 +73,7 @@ $groups = \LdapRecord\Models\OpenLDAP\Group::get();
 $ous = \LdapRecord\Models\OpenLDAP\OrganizationalUnit::get();
 ```
 
-## Without Models {#without-models}
+## Without Models
 
 If you do not want to use LdapRecord models, you can still use the query builder and retrieve raw LDAP results.
 

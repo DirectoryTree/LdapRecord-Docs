@@ -5,6 +5,6 @@ extends: _layouts.laravel.page
 section: content
 ---
 
-# License {#license}
+# License
 
 LdapRecord-Laravel is open-sourced software licensed under the MIT license.

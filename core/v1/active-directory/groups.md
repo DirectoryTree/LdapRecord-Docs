@@ -7,19 +7,7 @@ section: content
 
 # Group Management (Active Directory)
 
-- [Creation](#creation)
-- [Members](#members)
-  - [Getting Members](#getting-members)
-  - [Adding Members](#adding-members)
-  - [Removing Members](#removing-members)
-  - [Removing All Members](#removing-all-members)
-- [Groups](#groups)
-  - [Getting Groups](#getting-groups)
-  - [Adding Groups](#adding-groups)
-  - [Removing Groups](#removing-groups)
-  - [Removing All Groups](#removing-all-groups)
-
-## Creation {#creation}
+## Creation
 
 To create a new Active Directory group, only a common name is required (`cn`):
 
@@ -41,12 +29,12 @@ $group->cn = 'Accounting';
 $group->save();
 ```
 
-## Members {#members}
+## Members
 
 When you create or locate a group on your directory, the `members` relationship
 is available to you on the model instance.
 
-### Getting Members {#getting-members}
+### Getting Members
 
 To get the immediate members of a group on your directory call the `members` relationship, and then `get()`:
 
@@ -64,7 +52,7 @@ $members = $group->members()->get();
 >
 > To use different models, override the `members` relationship.
 
-#### Getting Members Recursively {#getting-all-members}
+#### Getting Members Recursively
 
 Very often we use groups that are apart of other groups, that include members.
 
@@ -76,11 +64,11 @@ $group = Group::find('cn=Accounting,dc=local,dc=com');
 $allMembers = $group->members()->recursive()->get();
 ```
 
-### Adding Members {#adding-members}
+### Adding Members
 
 In Active Directory, valid group members are other groups, users and contacts.
 
-To add members to a group, call the `members` relationship, and then the  `attach()` method:
+To add members to a group, call the `members` relationship, and then the `attach()` method:
 
 > You must provide a `Model` instance into the `attach()` method.
 
@@ -104,7 +92,7 @@ $office = $accounting->members()->attach(
 echo $office->getDn();
 ```
 
-#### Adding Multiple Members {#adding-many-members}
+#### Adding Multiple Members
 
 To add multiple members at once, provide an array of models to the `attachMany()` method:
 
@@ -116,7 +104,7 @@ $accountants = User::in('ou=Accountants,ou=Users,dc=local,dc=com')->get();
 $accounting->members()->attachMany($accountants);
 ```
 
-### Removing Members {#removing-members}
+### Removing Members
 
 To remove members on a group, call the `members` relationship, and then `detach()`:
 
@@ -130,7 +118,7 @@ $user = $group->members()->where('cn', '=', 'Steve Bauman')->first();
 $group->members()->detach($user);
 ```
 
-#### Removing Multiple Members {#removing-many-members}
+#### Removing Multiple Members
 
 To remove multiple members at once, provide an array of models to the `detachMany()` method:
 
@@ -144,7 +132,7 @@ $members = $group->members()
 $group->members()->detachMany($members);
 ```
 
-#### Removing All Members {#removing-all-members}
+#### Removing All Members
 
 To remove **all** immediate members from the group, call the `detachAll()` method:
 
@@ -160,12 +148,12 @@ foreach ($removed as $member) {
 }
 ```
 
-## Groups {#groups}
+## Groups
 
 When you create or locate a group on your directory, the `groups` relationship
 is available to you on the model instance.
 
-### Getting Groups {#getting-groups}
+### Getting Groups
 
 To get the immediate groups that a particular group is apart of on
 your directory call the `groups` relationship, and then `get()`:
@@ -176,7 +164,7 @@ $group = Group::find('cn=Accounting,dc=local,dc=com');
 $groups = $group->groups()->get();
 ```
 
-#### Getting Groups Recursively {#getting-all-groups}
+#### Getting Groups Recursively
 
 When you have a group that is apart of many parent groups in a hierarchy, you may need to retrieve these.
 
@@ -188,7 +176,7 @@ $group = Group::find('cn=Accounting,dc=local,dc=com');
 $allGroups = $group->groups()->recursive()->get();
 ```
 
-### Adding Groups {#adding-groups}
+### Adding Groups
 
 To add groups to a particular group, call the `attach()` method on the `groups` relation:
 
@@ -202,7 +190,7 @@ $office = Group::find('cn=Office,dc=local,dc=com');
 $accounting->groups()->attach($office);
 ```
 
-#### Adding Multiple Groups {#adding-many-groups}
+#### Adding Multiple Groups
 
 To add multiple groups at once, provide an array of models to the `attachMany()` method:
 
@@ -214,7 +202,7 @@ $officeGroups = Group::in('ou=Office,ou=Groups,dc=local,dc=com')->get();
 $accounting->groups()->attachMany($officeGroups);
 ```
 
-### Removing Groups {#removing-groups}
+### Removing Groups
 
 To remove groups on a particular group, call the `groups` relationship, and then `detach()`:
 
@@ -228,7 +216,7 @@ $officeGroup = $accounting->groups()->where('cn', '=', 'Office')->first();
 $accounting->groups()->detach($officeGroup);
 ```
 
-#### Removing Multiple Groups {#removing-multiple-groups}
+#### Removing Multiple Groups
 
 To remove multiple groups at once, provide an array of models to the `detachMany()` method:
 
@@ -242,7 +230,7 @@ $officeGroups = $accounting->groups()
 $accounting->groups()->detachMany($officeGroups);
 ```
 
-#### Removing All Groups {#removing-all-groups}
+#### Removing All Groups
 
 To remove **all** immediate groups of a particular group, call the `detachAll()` method:
 

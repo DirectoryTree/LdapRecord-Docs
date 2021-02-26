@@ -7,27 +7,13 @@ section: content
 
 # Authentication Configuration
 
-- [Introduction](#introduction)
-- [Plain Authentication](#plain)
- - [Driver](#plain-driver)
- - [Model](#plain-model)
- - [Rules](#plain-rules)
-- [Synchronized Database Authentication](#database)
- - [Database Model](#database-model)
- - [Password Column](#database-password-column)
- - [Password Sync](#database-password-sync)
- - [Sync Attributes](#database-sync-attributes)
- - [Sync Existing Records](#database-sync-existing)
- - [All Available Options Example](#database-options)
-- [Attribute Handlers](#attribute-handlers)
-
-## Introduction {#introduction}
+## Introduction
 
 To configure LDAP authentication, you must define or update a `provider` inside of your `config/auth.php` file.
 
 Let's walk through configuring both LDAP authentication mechanisms.
 
-## Plain Authentication {#plain}
+## Plain Authentication
 
 To create a plain LDAP authentication provider, navigate to the `providers`
 array, and paste the following `ldap` provider:
@@ -37,7 +23,7 @@ array, and paste the following `ldap` provider:
 
 'providers' => [
     // ...
-    
+
     'ldap' => [
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
@@ -60,20 +46,20 @@ App\Ldap\DomainAlpha\User
 
 This will allow you to segregate scopes, rules and other classes to their relating connection.
 
-### Driver {#plain-driver}
+### Driver
 
 The `driver` option must be `ldap` as this is what indicates to Laravel the proper authentication driver to use.
 
-### Model {#plain-model}
+### Model
 
 The `model` option must be the class name of your [LdapRecord model](/docs/core/v2/models). This model will be used
 for fetching users from your directory.
 
-### Rules {#plain-rules}
+### Rules
 
 The `rules` option must be an array of class names of [authentication rules](#rules).
 
-## Synchronized Database Authentication {#database}
+## Synchronized Database Authentication
 
 To create a synchronized database LDAP authentication provider, navigate to the `providers` array,
 and paste the following `ldap` provider:
@@ -85,7 +71,7 @@ and paste the following `ldap` provider:
 
 'providers' => [
     // ...
-    
+
     'ldap' => [
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
@@ -104,14 +90,14 @@ and paste the following `ldap` provider:
 
 As you can see above, a `database` array is used to configure the association between your LDAP user and your Eloquent user.
 
-### Database Model {#database-model}
+### Database Model
 
 The `database => model` key is the class name of the [Eloquent model](https://laravel.com/docs/eloquent) that will be
 used for creating and retrieving LDAP users from your applications database.
 
 > Be sure to add the required [trait and interface](/docs/laravel/v2/auth/database/installation) to this model as shown in the installation guide.
 
-### Password Column {#database-password-column}
+### Password Column
 
 If your application uses a different password column than `password`, then you can configure
 it using the `password_column` key inside of your providers configuration:
@@ -146,7 +132,7 @@ You can also set the value to `false` if your database table does not have any p
 ],
 ```
 
-### Sync Passwords {#database-password-sync}
+### Sync Passwords
 
 The `database => sync_passwords` option enables password synchronization. Password synchronization captures and hashes
 the users password **upon login** if they pass LDAP authentication. This helps in situations where you may want to
@@ -157,23 +143,23 @@ users password is valid without having to call to your LDAP server and validate 
 > random 16 character hashed password. This hashed password is only set once upon initial
 > import or login so no needless updates are performed on user records.
 
-### Sync Attributes {#database-sync-attributes}
+### Sync Attributes
 
 The `database => sync_attributes` array defines a set of key-value pairs:
 
 - The **key** of each array item is the column of your `users` database table
-- The **value** is the *name* of the users LDAP attribute to set the database value to
+- The **value** is the _name_ of the users LDAP attribute to set the database value to
 
 > You do not need to add your users `guid` or `domain` database columns. These are done automatically for you.
 
 For further control on sync attributes, see the below [attribute handler](#attribute-handlers) feature.
 
-### Sync Existing Records {#database-sync-existing}
+### Sync Existing Records
 
 The `database => sync_existing` array defines a set of key-value pairs:
 
 - The **key** of each array item is the column of your `users` database table to query
-- The **value** is the *name* of the users LDAP attribute to query inside of your database for
+- The **value** is the _name_ of the users LDAP attribute to query inside of your database for
 
 > If the LDAP attribute returns `null` for the given **value**, the value string will be used
 > in the query instead. This is helpful to be able to use raw strings to scope your query by.
@@ -182,10 +168,10 @@ Let's walk through an example.
 
 In our application, we have existing users inside of our Laravel applications database:
 
-id | name | email | password | guid | domain |
---- | --- | --- | --- |
-1 | Steve Bauman | sbauman@local.com | ... | `null` | `null` |
-2 | John Doe | jdoe@local.com | ... | `null` | `null` |
+| id  | name         | email             | password | guid   | domain |
+| --- | ------------ | ----------------- | -------- | ------ | ------ |
+| 1   | Steve Bauman | sbauman@local.com | ...      | `null` | `null` |
+| 2   | John Doe     | jdoe@local.com    | ...      | `null` | `null` |
 
 As you can see above, these users have `null` values for their `guid` and `domain` columns.
 
@@ -216,7 +202,7 @@ Now when `sbauman@local.com` attempts to log in, if the user cannot be located
 by their GUID, they will instead be located by their email address. Their
 GUID, domain, and sync attributes you define will then synchronize.
 
-### All Available Options Example {#database-options}
+### All Available Options Example
 
 Here is a synchronized database provider fully configured with all available options set:
 
@@ -225,7 +211,7 @@ Here is a synchronized database provider fully configured with all available opt
 
 'providers' => [
     // ...
-    
+
     'ldap' => [
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
@@ -246,7 +232,7 @@ Here is a synchronized database provider fully configured with all available opt
 ],
 ```
 
-## Attribute Handlers {#attribute-handlers}
+## Attribute Handlers
 
 If you require logic for synchronizing attributes when users sign into your application or are
 being [imported](/docs/laravel/v2/auth/database/importing), you can create an attribute handler class

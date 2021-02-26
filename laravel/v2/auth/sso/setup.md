@@ -7,15 +7,7 @@ section: content
 
 # Pass-through / SSO Setup
 
-- [Middleware](#middleware)
-- [Multi-Domain SSO](#multi-domain-sso)
-- [Domain Verification](#sso-domain-verification)
-- [Changing the Server Key](#changing-the-sso-server-key)
-- [Remember Single-Sign-On users](#remember-sso-users)
-- [Selective / Bypassing Single-Sign-On](#selective-single-sign-on)
-- [Forcing logouts on non Single-Sign-On users](#forcing-non-sso-logouts)
-
-## Middleware {#middleware}
+## Middleware
 
 To enable single-sign-on in your Laravel application, insert the included `WindowsAuthenticate`
 middleware on your middleware stack inside your `app/Http/Kernel.php` file:
@@ -33,7 +25,7 @@ protected $middlewareGroups = [
 > A user may successfully authenticate against your LDAP server when visiting your site, but depending
 > on your rules, may not be imported or logged in.
 
-## Multi-Domain SSO {#multi-domain-sso}
+## Multi-Domain SSO
 
 To be able to use multi-domain single-sign-on, your LDAP directory servers must first be joined in a trust.
 
@@ -103,16 +95,16 @@ Route::middleware([
 ```
 
 The actual ordering of the middleware definition is important here, so your users that are
-accessing your site through single-sign-on are logged in, *prior* to the `auth` middleware.
+accessing your site through single-sign-on are logged in, _prior_ to the `auth` middleware.
 Otherwise, they will be simply redirected to your login page.
 
-## SSO Domain Verification {#sso-domain-verification}
+## SSO Domain Verification
 
 To prevent security issues using multiple-domain authentication using the `WindowsAuthenticate`
 middleware, domain verification will be performed on the authenticating user.
 
-This verification checks if the users *domain name* is contained inside of their
-*full distinguished name*, which is retrieved from each of your configured LDAP guards.
+This verification checks if the users _domain name_ is contained inside of their
+_full distinguished name_, which is retrieved from each of your configured LDAP guards.
 
 > Only 'Domain Components' are checked in the users distinguished name. More on this below.
 
@@ -174,7 +166,7 @@ public function boot()
 }
 ```
 
-## Changing the Server Key {#changing-the-sso-server-key}
+## Changing the Server Key
 
 By default, the `WindowsAuthenticate` middleware uses the `AUTH_USER` key inside of PHP's `$_SERVER`
 array (`$_SERVER['AUTH_USER']`). If you would like to change this, call the `serverKey` method on
@@ -196,7 +188,7 @@ public function boot()
 }
 ```
 
-## Remember Single-Sign-On users {#remember-sso-users}
+## Remember Single-Sign-On users
 
 As of LdapRecord-Laravel version `v1.9.0`, users signed in to your application via the
 `WindowsAuthenticate` middleware will no longer be automatically "remembered".
@@ -221,10 +213,10 @@ public function boot()
 }
 ```
 
-## Selective / Bypassing Single-Sign-On {#selective-single-sign-on}
+## Selective / Bypassing Single-Sign-On
 
 Occasionally you may need to allow users who are not a part of the domain
-to login  to your application, as well as allowing domain users to
+to login to your application, as well as allowing domain users to
 automatically sign in via Single-Sign-On.
 
 Depending on your web servers OS, this process can be different.
@@ -282,7 +274,7 @@ Nothing needs to be done in your Laravel application. The `WindowsAuthenticate` 
 will only attempt to authenticate users when the `AUTH_USER` server key is present,
 so it can remain in the global middleware stack.
 
-## Forcing logouts on non Single-Sign-On users {#forcing-non-sso-logouts}
+## Forcing logouts on non Single-Sign-On users
 
 If a user successfully authenticates to your Laravel application through single-sign-on, and
 their LDAP account happens to be deleted or disabled, the user will remain authenticated

@@ -7,13 +7,7 @@ section: content
 
 # Usage
 
-- [Models](#models)
- - [Searching](#searching)
- - [Creating & Updating](#crud)
- - [Scopes](#scopes)
-- [Basic Authentication](#basic-auth)
-
-## Models {#models}
+## Models
 
 > This usage documentation is intentionally kept short and sweet to prevent duplication.
 > Be sure to review the core [LdapRecord documentation](/docs/core/v2) as it explains
@@ -62,7 +56,7 @@ class User extends Model
 > </br></br>
 > This can save you time from having to implement functionality manually.
 
-### Searching {#searching}
+### Searching
 
 To begin querying your model, you can statically call [query methods](/docs/core/v2/searching) off of the model:
 
@@ -76,7 +70,7 @@ When using the above example model for searching your LDAP directory, the follow
 (&(objectclass=top)(objectclass=person)(objectclass=organizationalperson)(objectclass=user)(company=Acme))
 ```
 
-### Creating / Updating {#creating-and-updating}
+### Creating / Updating
 
 To create a new object in your directory, call the `create` method:
 
@@ -116,10 +110,10 @@ $user->company = 'Acme';
 $user->save();
 ```
 
-> If you need help understanding user creation and management, take a look at the Active Directory 
+> If you need help understanding user creation and management, take a look at the Active Directory
 > [user management tutorial](/docs/laravel/v2/active-directory/users/).
 
-### Scopes {#scopes}
+### Scopes
 
 Sometimes you may need to utilize several of the same query filters around your application.
 Model scopes are a perfect for this, as you can extract these filters into its own class
@@ -171,7 +165,7 @@ class User extends Model
     protected static function boot()
     {
         parent::boot();
-        
+
         static::addGlobalScope(new OnlyAccountants);
     }
 }
@@ -189,7 +183,7 @@ $accountants = User::withGlobalScope('accountants', new OnlyAccountants)->get();
 
 As you may have noticed above, you must provide a named string for the scope you are passing in.
 
-## Basic Authentication {#basic-auth}
+## Basic Authentication
 
 Sometimes you simply want to know if a users LDAP credentials are valid.
 To do this, you must retrieve your LDAP connection from the LdapRecord

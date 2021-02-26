@@ -7,14 +7,7 @@ section: content
 
 # Testing
 
-- [Introduction](#introduction)
-- [Directory Emulator](#directory-emulator)
-- [Getting Started](#getting-started)
-- [Using a SQLite File Database](#sqlite-file-database)
-- [Emulated Queries](#emulated-queries)
-- [Working with Relationships](#working-with-relationships)
-
-## Introduction {#introduction}
+## Introduction
 
 Testing LDAP integration for PHP has always been quite difficult. Any type of integration
 that is needed, you either need a real LDAP server to test against, or you mock
@@ -24,7 +17,7 @@ test in an easy way.
 
 That's where the LdapRecord **Directory Emulator** comes in.
 
-## Directory Emulator {#directory-emulator}
+## Directory Emulator
 
 The Directory Emulator dynamically replaces the LDAP connection you specify with a fake
 one. This fake connection sets up an SQLite database that resembles an LDAP directory
@@ -38,7 +31,7 @@ When you query a model that uses the connection you have setup with the Director
 LdapRecord dynamically swaps query filters with Eloquent SQL queries, effectively
 allowing you to query objects you create inside of your emulated directory.
 
-## Getting Started {#getting-started}
+## Getting Started
 
 To begin, let's say we have an application that lists LDAP users inside of your configured directory.
 
@@ -67,7 +60,7 @@ public class UsersController extends Controller
     public function index()
     {
         $users = User::get();
-        
+
         return view('ldap.users', ['users' => $users]);
     }
 }
@@ -77,20 +70,20 @@ And our view that simply lists all the users:
 
 ```html
 <table>
-    <thead>
-        <tr>
-            <th>Username</th>      
-            <th>Full Name</th>      
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($users as $user)
-            <tr>
-                 <td>{{ $user->getFirstAttribute('samaccountname') }}</td>       
-                 <td>{{ $user->getFirstAttribute('cn') }}</td>       
-            </tr>
-        @endforeach
-    </tbody>
+  <thead>
+    <tr>
+      <th>Username</th>
+      <th>Full Name</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach($users as $user)
+    <tr>
+      <td>{{ $user->getFirstAttribute('samaccountname') }}</td>
+      <td>{{ $user->getFirstAttribute('cn') }}</td>
+    </tr>
+    @endforeach
+  </tbody>
 </table>
 ```
 
@@ -114,7 +107,7 @@ class LdapUserControllerTest extends TestCase
     public function test_index_works()
     {
         DirectoryEmulator::setup('default');
-    
+
         $user = User::create([
             'cn' => 'John Doe',
             'samaccountname' => 'jdoe',
@@ -133,10 +126,10 @@ As with actual LDAP objects created in a live directory using LdapRecord models,
 LDAP objects in the emulated directory, they will use your connections configured `base_dn`
 to create distinguished names.
 
-## Using a SQLite File Database {#sqlite-file-database}
+## Using a SQLite File Database
 
 To use a SQLite file database, you must supply an array to the second parameter
-of the `DirectoryEmulator::setup` method and provide a file path using the 
+of the `DirectoryEmulator::setup` method and provide a file path using the
 `database` key where you would like the SQLite file to be stored:
 
 > If the file does not exist already, it will be created for you automatically.
@@ -147,7 +140,7 @@ $file = storage_path('ldap_test_database.sqlite');
 DirectoryEmulator::setup('default', ['database' => $file]);
 ```
 
-## Emulated Queries {#emulated-queries}
+## Emulated Queries
 
 The Directory Emulator also emulates LDAP queries. However, there are
 limitations. It currently does not support the following features:
@@ -169,9 +162,9 @@ public class UsersController extends Controller
     public function index()
     {
         $ou = OrganizationalUnit::find('ou=Accounting,dc=local,dc=com');
-        
+
         $users = User::in($ou)->where('company', '=', 'Acme')->get();
-        
+
         return view('ldap.users', ['users' => $users]);
     }
 }
@@ -209,7 +202,7 @@ public function test_index_works()
 
 As you can see, this is extremely effective for testing your LDAP query integrations.
 
-## Working with Relationships {#working-with-relationships}
+## Working with Relationships
 
 ### Has One
 
@@ -259,7 +252,7 @@ $groups = $user->groups()->get();
 ```
 
 The `$user->groups()` relationship works because it queries for groups that contain a `member`
-attribute equal to the users distinguished name. This `member` attribute is set on the 
+attribute equal to the users distinguished name. This `member` attribute is set on the
 `$group` instance that you pass into the `attach()` method.
 
 The `$group->members()` relationship **does not work** because it queries for objects that contain
