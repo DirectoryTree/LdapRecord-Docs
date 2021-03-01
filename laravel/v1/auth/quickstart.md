@@ -41,20 +41,6 @@ Inside of your `config/auth.php` file, we must add a new provider in the `provid
 
 In this example, we will create a provider named `ldap`:
 
-<div class="files">
-    <div class="ellipsis"></div>
-
-    <div class="folder folder--open">
-        config
-
-        <div class="eillipses"></div>
-        <div class="file focus">auth.php</div>
-    </div>
-
-    <div class="ellipsis"></div>
-
-</div>
-
 ```php
 // config/auth.php
 
@@ -102,23 +88,6 @@ To support LDAP authentication, we must call the `Fortify::authenticateUsing()`
 and supply our own callback, overriding Laravel Fortify's default:
 
 We will call the above in our `AuthServiceProvider.php` file, inside the `boot()` method:
-
-<div class="files">
-    <div class="ellipsis"></div>
-
-    <div class="folder folder--open">
-        app
-
-        <div class="folder folder--open">
-            Providers
-
-            <div class="file focus">AuthServiceProvider.php</div>
-        </div>
-    </div>
-
-    <div class="ellipsis"></div>
-
-</div>
 
 ```php
 // app/Providers/AuthServiceProvider.php
@@ -168,21 +137,6 @@ When using plain LDAP authentication, we must disable various Jetstream and Fort
 teams, two-factor authentication, profile photos, API, registration, updating profile information,
 and resetting / updating passwords. We will make these changes in the `config/jetstream.php` and
 `config/fority.php` configuration files respectively:
-
-<div class="files">
-    <div class="ellipsis"></div>
-    
-    <div class="folder folder--open">
-        config
-
-        <div class="ellipsis"></div>
-        <div class="file focus">fortify.php</div>
-        <div class="file focus">jetstream.php</div>
-    </div>
-
-    <div class="ellipsis"></div>
-
-</div>
 
 ```php
 // config/fortify.php
@@ -383,23 +337,6 @@ and supply our own callbacks, overriding Laravel Fortify's default:
 - `Fortify::confirmPasswordsUsing()`
 
 We will call the above in our `AuthServiceProvider.php` file, inside the `boot()` method:
-
-<div class="files">
-    <div class="ellipsis"></div>
-
-    <div class="folder folder--open">
-        app
-
-        <div class="folder folder--open">
-            Providers
-
-            <div class="file focus">AuthServiceProvider.php</div>
-        </div>
-    </div>
-
-    <div class="ellipsis"></div>
-
-</div>
 
 ```php
 // app/Providers/AuthServiceProvider.php

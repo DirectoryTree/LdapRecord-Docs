@@ -39,31 +39,6 @@ we will override the `authenticate` method in the `LoginRequest`, and
 pass in an array with the `mail` key (which is the attribute we are
 wanting to retrieve our LDAP users by) and the users `password`:
 
-<div class="files">
-    <div class="ellipsis"></div>
-
-    <div class="folder folder--open">
-        app
-
-        <div class="folder folder--open">
-            Http
-
-             <div class="folder folder--open">
-                Requests
-
-                <div class="folder folder--open">
-                    Auth
-
-                    <div class="file">LoginRequest.php</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="ellipsis"></div>
-
-</div>
-
 ```php
 // app/Http/Requests/Auth/LoginRequest.php
 
@@ -160,33 +135,6 @@ Schema::create('users', function (Blueprint $table) {
 ### Login Form
 
 We're almost there. We will now need to update the input HTML field inside of the scaffolded `login.blade.php` view:
-
-<div class="files">
-    <div class="ellipsis"></div>
-
-    <div class="folder folder--open">
-        resources
-
-        <div class="ellipsis"></div>
-
-        <div class="folder folder--open">
-            views
-
-            <div class="ellipsis"></div>
-
-             <div class="folder folder--open">
-                auth
-
-                <div class="ellipsis"></div>
-
-                <div class="file">login.blade.php</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="ellipsis"></div>
-
-</div>
 
 **From**:
 
@@ -421,31 +369,6 @@ To enable this feature, you will have to:
 2. Insert the `ListensForLdapBindFailure` trait
 3. Call the `listenForLdapBindFailure()` method in the constructor:
 
-<div class="files">
-    <div class="ellipsis"></div>
-
-    <div class="folder folder--open">
-        app
-
-        <div class="folder folder--open">
-            Http
-
-             <div class="folder folder--open">
-                Controllers
-
-                <div class="folder folder--open">
-                    Auth
-
-                    <div class="file">AuthenticatedSessionController.php</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="ellipsis"></div>
-
-</div>
-
 ```php
 // app/Http/Controllers/Auth/AuthenticatedSessionController.php
 
@@ -493,39 +416,6 @@ If you need to modify the translations of these error messages, create a new tra
 file named `errors.php` in your `resources` directory at the following path:
 
 > The `vendor` directory (and each sub-directory) will have to be created manually.
-
-<div class="files">
-    <div class="ellipsis"></div>
-
-    <div class="folder folder--open">
-        resources
-
-        <div class="ellipsis"></div>
-
-        <div class="folder folder--open">
-            lang
-
-            <div class="ellipsis"></div>
-
-            <div class="folder folder--open">
-                vendor
-
-                <div class="folder folder--open">
-                    ldap
-
-                    <div class="folder folder--open">
-                        en
-
-                        <div class="file">errors.php</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="ellipsis"></div>
-
-</div>
 
 Then, paste in the following translations in the file and modify where necessary:
 

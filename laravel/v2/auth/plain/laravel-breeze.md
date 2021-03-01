@@ -38,31 +38,6 @@ we will override the `authenticate` method in the `LoginRequest`, and
 pass in an array with the `mail` key (which is the attribute we are
 wanting to retrieve our LDAP users by) and the users `password`:
 
-<div class="files">
-    <div class="ellipsis"></div>
-
-    <div class="folder folder--open">
-        app
-
-        <div class="folder folder--open">
-            Http
-
-             <div class="folder folder--open">
-                Requests
-
-                <div class="folder folder--open">
-                    Auth
-
-                    <div class="file">LoginRequest.php</div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="ellipsis"></div>
-
-</div>
-
 ```php
 // app/Http/Requests/Auth/LoginRequest.php
 
@@ -102,33 +77,6 @@ authentication, LdapRecord models are returned, **not Eloquent**.
 
 In the standard scaffolding, this occurs namely in the `navigation.blade.php` view:
 
-<div class="files">
-    <div class="ellipsis"></div>
-
-    <div class="folder folder--open">
-        resources
-
-        <div class="ellipsis"></div>
-
-        <div class="folder folder--open">
-            views
-
-            <div class="ellipsis"></div>
-
-             <div class="folder folder--open">
-                layouts
-
-                <div class="ellipsis"></div>
-
-                <div class="file">navigation.blade.php</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="ellipsis"></div>
-
-</div>
-
 **From**:
 
 ```html
@@ -156,33 +104,6 @@ In the following example, we will authenticate users by their `sAMAccountName`.
 ### Login Form
 
 We will first need to update the input HTML field inside of the scaffolded `login.blade.php` view:
-
-<div class="files">
-    <div class="ellipsis"></div>
-
-    <div class="folder folder--open">
-        resources
-
-        <div class="ellipsis"></div>
-
-        <div class="folder folder--open">
-            views
-
-            <div class="ellipsis"></div>
-
-             <div class="folder folder--open">
-                auth
-
-                <div class="ellipsis"></div>
-
-                <div class="file">login.blade.php</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="ellipsis"></div>
-
-</div>
 
 **From**:
 

@@ -343,39 +343,6 @@ file named `errors.php` in your `resources` directory at the following path:
 
 > The `vendor` directory (and each sub-directory) will have to be created manually.
 
-<div class="files">
-    <div class="ellipsis"></div>
-
-    <div class="folder folder--open">
-        resources
-
-        <div class="ellipsis"></div>
-
-        <div class="folder folder--open">
-            lang
-
-            <div class="ellipsis"></div>
-
-            <div class="folder folder--open">
-                vendor
-
-                <div class="folder folder--open">
-                    ldap
-
-                    <div class="folder folder--open">
-                        en
-
-                        <div class="file">errors.php</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="ellipsis"></div>
-
-</div>
-
 Then, paste in the following translations in the file and modify where necessary:
 
 ```php

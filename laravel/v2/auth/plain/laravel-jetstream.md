@@ -195,33 +195,6 @@ You will notice above that we are passing in an array of credentials with
 Now we must open up the `login.blade.php` view and swap the current HTML input field from `email`
 to `username` so we can retrieve it properly in our `Fortify::authenticateUsing()` callback:
 
-<div class="files">
-    <div class="ellipsis"></div>
-
-    <div class="folder folder--open">
-        resources
-
-        <div class="ellipsis"></div>
-
-        <div class="folder folder--open">
-            views
-
-            <div class="ellipsis"></div>
-
-             <div class="folder folder--open">
-                auth
-
-                <div class="ellipsis"></div>
-
-                <div class="file">login.blade.php</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="ellipsis"></div>
-
-</div>
-
 ```html
 <!-- Before: -->
 <div>
@@ -296,39 +269,6 @@ If you need to modify the translations of these error messages, create a new tra
 file named `errors.php` in your `resources` directory at the following path:
 
 > The `vendor` directory (and each sub-directory) will have to be created manually.
-
-<div class="files">
-    <div class="ellipsis"></div>
-
-    <div class="folder folder--open">
-        resources
-
-        <div class="ellipsis"></div>
-
-        <div class="folder folder--open">
-            lang
-
-            <div class="ellipsis"></div>
-
-            <div class="folder folder--open">
-                vendor
-
-                <div class="folder folder--open">
-                    ldap
-
-                    <div class="folder folder--open">
-                        en
-
-                        <div class="file focus">errors.php</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="ellipsis"></div>
-
-</div>
 
 Then, paste in the following translations in the file and modify where necessary:
 
