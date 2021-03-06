@@ -1,7 +1,6 @@
 ---
 title: Database Authentication Using Laravel UI
 description: Database authentication with Laravel UI
-extends: _layouts.laravel.page
 section: content
 ---
 

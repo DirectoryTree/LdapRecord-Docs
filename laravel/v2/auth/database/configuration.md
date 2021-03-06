@@ -1,7 +1,6 @@
 ---
 title: Database Authentication Configuration
 description: Configuring the database LDAP authentication provider
-extends: _layouts.laravel.page
 section: content
 ---
 

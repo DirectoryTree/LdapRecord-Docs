@@ -1,7 +1,6 @@
 ---
 title: Testing Authentication
 description: LdapRecord-Laravel testing guide
-extends: _layouts.laravel.page
 section: content
 ---
 

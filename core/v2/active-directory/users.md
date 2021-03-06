@@ -1,7 +1,6 @@
 ---
 title: User Management (Active Directory)
 description: Managing users with LdapRecord.
-extends: _layouts.core.page
 section: content
 ---
 

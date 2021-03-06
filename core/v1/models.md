@@ -1,7 +1,6 @@
 ---
 title: Models
 description: Creating and using models in LdapRecord
-extends: _layouts.core.page
 section: content
 ---
 

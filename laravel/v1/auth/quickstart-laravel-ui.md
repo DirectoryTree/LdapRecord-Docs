@@ -1,7 +1,6 @@
 ---
 title: Authentication Quickstart Using Laravel UI
 description: LdapRecord-Laravel Auth Quickstart Guide
-extends: _layouts.laravel.page
 section: content
 ---
 

@@ -1,7 +1,6 @@
 ---
 title: Testing
 description: Testing with LdapRecord
-extends: _layouts.core.page
 section: content
 ---
 

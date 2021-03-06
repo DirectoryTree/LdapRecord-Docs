@@ -1,7 +1,6 @@
 ---
 title: License
 description: LdapRecord-Laravel License
-extends: _layouts.laravel.page
 section: content
 ---
 

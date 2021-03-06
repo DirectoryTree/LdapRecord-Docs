@@ -1,7 +1,6 @@
 ---
 title: Usage
 description: LdapRecord-Laravel Usage Guide
-extends: _layouts.laravel.page
 section: content
 ---
 

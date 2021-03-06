@@ -1,7 +1,6 @@
 ---
 title: Quickstart
 description: Get up and running fast with LdapRecord.
-extends: _layouts.core.page
 section: content
 ---
 

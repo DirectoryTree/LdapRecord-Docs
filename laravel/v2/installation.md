@@ -1,7 +1,6 @@
 ---
 title: Installation
 description: LdapRecord-Laravel Install Guide
-extends: _layouts.laravel.page
 section: content
 ---
 
@@ -9,12 +8,12 @@ section: content
 
 LdapRecord-Laravel requires the following:
 
-Requirements |
---- |
-PHP >= 7.2 |
-Laravel >= 5.6 |
-PHP LDAP extension enabled |
-An LDAP server (Active Directory, OpenLDAP, FreeIPA etc.) |
+| Requirements                                              |
+| --------------------------------------------------------- |
+| PHP >= 7.2                                                |
+| Laravel >= 5.6                                            |
+| PHP LDAP extension enabled                                |
+| An LDAP server (Active Directory, OpenLDAP, FreeIPA etc.) |
 
 Require LdapRecord-Laravel via [composer](https://getcomposer.org/):
 

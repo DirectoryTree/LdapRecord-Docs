@@ -1,7 +1,6 @@
 ---
 title: Events
 description: Listening to events in LdapRecord
-extends: _layouts.core.page
 section: content
 ---
 

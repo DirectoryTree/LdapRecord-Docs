@@ -1,7 +1,6 @@
 ---
 title: Authentication Setup & Features
 description: LdapRecord-Laravel authentication setup guide
-extends: _layouts.laravel.page
 section: content
 ---
 
@@ -20,7 +19,7 @@ For this example, we will change our default `web` guard to use our new `ldap` p
         'driver' => 'session',
         'provider' => 'ldap', // Changed from 'users'
     ],
-    
+
     // ...
 ],
 ```

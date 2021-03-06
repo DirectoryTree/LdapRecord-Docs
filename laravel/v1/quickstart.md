@@ -1,7 +1,6 @@
 ---
 title: Quickstart
 description: LdapRecord-Laravel Quickstart Guide
-extends: _layouts.laravel.page
 section: content
 ---
 

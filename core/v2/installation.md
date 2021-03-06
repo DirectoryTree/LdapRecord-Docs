@@ -1,7 +1,6 @@
 ---
 title: Installation
 description: Installing LdapRecord
-extends: _layouts.core.page
 section: content
 ---
 

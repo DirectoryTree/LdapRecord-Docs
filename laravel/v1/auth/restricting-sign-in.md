@@ -1,7 +1,6 @@
 ---
 title: Restricting Sign In
 description: Restricting LDAP authentication
-extends: _layouts.laravel.page
 section: content
 ---
 

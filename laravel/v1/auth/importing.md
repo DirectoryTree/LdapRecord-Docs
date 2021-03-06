@@ -1,7 +1,6 @@
 ---
 title: Importing Users
 description: Running the import command
-extends: _layouts.laravel.page
 section: content
 ---
 

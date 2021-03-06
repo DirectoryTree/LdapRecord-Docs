@@ -1,7 +1,6 @@
 ---
 title: Debugging
 description: Debugging LdapRecord-Laravel
-extends: _layouts.laravel.page
 section: content
 ---
 

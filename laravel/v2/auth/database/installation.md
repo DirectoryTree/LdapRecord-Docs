@@ -1,7 +1,6 @@
 ---
 title: Database Authentication Installation
 description: LdapRecord-Laravel authentication install guide
-extends: _layouts.laravel.page
 section: content
 ---
 

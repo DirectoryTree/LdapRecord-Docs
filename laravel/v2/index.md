@@ -1,7 +1,6 @@
 ---
 title: Overview
 description: LdapRecord-Laravel Overview
-extends: _layouts.laravel.page
 section: content
 ---
 

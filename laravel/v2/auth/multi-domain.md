@@ -1,7 +1,6 @@
 ---
 title: Multi-Domain Authentication Guide
 description: Setting up multi-domain authentication using LdapRecord-Laravel
-extends: _layouts.laravel.page
 section: content
 ---
 

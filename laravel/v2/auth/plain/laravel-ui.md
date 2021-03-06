@@ -1,7 +1,6 @@
 ---
 title: Plain Authentication Using Laravel UI
 description: Plain authentication with Laravel UI
-extends: _layouts.laravel.page
 section: content
 ---
 

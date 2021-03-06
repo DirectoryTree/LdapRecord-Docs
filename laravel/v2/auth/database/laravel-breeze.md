@@ -1,7 +1,6 @@
 ---
 title: Database Authentication Using Laravel Breeze
 description: Using LdapRecord-Laravel with Laravel Breeze
-extends: _layouts.laravel.page
 section: content
 ---
 

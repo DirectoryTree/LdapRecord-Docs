@@ -1,7 +1,6 @@
 ---
 title: Overview
 description: LdapRecord Overview
-extends: _layouts.core.page
 section: content
 ---
 
@@ -9,7 +8,7 @@ section: content
 
 LdapRecord is a PHP package that provides you with a full ActiveRecord
 implementation for working with your LDAP server. Each LDAP object type
-has a corresponding "Model" which is used to interact with that type. 
+has a corresponding "Model" which is used to interact with that type.
 An LDAP object type is determined by its object classes.
 
 Models allow you to execute search operations on your LDAP server as well as create and modify objects.

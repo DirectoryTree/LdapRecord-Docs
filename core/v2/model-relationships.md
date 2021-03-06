@@ -1,7 +1,6 @@
 ---
 title: Model Relationships
 description: Implementing and utilizing relationships in LdapRecord
-extends: _layouts.core.page
 section: content
 ---
 

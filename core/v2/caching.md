@@ -1,7 +1,6 @@
 ---
 title: Query Caching
 description: Using LdapRecord query caching
-extends: _layouts.core.page
 section: content
 ---
 

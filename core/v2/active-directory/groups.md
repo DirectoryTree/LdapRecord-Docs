@@ -1,7 +1,6 @@
 ---
 title: Group Management (Active Directory)
 description: Managing groups with LdapRecord.
-extends: _layouts.core.page
 section: content
 ---
 

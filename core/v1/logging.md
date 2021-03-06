@@ -1,7 +1,6 @@
 ---
 title: Logging
 description: Logging events in LdapRecord
-extends: _layouts.core.page
 section: content
 ---
 

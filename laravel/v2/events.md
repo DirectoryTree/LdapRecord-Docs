@@ -1,7 +1,6 @@
 ---
 title: Events
 description: Listening for LDAP events in LdapRecord-Laravel
-extends: _layouts.laravel.page
 section: content
 ---
 

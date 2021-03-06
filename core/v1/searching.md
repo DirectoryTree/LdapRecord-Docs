@@ -1,7 +1,6 @@
 ---
 title: Searching
 description: Searching your directory using LdapRecord
-extends: _layouts.core.page
 section: content
 ---
 

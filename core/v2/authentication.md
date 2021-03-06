@@ -1,7 +1,6 @@
 ---
 title: Authentication
 description: Binding users to an LDAP directory
-extends: _layouts.core.page
 section: content
 ---
 

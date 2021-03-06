@@ -1,7 +1,6 @@
 ---
 title: Configuration
 description: Configuring LdapRecord
-extends: _layouts.core.page
 section: content
 ---
 

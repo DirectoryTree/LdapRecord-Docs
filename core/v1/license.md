@@ -1,7 +1,6 @@
 ---
 title: License
 description: LdapRecord License
-extends: _layouts.core.page
 section: content
 ---
 

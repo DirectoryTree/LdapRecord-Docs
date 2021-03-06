@@ -1,7 +1,6 @@
 ---
 title: v2 Upgrade Guide
 description: Upgrading from LdapRecord v1
-extends: _layouts.core.page
 section: content
 ---
 

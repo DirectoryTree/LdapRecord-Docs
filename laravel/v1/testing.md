@@ -1,7 +1,6 @@
 ---
 title: Testing with LdapRecord
 description: LdapRecord-Laravel testing guide
-extends: _layouts.laravel.page
 section: content
 ---
 

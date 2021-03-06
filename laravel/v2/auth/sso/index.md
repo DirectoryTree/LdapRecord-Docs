@@ -1,7 +1,6 @@
 ---
 title: Pass-through / SSO Authentication
 description: Overview of up pass-through / SSO authentication
-extends: _layouts.laravel.page
 section: content
 ---
 

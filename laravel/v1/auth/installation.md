@@ -1,7 +1,6 @@
 ---
 title: Authentication Installation
 description: LdapRecord-Laravel authentication install guide
-extends: _layouts.laravel.page
 section: content
 ---
 
@@ -10,10 +9,10 @@ section: content
 If you are using [database synchronization](/docs/laravel/v1/auth#database), you must publish the
 included migrations to add the following database columns to your `users` table:
 
-Column | Reason |
-:---: | --- |
-`guid` | This is for storing your LDAP users `objectguid`. It is needed for locating and synchronizing your LDAP user to the database. |
-`domain` | This is for storing your LDAP users connection name. It is needed for storing your configured LDAP connection name of the user. |
+|  Column  | Reason                                                                                                                          |
+| :------: | ------------------------------------------------------------------------------------------------------------------------------- |
+|  `guid`  | This is for storing your LDAP users `objectguid`. It is needed for locating and synchronizing your LDAP user to the database.   |
+| `domain` | This is for storing your LDAP users connection name. It is needed for storing your configured LDAP connection name of the user. |
 
 Publish the migration using the below command:
 
@@ -23,10 +22,10 @@ php artisan vendor:publish --provider="LdapRecord\Laravel\LdapAuthServiceProvide
 
 Then, add the following interface and trait to your `app/User.php` model:
 
-Type | |
-:---: | --- |
-Interface | `LdapRecord\Laravel\Auth\LdapAuthenticatable` |
-Trait | `LdapRecord\Laravel\Auth\AuthenticatesWithLdap` |
+|   Type    |                                                 |
+| :-------: | ----------------------------------------------- |
+| Interface | `LdapRecord\Laravel\Auth\LdapAuthenticatable`   |
+|   Trait   | `LdapRecord\Laravel\Auth\AuthenticatesWithLdap` |
 
 ```php
 // app/User.php
@@ -69,7 +68,7 @@ class User extends Authenticatable implements LdapAuthenticatable
     {
         return 'domain_column';
     }
-    
+
     public function getLdapGuidColumn()
     {
         return 'guid_column';
