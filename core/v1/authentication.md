@@ -1,7 +1,6 @@
 ---
 title: Authentication
 description: Binding users to an LDAP directory
-section: content
 ---
 
 # Authentication

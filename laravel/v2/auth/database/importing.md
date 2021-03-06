@@ -1,7 +1,6 @@
 ---
 title: Importing Users
 description: Running the import command
-section: content
 ---
 
 # Importing LDAP Users

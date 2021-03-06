@@ -1,7 +1,6 @@
 ---
 title: Credits
 description: Connecting to LDAP servers using LdapRecord
-section: content
 ---
 
 # Credits

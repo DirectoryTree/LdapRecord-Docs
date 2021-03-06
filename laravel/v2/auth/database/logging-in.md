@@ -1,7 +1,6 @@
 ---
 title: Database Authentication Setup
 description: Logging in with LdapRecord-Laravel database authentication
-section: content
 ---
 
 # Logging In

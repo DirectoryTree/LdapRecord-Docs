@@ -1,7 +1,6 @@
 ---
 title: Connecting
 description: Connecting to LDAP servers using LdapRecord
-section: content
 ---
 
 # Connections

@@ -1,7 +1,6 @@
 ---
 title: Testing Authentication
 description: LdapRecord-Laravel testing guide
-section: content
 ---
 
 # Testing

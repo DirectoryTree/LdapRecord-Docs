@@ -1,7 +1,6 @@
 ---
 title: Plain Authentication Using Laravel Breeze
 description: Using LdapRecord-Laravel with Laravel Breeze
-section: content
 ---
 
 # Laravel Breeze

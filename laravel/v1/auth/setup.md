@@ -1,7 +1,6 @@
 ---
 title: Authentication Setup & Features
 description: LdapRecord-Laravel authentication setup guide
-section: content
 ---
 
 # Authentication Setup

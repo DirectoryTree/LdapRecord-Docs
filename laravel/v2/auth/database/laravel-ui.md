@@ -1,7 +1,6 @@
 ---
 title: Database Authentication Using Laravel UI
 description: Database authentication with Laravel UI
-section: content
 ---
 
 # Laravel UI

@@ -1,7 +1,6 @@
 ---
 title: Plain Authentication Configuration
 description: Configuring the plain LDAP authentication provider
-section: content
 ---
 
 # Plain Auth Configuration

@@ -1,7 +1,6 @@
 ---
 title: Database Authentication Overview
 description: LdapRecord-Laravel database synchronization authentication overview
-section: content
 ---
 
 # Database Authentication Overview

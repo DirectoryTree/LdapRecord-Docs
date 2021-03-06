@@ -1,7 +1,6 @@
 ---
 title: Versioning
 description: LdapRecord Versioning
-section: content
 ---
 
 # Versioning

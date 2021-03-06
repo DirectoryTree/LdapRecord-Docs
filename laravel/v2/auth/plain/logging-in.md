@@ -1,7 +1,6 @@
 ---
 title: Plain Authentication Setup
 description: Logging in with LdapRecord-Laravel plain authentication
-section: content
 ---
 
 # Logging In

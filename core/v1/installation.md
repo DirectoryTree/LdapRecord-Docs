@@ -1,7 +1,6 @@
 ---
 title: Installation
 description: Installing LdapRecord
-section: content
 ---
 
 # Installation

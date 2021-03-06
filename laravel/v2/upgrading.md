@@ -1,7 +1,6 @@
 ---
 title: Upgrading from v1
 description: LdapRecord-Laravel upgrading from v1 guide
-section: content
 ---
 
 # Upgrading to Version 2

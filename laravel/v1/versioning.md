@@ -1,7 +1,6 @@
 ---
 title: Versioning
 description: LdapRecord-Laravel Versioning
-section: content
 ---
 
 # Versioning

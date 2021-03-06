@@ -1,7 +1,6 @@
 ---
 title: License
 description: LdapRecord License
-section: content
 ---
 
 # License

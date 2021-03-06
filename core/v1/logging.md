@@ -1,7 +1,6 @@
 ---
 title: Logging
 description: Logging events in LdapRecord
-section: content
 ---
 
 # Logging

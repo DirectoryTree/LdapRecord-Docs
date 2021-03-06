@@ -1,7 +1,6 @@
 ---
 title: Common Queries
 description: Common LDAP queries using LdapRecord
-section: content
 ---
 
 # Common Queries

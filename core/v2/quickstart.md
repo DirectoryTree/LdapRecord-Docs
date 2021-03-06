@@ -1,7 +1,6 @@
 ---
 title: Quickstart
 description: Get up and running fast with LdapRecord.
-section: content
 ---
 
 # Quick Start

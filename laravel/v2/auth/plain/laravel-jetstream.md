@@ -1,7 +1,6 @@
 ---
 title: Using LdapRecord-Laravel with Laravel Jetstream
 description: Setting up LDAP authentication with Laravel JetStream
-section: content
 ---
 
 # Laravel Jetstream

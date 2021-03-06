@@ -1,7 +1,6 @@
 ---
 title: Debugging
 description: Debugging LdapRecord-Laravel
-section: content
 ---
 
 # Debugging

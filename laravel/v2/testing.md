@@ -1,7 +1,6 @@
 ---
 title: Testing with LdapRecord
 description: LdapRecord-Laravel testing guide
-section: content
 ---
 
 # Testing

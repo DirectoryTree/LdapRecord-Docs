@@ -1,7 +1,6 @@
 ---
 title: Pass-through / SSO Authentication Setup
 description: Setting up pass-through / SSO authentication
-section: content
 ---
 
 # Pass-through / SSO Setup

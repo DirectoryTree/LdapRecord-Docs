@@ -1,7 +1,6 @@
 ---
 title: Authentication Configuration
 description: Configuring the LDAP authentication provider
-section: content
 ---
 
 # Authentication Configuration

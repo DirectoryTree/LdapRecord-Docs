@@ -1,7 +1,6 @@
 ---
 title: Model Relationships
 description: Implementing and utilizing relationships in LdapRecord
-section: content
 ---
 
 # Models: Relationships

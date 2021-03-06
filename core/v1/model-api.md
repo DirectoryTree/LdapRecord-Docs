@@ -1,7 +1,6 @@
 ---
 title: Model API
 description: A list of all available LdapRecord model methods.
-section: content
 ---
 
 # Available Model Methods (API)

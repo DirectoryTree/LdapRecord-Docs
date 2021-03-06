@@ -1,7 +1,6 @@
 ---
 title: Restricting Login
 description: Restricting LDAP authentication login
-section: content
 ---
 
 # Restricting Login

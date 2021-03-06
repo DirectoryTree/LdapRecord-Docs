@@ -1,7 +1,6 @@
 ---
 title: Overview
 description: LdapRecord-Laravel Overview
-section: content
 ---
 
 # Overview

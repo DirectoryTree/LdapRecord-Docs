@@ -1,7 +1,6 @@
 ---
 title: Authentication Overview
 description: Authenticating LDAP users into your application
-section: content
 ---
 
 # Authentication Overview

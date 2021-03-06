@@ -1,7 +1,6 @@
 ---
 title: Model Accessors & Mutators
 description: Utilizing Accessors & Mutators in LdapRecord
-section: content
 ---
 
 # Models: Accessors & Mutators

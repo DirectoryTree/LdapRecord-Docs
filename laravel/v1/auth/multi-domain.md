@@ -1,7 +1,6 @@
 ---
 title: Multi-Domain Authentication Guide
 description: Setting up multi-domain authentication using LdapRecord-Laravel
-section: content
 ---
 
 # Multi-Domain Authentication

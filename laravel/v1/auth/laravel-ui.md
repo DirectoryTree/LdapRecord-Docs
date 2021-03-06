@@ -1,7 +1,6 @@
 ---
 title: Authentication Using Laravel UI
 description: Setting up LDAP authenticating using Laravel UI
-section: content
 ---
 
 # Laravel UI

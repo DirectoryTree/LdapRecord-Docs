@@ -1,7 +1,6 @@
 ---
 title: Searching API
 description: A list of all available LdapRecord query builder methods.
-section: content
 ---
 
 # Available Search Methods (API)

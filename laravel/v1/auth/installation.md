@@ -1,7 +1,6 @@
 ---
 title: Authentication Installation
 description: LdapRecord-Laravel authentication install guide
-section: content
 ---
 
 # Authentication Installation

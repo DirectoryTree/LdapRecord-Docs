@@ -1,7 +1,6 @@
 ---
 title: Installation
 description: LdapRecord-Laravel Install Guide
-section: content
 ---
 
 # Installation

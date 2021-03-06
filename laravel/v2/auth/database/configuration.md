@@ -1,7 +1,6 @@
 ---
 title: Database Authentication Configuration
 description: Configuring the database LDAP authentication provider
-section: content
 ---
 
 # Database Auth Configuration

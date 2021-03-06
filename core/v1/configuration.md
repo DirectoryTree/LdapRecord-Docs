@@ -1,7 +1,6 @@
 ---
 title: Configuration
 description: Configuring LdapRecord
-section: content
 ---
 
 # Configuration

@@ -1,7 +1,6 @@
 ---
 title: Group Management (Active Directory)
 description: Managing groups with LdapRecord.
-section: content
 ---
 
 # Group Management (Active Directory)

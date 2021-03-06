@@ -1,7 +1,6 @@
 ---
 title: Testing
 description: Testing with LdapRecord
-section: content
 ---
 
 # Testing

@@ -1,7 +1,6 @@
 ---
 title: Quickstart
 description: LdapRecord-Laravel Quickstart Guide
-section: content
 ---
 
 # Quickstart

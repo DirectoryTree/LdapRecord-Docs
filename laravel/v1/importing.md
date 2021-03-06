@@ -1,7 +1,6 @@
 ---
 title: Importing Objects
 description: LdapRecord-Laravel Overview
-section: content
 ---
 
 # Importing LDAP Objects

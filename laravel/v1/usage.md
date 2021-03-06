@@ -1,7 +1,6 @@
 ---
 title: Usage
 description: LdapRecord-Laravel Usage Guide
-section: content
 ---
 
 # Usage

@@ -1,7 +1,6 @@
 ---
 title: Models
 description: Creating and using models in LdapRecord
-section: content
 ---
 
 # Models: Getting Started

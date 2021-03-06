@@ -1,7 +1,6 @@
 ---
 title: License
 description: LdapRecord-Laravel License
-section: content
 ---
 
 # License

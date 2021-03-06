@@ -1,7 +1,6 @@
 ---
 title: Plain Authentication Overview
 description: LdapRecord-Laravel plain authentication overview
-section: content
 ---
 
 # Plain Authentication Overview

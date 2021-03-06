@@ -1,7 +1,6 @@
 ---
 title: User Management (Active Directory)
 description: Managing users with LdapRecord.
-section: content
 ---
 
 # User Management (Active Directory)

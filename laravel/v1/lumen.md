@@ -1,7 +1,6 @@
 ---
 title: LdapRecord-Lumen
 description: Getting started with LdapRecord in Lumen.
-section: content
 ---
 
 # LdapRecord-Lumen

@@ -1,7 +1,6 @@
 ---
 title: Overview
 description: LdapRecord Overview
-section: content
 ---
 
 # Overview
