@@ -47,6 +47,18 @@ is located (or where it must be created), as well as what it must contain.
 > to the `ldap.conf` file. In some cases, you may even have to restart
 > your workstation or server for the changes to take effect.
 
+## Directory and Objects
+
+LdapRecord-Laravel comes with a built-in command to browse and navigate through your LDAP directories interactively.
+
+To browse your directory, use the `ldap:browse {connection}` command:
+
+> **Note**: If no connection is specified, the browse command will connect to your default LDAP connection.
+
+```bash
+php artisan ldap:browse
+```
+
 ## Logging In
 
 To debug issues logging in, its recommended to first complete the following steps:
