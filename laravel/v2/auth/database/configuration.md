@@ -7,10 +7,11 @@ description: Configuring the database LDAP authentication provider
 
 ## Introduction
 
-To configure a synchronized database LDAP authentication provider, navigate to the `providers`
-array inside of your `config/auth.php` file, and paste the following `users` provider:
+To configure a synchronized database LDAP authentication provider, navigate
+to the `providers` array inside of your `config/auth.php` file, and paste
+the following `users` provider:
 
-> You will have to remove the default included `users` provider.
+> You will have to remove/alter the default `users` provider, or create your own.
 
 ```php
 // config/auth.php
@@ -143,7 +144,7 @@ Once we have our rule defined, we will add it into our authentication provider i
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
         'rules' => [
@@ -177,7 +178,7 @@ it using the `password_column` key inside of your providers configuration:
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         // ...
         'database' => [
             // ...
@@ -193,7 +194,7 @@ You can also set the value to `false` if your database table does not have any p
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         // ...
         'database' => [
             // ...
@@ -260,7 +261,7 @@ To solve this issue, we will insert the following `sync_existing` array:
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         // ...
         'database' => [
             // ...
@@ -319,7 +320,7 @@ Then inside of your `config/auth.php` file for your provider, set the attribute 
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         // ...
         'database' => [
             // ...
@@ -354,7 +355,7 @@ Here is a synchronized database provider fully configured with all available opt
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
         'rules' => [],

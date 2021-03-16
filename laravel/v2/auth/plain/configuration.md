@@ -10,7 +10,7 @@ description: Configuring the plain LDAP authentication provider
 To configure a plain LDAP authentication provider, navigate to the `providers` array
 inside of your `config/auth.php` file, and paste the following `users` provider:
 
-> You will have to remove the default included `users` provider.
+> You will have to remove/alter the default `users` provider, or create your own.
 
 ```php
 // config/auth.php
@@ -130,7 +130,7 @@ Once we have our rule defined, we will add it into our authentication provider i
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
         'rules' => [
