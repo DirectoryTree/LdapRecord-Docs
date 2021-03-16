@@ -92,9 +92,13 @@ Route::middleware([
 });
 ```
 
-The actual ordering of the middleware definition is important here, so your users that are
-accessing your site through single-sign-on are logged in, _prior_ to the `auth` middleware.
-Otherwise, they will be simply redirected to your login page.
+> **Important**:
+> <br/><br/>
+> The actual order of the middleware definition is critical here, so your users that are
+> accessing your site through single-sign-on are logged into your application, _prior_
+> to hitting the `auth` middleware, which validates that they are in-fact logged in.
+> <br/><br/>
+> Otherwise, they will be simply redirected to your login page.
 
 ## SSO Domain Verification
 

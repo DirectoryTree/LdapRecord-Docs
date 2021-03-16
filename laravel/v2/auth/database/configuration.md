@@ -37,7 +37,9 @@ the following `users` provider:
 
 As you can see above, a `database` array is used to configure the association between your LDAP user and your Eloquent user.
 
-> **Important**: If your application requires more than one LDAP connection, you
+> **Important**:
+> <br/><br/>
+> If your application requires more than one LDAP connection, you
 > must create a new provider for each connection.
 > <br/><br/>
 > This new provider must have its own unique `model` class which must use your
@@ -64,7 +66,7 @@ for fetching users from your directory.
 
 ## Rules
 
-The `rules` option must be an array of [authentication rule](#rules) class names.
+The `rules` option must be an array of [authentication rule](#rules) class name's.
 
 ### Overview
 
@@ -135,8 +137,9 @@ class OnlyAdministrators extends Rule
 }
 ```
 
-> We call the `recursive` method on the relationship to make sure that we load groups of
-> groups in case the user is not an immediate member of the `Administrators` group.
+> We call the `recursive` method on the relationship to make sure
+> that we load _groups of groups_ in case the user is not an
+> immediate member of the `Administrators` group.
 
 Once we have our rule defined, we will add it into our authentication provider in the `config/auth.php` file:
 
@@ -160,7 +163,7 @@ Once we have our rule defined, we will add it into our authentication provider i
 Now when you attempt to login to your application with a LDAP user that successfully passes
 LDAP authentication, they will need to be a member of the `Administrators` group.
 
-If you are caching your configuration, make sure you re-run `config:cache` to re-cache your modifications.
+> If you are caching your configuration, make sure you re-run `config:cache` to re-cache your modifications.
 
 ### Database Model
 
@@ -250,12 +253,12 @@ In our application, we have existing users inside of our Laravel applications da
 
 As you can see above, these users have `null` values for their `guid` and `domain` columns.
 
-If you do not define a `sync_existing` array, and a user logs in with `sbauman@local.com`,
+If you do not define a `sync_existing` array and a user logs in with `sbauman@local.com`,
 you will receive a SQL exception. This is because LdapRecord was unable to locate a local
-database user using the users GUID. If this occurs, LdapRecord attempts to insert a new
-user with the same email address.
+database user using the users GUID. If this occurs, LdapRecord will attempt to insert a
+new user with the same email address.
 
-To solve this issue, we will insert the following `sync_existing` array:
+To resolve this issue, we will insert the following `sync_existing` array:
 
 ```php
 'providers' => [
@@ -345,9 +348,12 @@ You may also add multiple if you'd prefer, or combine them with `key => value` p
 ],
 ```
 
-### All Available Options Example
+> Attributes you specify are synchronized _in order_ (first to last), so you may
+> access the already synchronized attributes in subsequent attribute handlers.
 
-Here is a synchronized database provider fully configured with all available options set:
+## All Available Options
+
+Below is a synchronized database provider that is configured with all available options:
 
 ```php
 // config/auth.php
