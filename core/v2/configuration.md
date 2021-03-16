@@ -90,7 +90,7 @@ To connect to your LDAP server, a username and password is required to be able t
 > **Important**:
 >
 > - The `username` option **must** be a users [Distinguished Name](https://docs.microsoft.com/en-us/previous-versions/windows/desktop/ldap/distinguished-names)
-> - If however you are connecting to an Active Directory server, you may use a:
+> - If however you are connecting to an Active Directory server, you may use:
 >   - [userPrincipalName](https://docs.microsoft.com/en-us/windows/win32/secauthn/user-name-formats#user-principal-name) (`username@domain.com`)
 >   - [Down-Level Logon Name](https://docs.microsoft.com/en-us/windows/win32/secauthn/user-name-formats#down-level-logon-name) (`DOMAIN\\username`)
 > - To run administration level operations, such as resetting passwords, this account **must** have the permissions to do so on your directory.
