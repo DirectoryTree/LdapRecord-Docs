@@ -223,10 +223,10 @@ to call to your LDAP server and validate it for you.
 
 ### Sync Attributes
 
-The `database => sync_attributes` array defines a set of key-value pairs:
+The `database => sync_attributes` array defines a set of key-value pairs or array syntax for more fine-grained control over how your models are queried:
 
 - The **key** of each array item is the column of your `users` database table
-- The **value** is the _name_ of the users LDAP attribute to set the database value to
+- The **value** is the _name_ of the users LDAP attribute to set the database value to. Alternatively, you may provide an array as the value with an `attribute` key containing the LDAP attribute name and an `operator` key to use for the query when retrieving a record from the database.
 
 > You do not need to add your users `guid` or `domain` database columns. These are done automatically for you.
 
@@ -237,7 +237,7 @@ For further control on sync attributes, see the below [attribute handler](#datab
 The `database => sync_existing` array defines a set of key-value pairs:
 
 - The **key** of each array item is the column of your `users` database table to query
-- The **value** is the _name_ of the users LDAP attribute to query inside of your database for
+- The **value** is the _name_ of the users LDAP attribute to set the database value to. Alternatively, you may provide an array as the value with an `attribute` key containing the LDAP attribute name and an `operator` key to use for the query when retrieving a record from the database.
 
 > If the LDAP attribute returns `null` for the given **value**, the value string will be used
 > in the query instead. This is helpful to be able to use raw strings to scope your query by.
@@ -279,6 +279,38 @@ To resolve this issue, we will insert the following `sync_existing` array:
 Now when `sbauman@local.com` attempts to log in, if the user cannot be located
 by their GUID, they will instead be located by their email address. Their
 GUID, domain, and sync attributes you define will then synchronize.
+
+In some database drivers, such as Postgres, there is case-sensitivity when doing where clauses with the `=` operator. Consider the following data in your database:
+
+| id  | name         | email             | password | guid   | domain |
+| --- | ------------ | ----------------- | -------- | ------ | ------ |
+| 1   | Steve Bauman | sbauman@local.com | ...      | `null` | `null` |
+| 2   | John Doe     | jdoe@local.com    | ...      | `null` | `null` |
+
+However, in LDAP the `mail` attribute for Steve's record is actually `SBauman@local.com`. While he could successfully authenticate, the existing record would not be found in our database due to Postgres' more strict SQL grammar. Changing the `sync_existing` configuration to the following array syntax would allow us to change the operator from `=` to `ilike`.
+
+```php
+'providers' => [
+    // ...
+
+    'users' => [
+        // ...
+        'database' => [
+            // ...
+            'sync_existing' => [
+                // Originally it was
+                // 'email' => 'mail',
+                'email' => [
+                    'attribute' => 'mail',
+                    'operator' => 'ilike',
+                ],
+            ],
+        ],
+    ],
+],
+```
+
+By replacing the value of the array to be an array with the `attribute` and `operator` keys, we can fine-tune the query syntax to be more flexible to your needs. 
 
 ## Attribute Handlers
 
