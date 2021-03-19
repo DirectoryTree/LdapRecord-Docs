@@ -10,7 +10,7 @@ description: Creating and using models in LdapRecord
 The LdapRecord ORM provides a beautiful and simple ActiveRecord implementation for working with your LDAP server.
 Each "Model" represents a type of LDAP object that resides in your directory.
 
-Models allow you query your directory as well as create, update, and delete records.
+Models allow you query your directory as well as create, update, and delete objects.
 
 Before getting started, ensure you've added at least one connection to the [container](/docs/core/v2/connections#container).
 
@@ -839,9 +839,9 @@ $deleted = User::destroy([
 
 #### Recursive Deleting
 
-Sometimes you will be working with containers or organizational units that contain nested records
-inside of them. Calling `delete()` on these records will generate an exception without first
-deleting the records inside. If you would like to delete all records contained inside of
+Sometimes you will be working with containers or organizational units that contain nested objects
+inside of them. Calling `delete()` on these objects will generate an exception without first
+deleting the objects inside. If you would like to delete all objects contained inside of
 another model, pass in `true` in the first parameter of the `delete()` method:
 
 ```php

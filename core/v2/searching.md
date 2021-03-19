@@ -110,16 +110,16 @@ $record = $query->first();
 
 Results will return **the model instance only**.
 
-You can also use `firstOrFail()` to generate an exception when no records are found.
+You can also use `firstOrFail()` to generate an exception when no objects are found.
 
 ## Limit
 
-To limit the results records returned from your LDAP server and increase the
+To limit the results objects returned from your LDAP server and increase the
 speed of your queries, you can use the `limit()` method:
 
 ```php
-// This will only return 5 records that contain the name of 'John':
-$records = $query->where('cn', 'contains', 'John')->limit(5)->get();
+// This will only return 5 objects that contain the name of 'John':
+$objects = $query->where('cn', 'contains', 'John')->limit(5)->get();
 ```
 
 ## Wheres
@@ -218,9 +218,9 @@ $results = $query->whereEndsWith('cn', 'Doe')->get();
 
 #### Where Between
 
-To search for records between two values, use the `whereBetween` method.
+To search for objects between two values, use the `whereBetween` method.
 
-For the example below, we'll retrieve all records that were created between two dates:
+For the example below, we'll retrieve all objects that were created between two dates:
 
 ```php
 $from = (new DateTime('October 1st 2016'))->format('YmdHis.0\Z');
@@ -368,7 +368,7 @@ $results = $query->andFilter(function (LdapRecord\Query\Builder $q) {
 })->get();
 ```
 
-The above query would return records that contain the first name `John` **and** the last name `Doe`.
+The above query would return objects that contain the first name `John` **and** the last name `Doe`.
 
 #### orFilter
 
@@ -382,7 +382,7 @@ $results = $query->orFilter(function (LdapRecord\Query\Builder $q) {
 })->get();
 ```
 
-The above query would return records that contain the first name `John` **or** the last name `Doe`.
+The above query would return objects that contain the first name `John` **or** the last name `Doe`.
 
 #### notFilter
 
@@ -396,7 +396,7 @@ $results = $query->notFilter(function (LdapRecord\Query\Builder $q) {
 })->get();
 ```
 
-The above query would return records that **do not** contain the first name `John` **or** the last name `Doe`.
+The above query would return objects that **do not** contain the first name `John` **or** the last name `Doe`.
 
 #### Complex Nesting
 
@@ -444,13 +444,13 @@ echo $query; // Returns (&(samaccountname=jdoe)(surname=Doe))
 
 Paginating your search results will allow you to return more results than your LDAP cap (usually 1000).
 
-For example, if your LDAP server contains 10,000 records and you paginate by 1000, 10 queries will be executed.
+For example, if your LDAP server contains 10,000 objects and you paginate by 1000, 10 queries will be executed.
 
-> Calling `paginate()` will retrieve **all** records from your LDAP server for the current query.
+> Calling `paginate()` will retrieve **all** objects from your LDAP server for the current query.
 > Be careful with large result sets, as you may run out of memory.
 
 ```php
-// Perform global "all" search, paginating by 1000 records:
+// Perform global "all" search, paginating by 1000 objects:
 $results = $query->paginate(1000);
 
 foreach ($results as $result) {
@@ -539,4 +539,4 @@ $query = $query->where('cn', '=', 'John Doe')->getUnescapedQuery();
 echo $query; // Returns '(cn=John Doe)'
 ```
 
-Now that you know how to search your directory, lets move onto [creating / modifying LDAP records](/docs/core/v2/models).
+Now that you know how to search your directory, lets move onto [creating / modifying LDAP objects](/docs/core/v2/models).

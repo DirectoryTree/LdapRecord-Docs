@@ -76,7 +76,7 @@ be used as the root of all searches and object creations using LdapRecord.
 An example base DN would be `dc=local,dc=com`.
 
 This means, that all searches executed with LdapRecord will start at `dc=local,dc=com`
-as the root. This would allow all records _below_ it to be retrieved from results.
+as the root. This would allow all objects _below_ it to be retrieved from results.
 
 > **Important**:
 >

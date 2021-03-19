@@ -7,11 +7,11 @@ description: Implementing and utilizing relationships in LdapRecord
 
 ## Introduction
 
-LDAP records often contain attributes that reference other LDAP records in your directory. An
+LDAP objects often contain attributes that reference other LDAP objects in your directory. An
 example of this would be the `member` attribute on LDAP groups that contain a list of
 distinguished names whom are members of the group.
 
-Using LdapRecord relationships, we can define what models contain references to other records
+Using LdapRecord relationships, we can define what models contain references to other objects
 and easily retrieve the referenced models to perform operations upon. There are several
 relationship types that LdapRecord supports:
 

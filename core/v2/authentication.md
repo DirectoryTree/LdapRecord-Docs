@@ -136,7 +136,7 @@ Since we will first be searching our LDAP directory for the user that is attempt
 - Providing a `username` and `password` to our connection
 - Anonymously bind to our connection, by not providing a `username` and `password` (if enabled in your directory)
 
-> Since we will be searching our directory, we must provide a `base_dn`, so LdapRecord knows where to begin searching for records.
+> Since we will be searching our directory, we must provide a `base_dn`, so LdapRecord knows where to begin searching for objects.
 
 ```php
 // Connecting with an an account...
