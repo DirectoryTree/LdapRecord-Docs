@@ -265,7 +265,7 @@ lockout, or their password requiring to be changed, specific error codes will be
 back from your server. LdapRecord can interpret these for you and display
 helpful error messages to users upon failing authentication.
 
-![LDAP Error Message](/docs/laravel/v2/img/ldap-error-message.png "Screenshot of an LDAP error message being displayed")
+![LDAP Error Message](/doc-images/ldap-error-message.png "Screenshot of an LDAP error message being displayed")
 
 To add this functionality, you must add the following trait to your `LoginController`:
 
