@@ -101,13 +101,13 @@ Convert all the models attributes to their JSON encodable value:
 $attributes = $model->attributesToArray();
 ```
 
-> LDAP date attributes specified via the `$dates` model property will be converted in the returned array.
+> **Important:** LDAP date attributes specified via the `$dates` model property will be converted in the returned array.
 
 #### `convert`
 
 Convert a model into another by copying its attributes, connection and distinguished name:
 
-> This will also set `$model->exists` property to `true` if the **model being converted** exists.
+> **Important:** This will also set `$model->exists` property to `true` if the **model being converted** exists.
 
 ```php
 $into = new \LdapRecord\Models\ActiveDirectory\User();
@@ -120,7 +120,7 @@ $user = $model->convert($into);
 
 Get the total number of attributes on a model:
 
-> This does not count attribute values.
+> **Important:** This does not count attribute values.
 
 ```php
 $model->fill([
@@ -138,7 +138,7 @@ Immediately inserts a new attribute value on the model.
 
 Performs an `ldap_mod_add` under the hood.
 
-> This does not create attributes that do not exist on your LDAP schema for the object.
+> **Important:** This does not create attributes that do not exist on your LDAP schema for the object.
 
 ```php
 $model->createAttribute('telephonenumber', '+1 555 555 1717');
@@ -255,8 +255,9 @@ Get the value of the specified attribute.
 
 This will return an `array` if the attribute exists and `null` if non-existent:
 
-> If a mutator exists for the attribute (such as a date, or custom attribute
-> [mutator method](//docs/core/v2/model-mutators/#defining-a-mutator)), it's value will be returned instead.
+> **Important:** If a mutator exists for the attribute (such as a date,
+> or custom attribute [mutator method](//docs/core/v2/model-mutators/#defining-a-mutator)),
+> it's value will be returned instead.
 
 ```php
 // Returns array:
@@ -277,7 +278,7 @@ Performs the same as above.
 
 Get all the models raw attributes:
 
-> Mutator attribute values will not be included in this array.
+> **Important:** Mutator attribute values will not be included in this array.
 
 ```php
 $attributes = $model->getAttributes();
@@ -301,7 +302,7 @@ $config = $connection->getConfiguration();
 
 Get the connection name from the model:
 
-> If no connection is set on the model, `null` will be returned.
+> **Important:** If no connection is set on the model, `null` will be returned.
 
 ```php
 class Entry extends Model
@@ -479,9 +480,10 @@ $name = $model->getName();
 
 Get the raw binary object GUID:
 
-> The raw binary object GUID will be returned when connecting to Active Directory.
-> <br/><br/>
-> The raw string GUID will be returned with other LDAP directories.
+> **Important:**
+>
+> - The **raw binary** GUID will be returned when connecting to **Active Directory**.
+> - The **raw string** GUID will be returned with **other LDAP directories**.
 
 ```php
 $rawBinary = $model->getObjectGuid();
@@ -599,9 +601,8 @@ $model->hasSetAttribute('cn');
 
 Set the container that the model should be **created** inside:
 
-> Calling `inside()` on an existing model will not perform any move / rename operation.
-> <br/><br/>
-> Use [move](#move) or [rename](#rename) instead.
+> **Important:** Calling `inside()` on an existing model will not perform any
+> move / rename operation. Use [move](#move) or [rename](#rename) instead.
 
 ```php
 $model = new Model();
@@ -778,7 +779,7 @@ $new = $model->newInstance();
 
 Create a **new** model query:
 
-> Global scopes and object classes **will be applied** to this query.
+> **Important:** Global scopes and object classes **will be applied** to this query.
 
 ```php
 $results = $model->newQuery()->where('cn', 'contains', 'Steve')->get();
@@ -788,7 +789,7 @@ $results = $model->newQuery()->where('cn', 'contains', 'Steve')->get();
 
 Create a new model query **without** global scopes:
 
-> Global scopes and object classes **will not be applied** to this query.
+> **Important:** Global scopes and object classes **will not be applied** to this query.
 
 ```php
 $results = $model->newQueryWithoutScopes()->get();
@@ -808,9 +809,9 @@ $model->refresh();
 
 Rename a model and keep it's container location:
 
-> When renaming is successful, the models distinguished name is automatically
-> updated to reflect its new name in the directory, so you may run further
-> operations on it during the same request.
+> **Important:** When renaming is successful, the models distinguished name is
+> automatically updated to reflect its new name in the directory, so you may
+> run further operations on it during the same request.
 
 ```php
 $user = Model::find('cn=John Doe,dc=local,dc=com');
@@ -958,7 +959,7 @@ $attributes = json_encode($model);
 
 Create a new query to retrieve a models siblings:
 
-> The existing model instance will be included in the query results.
+> **Important**: The existing model instance will be included in the query results.
 
 ```php
 $siblings = $model->siblings()->get();
@@ -968,9 +969,9 @@ $siblings = $model->siblings()->get();
 
 Persist the changes of a model to the LDAP directory.
 
-> The [save](#save) method should be used instead of `update` to persist new or existing models.
-> <br/><br/>
-> If the model does not exist in the directory, an exception will be thrown.
+> **Important**: The [save](#save) method should be used instead
+> of `update` to persist new or existing models. If the model
+> does not exist in the directory, an exception will be thrown.
 
 ```php
 $model->cn = 'John Doe';

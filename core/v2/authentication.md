@@ -20,7 +20,7 @@ we will call the `auth()->attempt()` method:
 
 > If you only need to authenticate users against your LDAP server, you do not need to
 > provide a `base_dn`. This is only used for performing searches on your directory.
-> <br/><br/>
+>
 > Similarly with the `username` and `password` configuration options, these are only
 > used for performing operations on your LDAP server that require permission - such
 > as resetting passwords, modifying LDAP objects, and more.
