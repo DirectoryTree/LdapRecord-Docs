@@ -27,6 +27,32 @@ In addition, you may also run the below artisan command to test connectivity to 
 php artisan ldap:test
 ```
 
+## Sessions
+
+Before we begin, if you are using the `database` session driver, you **must** change the
+`user_id` column from its default type. This is due to LDAP Object GUID's being stored
+as the user's ID, which is not compatible with the unsigned big integer type:
+
+**From**:
+
+```php
+Schema::create('sessions', function (Blueprint $table) {
+    // ...
+    $table->foreignId('user_id')->nullable()->index();
+    // ...
+});
+```
+
+**To**:
+
+```php
+Schema::create('sessions', function (Blueprint $table) {
+    // ...
+    $table->string('user_id')->nullable()->index();
+    // ...
+});
+```
+
 ## Login Controller
 
 For this example application, we will authenticate our LDAP users with their email address using the LDAP attribute `mail`.

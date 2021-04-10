@@ -96,14 +96,11 @@ features by commenting them out inside of the `config/fortify.php` file:
 > continue to allow registration, you will need to either use multiple Laravel
 > authentication guards, or setup the [login fallback](#fallback-auth) feature.
 
-## Session Migration
+## Sessions
 
-Since an LdapRecord model instance is used for authentication, an Object GUID
-will be stored in the `user_id` column in Laravel's `sessions` database table.
-
-However, the default published migration is not compatible with storing string-based idenfitiers -- it must be changed.
-
-This means you must change the `user_id` column from an `integer` field to a `uuid`.
+If you are using the `database` session driver, you **must** change the `user_id`
+column from its default type. This is due to LDAP Object GUID's being stored
+as the user's ID, which is not compatible with the unsigned big integer type:
 
 **From**:
 
