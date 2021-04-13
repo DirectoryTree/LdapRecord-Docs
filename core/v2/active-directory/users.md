@@ -444,6 +444,106 @@ The Account Control builder has methods to apply every possible value:
 | `AccountControl::trustToAuthForDelegation()`     | `AccountControl::TRUSTED_TO_AUTH_FOR_DELEGATION` |
 | `AccountControl::accountIsReadOnly()`            | `AccountControl::PARTIAL_SECRETS_ACCOUNT`        |
 
+There are also some utility methods that you may find useful:
+
+#### `add`
+
+Add a value to the account control:
+
+```php
+$uac = new AccountControl();
+
+$uac->add(512);
+```
+
+#### `remove`
+
+Remove a value from the account control:
+
+```php
+$uac = new AccountControl();
+
+$uac->remove(2);
+```
+
+#### `apply`
+
+Apply a value that is a combination of multiple flags:
+
+```php
+$uac = new AccountControl();
+
+$uac->apply(514);
+```
+
+#### `has`
+
+Determine if the account control contains a specific flag:
+
+```php
+$uac = new AccountControl(512);
+
+// true
+$uac->has(AccountControl::NORMAL_ACCOUNT);
+
+// false
+$uac->has(AccountControl::ACCOUNTDISABLE);
+```
+
+#### `doesntHave`
+
+Determine if the account control does not contain a specific flag:
+
+```php
+$uac = new AccountControl(512);
+
+// false
+$uac->doesntHave(AccountControl::NORMAL_ACCOUNT);
+
+// true
+$uac->doesntHave(AccountControl::ACCOUNTDISABLE);
+```
+
+#### `filter`
+
+Generate an LDAP filter string for the account control value:
+
+```php
+$uac = new AccountControl(512);
+
+// "(UserAccountControl:1.2.840.113556.1.4.803:=512)"
+$uac->filter();
+```
+
+#### `getAllFlags`
+
+Get an array of all of the _available_ account control flags:
+
+```php
+$uac = new AccountControl();
+
+// [
+//  'SCRIPT' => 1,
+//  'ACCOUNTDISABLE' => 2,
+//  'HOMEDIR_REQUIRED' => 8,
+//  ...
+// ]
+$uac->getAllFlags();
+```
+
+#### `getAppliedFlags`
+
+Get an array of all of the _applied_ account control flags:
+
+```php
+$uac = new AccountControl(512);
+
+// [
+//  'NORMAL_ACCOUNT' => 512,
+// ]
+$uac->getAppliedFlags();
+```
+
 ## Group Management
 
 If you are utilizing the included `LdapRecord\Models\ActiveDirectory\User` model, the

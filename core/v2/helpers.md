@@ -74,6 +74,55 @@ $dn->set('cn=John Doe,dc=local,dc=com');
 $dn->get();
 ```
 
+### `explode`
+
+Explode a Distinguished Name string:
+
+```php
+$dn = DistinguishedName::explode('cn=john doe,dc=local,dc=com');
+
+// [
+//   "cn=john doe",
+//   "dc=local",
+//   "dc=com",
+// ]
+var_dump($dn);
+```
+
+### `explodeRdn`
+
+Explode a Relative Distinguished Name string:
+
+```php
+[$attribute, $value] = DistinguishedName::explodeRdn('cn=john doe');
+
+// "cn"
+echo $attribute;
+
+// "john doe"
+echo $value;
+```
+
+### `makeRdn`
+
+Make a Relative Distinguished Name string:
+
+```php
+$rdn = DistinguishedName::makeRdn(['cn', 'john doe']);
+
+// "cn=john doe"
+echo $rdn;
+```
+
+### `unescape`
+
+```php
+$unescaped = DistinguishedName::unescape('\6a\6f\68\6e\2c\64\6f\65');
+
+// "doe, john"
+echo $unescaped;
+```
+
 ### `name`
 
 Get the Relative Distinguished Name's value:
