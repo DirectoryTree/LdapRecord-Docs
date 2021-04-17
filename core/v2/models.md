@@ -75,10 +75,10 @@ Each below model references a type of object in Active Directory.
 
 | Model                                           |
 | ----------------------------------------------- |
-| `LdapRecord\Models\OpenLdap\Entry`              |
-| `LdapRecord\Models\OpenLdap\User`               |
-| `LdapRecord\Models\OpenLdap\Group`              |
-| `LdapRecord\Models\OpenLdap\OrganizationalUnit` |
+| `LdapRecord\Models\OpenLDAP\Entry`              |
+| `LdapRecord\Models\OpenLDAP\User`               |
+| `LdapRecord\Models\OpenLDAP\Group`              |
+| `LdapRecord\Models\OpenLDAP\OrganizationalUnit` |
 
 #### FreeIPA Models
 
