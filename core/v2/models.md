@@ -51,12 +51,12 @@ LdapRecord comes with many predefined models that allow you to get started right
 
 You may extend these built-in models and add your own methods & functionality, as well as override built-in functionality.
 
+> **Important**: Make sure you import the classes with the exact casing
+> shown below. PHP imports in Linux environments are case sensitive.
+
 #### Entry Model
 
 Use the `LdapRecord\Models\Entry` model for retrieving all objects from your directory - regardless of type.
-
-> **Important**: Make sure you import the classes with the exact casing
-> shown below. PHP imports in Linux environments are case sensitive.
 
 #### Active Directory Models
 
