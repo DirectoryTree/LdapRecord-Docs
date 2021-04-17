@@ -55,6 +55,9 @@ You may extend these built-in models and add your own methods & functionality, a
 
 Use the `LdapRecord\Models\Entry` model for retrieving all objects from your directory - regardless of type.
 
+> **Important**: Make sure you import the classes with the exact casing
+> shown below. PHP imports in Linux environments are case sensitive.
+
 #### Active Directory Models
 
 Each below model references a type of object in Active Directory.
