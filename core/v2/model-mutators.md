@@ -265,3 +265,39 @@ if ($user->msExchHideFromAddressList) {
     // This user is being hidden from the Global Address list.
 }
 ```
+
+## Appending Accessors
+
+Ported directly from Laravel's Eloquent, the `$appends` array
+property can be set directly on the model class to add an
+accessor's value to the models array form.
+
+> **Important**: LDAP attributes cannot contain underscores (`_`). Therefore, all
+> accessors that are PascalCased must be defined in their hyphenated format, and
+> will appear in their hyphenated format in the model's array form.
+
+```php
+namespace App\Models\Ldap;
+
+use LdapRecord\Models\ActiveDirectory\User as BaseUser;
+
+class User extends BaseUser
+{
+    protected $appends = ['full-name'];
+
+    public function getFullNameAttribute()
+    {
+        return 'John Doe';
+    }
+}
+```
+
+```php
+$user = User::find('cn=john,dc=local,dc=com');
+
+// Displays: "John Doe"
+echo $user->full_name;
+
+// Displays: "{"full-name":["John Doe"]}"
+echo json_encode($user);
+```

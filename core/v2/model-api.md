@@ -237,7 +237,8 @@ Get an array of ANR attributes defined on the model:
 ```php
 $attributes = $model->getAnrAttributes();
 
-// Displays: [
+// Displays:
+// [
 //    'cn',
 //    'sn',
 //    'uid',
@@ -247,6 +248,20 @@ $attributes = $model->getAnrAttributes();
 //    'displayname'
 // ]
 var_dump($attributes);
+```
+
+#### `getAppends`
+
+Get the accessors being appended to the models array form:
+
+```php
+$model->setAppends(['foo-bar']);
+
+// Displays:
+// [
+//    'foo-bar',
+// ]
+var_dump($model->getAppends());
 ```
 
 #### `getAttribute`
@@ -371,7 +386,8 @@ Get an array of attributes that should be mutated to dates:
 ```php
 $dates = $model->getDates();
 
-// Displays: [
+// Displays:
+// [
 //    'createtimestamp' => 'ldap',
 //    'modifytimestamp' => 'ldap',
 // ]
@@ -543,6 +559,17 @@ $model->addVisible('cn', 'sn');
 
 // Returns: ['cn', 'sn']
 $visibleAttributes = $model->getVisible();
+```
+
+#### `hasAppended`
+
+Determine if the model has an accessor attribute being appended:
+
+```php
+$model->setAppends(['foo-bar']);
+
+// Returns: true
+$model->hasAppended('foo-bar');
 ```
 
 #### `hasAttribute`
@@ -844,6 +871,20 @@ You may also pass an array of attributes to persist to your LDAP directory:
 
 ```php
 $model->save(['cn' => 'Steve Bauman']);
+```
+
+#### `setAppends`
+
+Set the accessors to append to model arrays:
+
+```php
+$model->setAppends(['foo-bar']);
+
+// Displays:
+// [
+//     'foo-bar',
+// ]
+var_dump($model->getAppends());
 ```
 
 #### `setAttribute`
