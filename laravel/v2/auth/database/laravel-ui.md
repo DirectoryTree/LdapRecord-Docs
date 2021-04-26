@@ -314,12 +314,21 @@ class LoginController extends Controller
 }
 ```
 
-### Changing The Error Messages
+### Changing the Error Messages
 
 If you need to modify the translations of these error messages, create a new translation
 file named `errors.php` in your `resources` directory at the following path:
 
-> ## The `vendor` directory (and each sub-directory) will have to be created manually.
+> The `vendor` directory (and each sub-directory) will have to be created manually.
+
+```
+/resources
+    /lang
+        /vendor
+            /ldap
+                /en
+                    errors.php
+```
 
 Then, paste in the following translations in the file and modify where necessary:
 

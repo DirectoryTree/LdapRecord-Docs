@@ -262,6 +262,15 @@ file named `errors.php` in your `resources` directory at the following path:
 
 > The `vendor` directory (and each sub-directory) will have to be created manually.
 
+```
+/resources
+    /lang
+        /vendor
+            /ldap
+                /en
+                    errors.php
+```
+
 Then, paste in the following translations in the file and modify where necessary:
 
 ```php
