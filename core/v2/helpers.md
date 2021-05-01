@@ -301,6 +301,52 @@ use LdapRecord\Models\Attributes\DistinguishedNameBuilder;
 > - Values given to the `prepend` and `append` are escaped.
 > - Missing method calls are forwarded to a `DistinguishedName` instance.
 
+### `components`
+
+Get all of the components of the DN.
+
+```php
+$dn = DistinguishedName::build('cn=john doe,ou=users,dc=local,dc=com');
+
+// array:4 [
+//   0 => array:2 [
+//     0 => "cn"
+//     1 => "john doe"
+//   ]
+//   1 => array:2 [
+//     0 => "ou"
+//     1 => "users"
+//   ]
+//   2 => array:2 [
+//     0 => "dc"
+//     1 => "local"
+//   ]
+//   3 => array:2 [
+//     0 => "dc"
+//     1 => "com"
+//   ]
+// ]
+$dn->components();
+```
+
+Get the components of a partiular type:
+
+```php
+$dn = DistinguishedName::build('cn=john doe,ou=users,dc=local,dc=com');
+
+// array:2 [
+//   0 => array:2 [
+//     0 => "dc"
+//     1 => "local"
+//   ]
+//   1 => array:2 [
+//     0 => "dc"
+//     1 => "com"
+//   ]
+// ]
+$dn->components('dc');
+```
+
 ### `prepend`
 
 Prepend an RDN onto the DN.
@@ -355,7 +401,7 @@ DistinguishedName::build('cn=john,dc=local,dc=com')
   ->pop(2, $removed)
   ->get();
 
-// ^ array:2 [
+// array:2 [
 //   0 => "dc=local"
 //   1 => "dc=com"
 // ]
@@ -382,7 +428,7 @@ DistinguishedName::build('cn=john,dc=local,dc=com')
   ->shift(2, $removed)
   ->get();
 
-// ^ array:2 [
+// array:2 [
 //   0 => "cn=john"
 //   1 => "dc=local"
 // ]
