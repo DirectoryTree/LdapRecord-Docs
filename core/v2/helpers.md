@@ -329,7 +329,7 @@ $dn = DistinguishedName::build('cn=john doe,ou=users,dc=local,dc=com');
 $dn->components();
 ```
 
-Get the components of a partiular type:
+Get the components of a particular type:
 
 ```php
 $dn = DistinguishedName::build('cn=john doe,ou=users,dc=local,dc=com');
