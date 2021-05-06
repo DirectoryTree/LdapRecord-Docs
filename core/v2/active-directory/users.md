@@ -12,9 +12,9 @@ are some requirements you must know prior to creation:
 
 | Requirement                                                                                               |
 | --------------------------------------------------------------------------------------------------------- |
-| You must connect to your server via TLS or SSL if you set the the users password (`unicodepwd`) attribute |
-| You must connect to your server with an account that has permission to create users                       |
 | You must set a common name (`cn`) for the user                                                            |
+| You must connect to your server with an account that has permission to create users                       |
+| You must connect to your server via TLS or SSL if you set the the users password (`unicodepwd`) attribute |
 | You must set the `unicodePwd` attribute as a non-encoded string (more on this below)                      |
 | To set the users `userAccountControl`, it must be set **after** the user has been created                 |
 
