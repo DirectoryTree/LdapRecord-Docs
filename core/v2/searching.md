@@ -12,7 +12,7 @@ Using the LdapRecord query builder makes building LDAP queries feel effortless.
 It allows you to generate LDAP filters using a fluent and
 convenient interface, similar to Eloquent in Laravel.
 
-> The LdapRecord query builder escapes all fields & values
+> **Important**: The LdapRecord query builder escapes all fields & values
 > given to its `where()` methods. There is no need to clean or
 > escape strings before passing them into the query builder.
 
@@ -30,13 +30,13 @@ Or you can chain all your methods if you'd prefer:
 $results = $connection->query()->where('cn', '=', 'John Doe')->get();
 ```
 
-> Querying your LDAP connection manually will return raw LDAP results
+> **Important**: Querying your LDAP connection manually will return raw LDAP results
 > in a `Collection`. You must query using [models](/docs/core/v2/models#retrieving-models)
 > themselves if you would like them to be returned instead.
 
 ## Selects
 
-> Fields are case in-sensitive. For example, you can
+> **Important**: Fields are case in-sensitive. For example, you can
 > insert `CN`, `cn` or `cN`, they will return the same result.
 
 Selecting only the LDAP attributes you need will increase the speed of your queries.
@@ -57,7 +57,7 @@ If you're trying to find a single record, you must use the `find()` method
 and insert the distinguished name of the record you are looking for:
 
 ```php
-$record = $query->find('cn=John Doe,dc=acme,dc=org');
+$record = $query->find('cn=John Doe,dc=local,dc=com');
 
 if ($record) {
     // Record was found!
@@ -73,7 +73,7 @@ it hasn't been found, use the `findOrFail()` method:
 
 ```php
 try {
-    $record = $query->findOrFail('cn=John Doe,dc=acme,dc=org');
+    $record = $query->findOrFail('cn=John Doe,dc=local,dc=com');
 } catch (LdapRecord\Models\ModelNotFoundException $e) {
     // Record wasn't found!
 }
@@ -464,13 +464,35 @@ To set the base DN of your search you can use one of two methods:
 
 ```php
 // Using the `in()` method:
-$results = $query->in('ou=Accounting,dc=acme,dc=org')->get();
+$results = $query->in('ou=Accounting,dc=local,dc=com')->get();
 
 // Using the `setDn()` method:
-$results = $query->setDn('ou=Accounting,dc=acme,dc=org')->get();
+$results = $query->setDn('ou=Accounting,dc=local,dc=com')->get();
 ```
 
 Either option will return the same results. Use which ever method you prefer to be more readable.
+
+### Automatic Base DN Substitution
+
+Since your LDAP configuration contains your connection's base DN, LdapRecord
+can automatically substitute it into the `setDn()`, `in()`, or `find()`
+methods using a `{base}` replacement template string.
+
+For example, if our configuration contains the `base_dn` of `dc=local,dc=com`, we can
+insert `{base}` alongside the other RDN's of the LDAP DN we are looking for:
+
+```php
+// Queries for "ou=Accounting,dc=local,dc=com"
+$results = $query->setDn('ou=Accounting,{base}')->get();
+
+// Alias for the above.
+$results = $query->in('ou=Accounting,{base}')->get();
+
+// Queries for "ou=John Doe,ou=Users,dc=local,dc=com"
+$object = $query->find('cn=John Doe,ou=Users,{base}');
+```
+
+This helps reduce the possibility for error and also allows you to use a single source of truth for your base DN.
 
 ## Root DSE
 
