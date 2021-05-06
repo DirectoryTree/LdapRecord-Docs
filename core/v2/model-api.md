@@ -101,13 +101,13 @@ Convert all the models attributes to their JSON encodable value:
 $attributes = $model->attributesToArray();
 ```
 
-> **Important:** LDAP date attributes specified via the `$dates` model property will be converted in the returned array.
+> **Important**: LDAP date attributes specified via the `$dates` model property will be converted in the returned array.
 
 #### `convert`
 
 Convert a model into another by copying its attributes, connection and distinguished name:
 
-> **Important:** This will also set `$model->exists` property to `true` if the **model being converted** exists.
+> **Important**: This will also set `$model->exists` property to `true` if the **model being converted** exists.
 
 ```php
 $into = new \LdapRecord\Models\ActiveDirectory\User();
@@ -120,7 +120,7 @@ $user = $model->convert($into);
 
 Get the total number of attributes on a model:
 
-> **Important:** This does not count attribute values.
+> **Important**: This does not count attribute values.
 
 ```php
 $model->fill([
@@ -138,7 +138,7 @@ Immediately inserts a new attribute value on the model.
 
 Performs an `ldap_mod_add` under the hood.
 
-> **Important:** This does not create attributes that do not exist on your LDAP schema for the object.
+> **Important**: This does not create attributes that do not exist on your LDAP schema for the object.
 
 ```php
 $model->createAttribute('telephonenumber', '+1 555 555 1717');
@@ -270,7 +270,7 @@ Get the value of the specified attribute.
 
 This will return an `array` if the attribute exists and `null` if non-existent:
 
-> **Important:** If a mutator exists for the attribute (such as a date,
+> **Important**: If a mutator exists for the attribute (such as a date,
 > or custom attribute [mutator method](//docs/core/v2/model-mutators/#defining-a-mutator)),
 > it's value will be returned instead.
 
@@ -293,7 +293,7 @@ Performs the same as above.
 
 Get all the models raw attributes:
 
-> **Important:** Mutator attribute values will not be included in this array.
+> **Important**: Mutator attribute values will not be included in this array.
 
 ```php
 $attributes = $model->getAttributes();
@@ -317,7 +317,7 @@ $config = $connection->getConfiguration();
 
 Get the connection name from the model:
 
-> **Important:** If no connection is set on the model, `null` will be returned.
+> **Important**: If no connection is set on the model, `null` will be returned.
 
 ```php
 class Entry extends Model
@@ -496,7 +496,7 @@ $name = $model->getName();
 
 Get the raw binary object GUID:
 
-> **Important:**
+> **Important**:
 >
 > - The **raw binary** GUID will be returned when connecting to **Active Directory**.
 > - The **raw string** GUID will be returned with **other LDAP directories**.
@@ -628,7 +628,7 @@ $model->hasSetAttribute('cn');
 
 Set the container that the model should be **created** inside:
 
-> **Important:** Calling `inside()` on an existing model will not perform any
+> **Important**: Calling `inside()` on an existing model will not perform any
 > move / rename operation. Use [move](#move) or [rename](#rename) instead.
 
 ```php
@@ -655,8 +655,8 @@ $model->is($another);
 Determine if a model is an ancestor of another:
 
 ```php
-$user = User::find('cn=John Doe,ou=Accounting,ou=Accounts,dc=acme,dc=org');
-$ou = OrganizationalUnit::find('ou=Accounts,dc=acme,dc=org');
+$user = User::find('cn=John Doe,ou=Accounting,ou=Accounts,dc=local,dc=com');
+$ou = OrganizationalUnit::find('ou=Accounts,dc=local,dc=com');
 
 // Returns: true
 $ou->isAncestorOf($user);
@@ -667,8 +667,8 @@ $ou->isAncestorOf($user);
 Determine if a model is an **immediate** child of another:
 
 ```php
-$ou = OrganizationalUnit::find('ou=Accounts,dc=acme,dc=org');
-$user = User::find('cn=John Doe,ou=Accounts,dc=acme,dc=org');
+$ou = OrganizationalUnit::find('ou=Accounts,dc=local,dc=com');
+$user = User::find('cn=John Doe,ou=Accounts,dc=local,dc=com');
 
 // Returns: true
 $user->isChildOf($ou);
@@ -695,8 +695,8 @@ $model->isDateAttribute('whenchanged');
 Determine if a model is a descendent of another:
 
 ```php
-$ou = OrganizationalUnit::find('ou=Accounts,dc=acme,dc=org');
-$user = User::find('cn=John Doe,ou=Accounting,ou=Accounts,dc=acme,dc=org');
+$ou = OrganizationalUnit::find('ou=Accounts,dc=local,dc=com');
+$user = User::find('cn=John Doe,ou=Accounting,ou=Accounts,dc=local,dc=com');
 
 // Returns: true
 $user->isDescendantOf($ou);
@@ -723,8 +723,8 @@ $model->isDirty('cn');
 Determine if a model is an **immediate** parent of another:
 
 ```php
-$ou = OrganizationalUnit::find('ou=Accounts,dc=acme,dc=org');
-$user = User::find('cn=John Doe,ou=Accounts,dc=acme,dc=org');
+$ou = OrganizationalUnit::find('ou=Accounts,dc=local,dc=com');
+$user = User::find('cn=John Doe,ou=Accounts,dc=local,dc=com');
 
 // Returns: true
 $ou->isParentOf($user);
@@ -806,7 +806,7 @@ $new = $model->newInstance();
 
 Create a **new** model query:
 
-> **Important:** Global scopes and object classes **will be applied** to this query.
+> **Important**: Global scopes and object classes **will be applied** to this query.
 
 ```php
 $results = $model->newQuery()->where('cn', 'contains', 'Steve')->get();
@@ -816,7 +816,7 @@ $results = $model->newQuery()->where('cn', 'contains', 'Steve')->get();
 
 Create a new model query **without** global scopes:
 
-> **Important:** Global scopes and object classes **will not be applied** to this query.
+> **Important**: Global scopes and object classes **will not be applied** to this query.
 
 ```php
 $results = $model->newQueryWithoutScopes()->get();
@@ -836,7 +836,7 @@ $model->refresh();
 
 Rename a model and keep it's container location:
 
-> **Important:** When renaming is successful, the models distinguished name is
+> **Important**: When renaming is successful, the models distinguished name is
 > automatically updated to reflect its new name in the directory, so you may
 > run further operations on it during the same request.
 

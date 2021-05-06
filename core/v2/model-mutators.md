@@ -159,7 +159,7 @@ class User extends Model
 Now lets have our user's account expire at the same time tomorrow:
 
 ```php
-$user = User::find('cn=John Doe,dc=acme,dc=org');
+$user = User::find('cn=John Doe,dc=local,dc=com');
 
 $user->accountexpires = new \DateTime('+1 day');
 
@@ -171,7 +171,7 @@ be converted to a [Carbon](https://github.com/briannesbitt/Carbon)
 instance so you can use any of Carbon's methods on the attribute:
 
 ```php
-$user = User::find('cn=John Doe,dc=acme,dc=org');
+$user = User::find('cn=John Doe,dc=local,dc=com');
 
 if ($user->accountexpires->isPast()) {
     // The user account is expired.

@@ -30,7 +30,7 @@ $connection = new \LdapRecord\Connection([
     'hosts' => ['127.0.0.1'],
 ]);
 
-if ($connection->auth()->attempt('cn=john doe,dc=acme,dc=org', 'p@ssw0rd', $stayAuthenticated = true)) {
+if ($connection->auth()->attempt('cn=john doe,dc=local,dc=com', 'p@ssw0rd', $stayAuthenticated = true)) {
     // Successfully authenticated user.
 } else {
     // Username or password is incorrect.
@@ -142,8 +142,8 @@ Since we will first be searching our LDAP directory for the user that is attempt
 // Connecting with an an account...
 $connection = new \LdapRecord\Connection([
     'hosts' => ['127.0.0.1'],
-    'base_dn' => 'dc=acme,dc=org',
-    'username' => 'cn=WebApi,dc=acme,dc=org',
+    'base_dn' => 'dc=local,dc=com',
+    'username' => 'cn=WebApi,dc=local,dc=com',
     'password' => 'super-secret',
 ]);
 
@@ -152,7 +152,7 @@ $connection->connect();
 // Anonymously binding...
 $connection = new \LdapRecord\Connection([
     'hosts' => ['127.0.0.1'],
-    'base_dn' => 'dc=acme,dc=org',
+    'base_dn' => 'dc=local,dc=com',
 ]);
 
 $connection->connect();
@@ -207,8 +207,8 @@ $userGroups = $user['memberof'];
 
 // Set up our allowed groups.
 $allowed = [
-    'cn=Accounting,ou=Groups,dc=acme,dc=org',
-    'cn=IT,ou=Groups,dc=acme,dc=org',
+    'cn=Accounting,ou=Groups,dc=local,dc=com',
+    'cn=IT,ou=Groups,dc=local,dc=com',
 ];
 
 // Normalize the group distinguished names and determine if
@@ -244,7 +244,7 @@ $connection = new \LdapRecord\Connection(['...']);
 
 $connection->connect();
 
-$organizationalUnit = 'ou=AllowedUsers,dc=acme,dc=org';
+$organizationalUnit = 'ou=AllowedUsers,dc=local,dc=com';
 
 $user = $connection->query()
     ->in($organizationalUnit)

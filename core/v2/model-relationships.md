@@ -220,7 +220,7 @@ because we have explicitly requested attributes **excluding** `memberof`:
 
 ```php
 // Selecting only the 'cn', and 'sn' attributes:
-$user = User::select(['cn', 'sn'])->find('cn=John Doe,dc=acme,dc=org');
+$user = User::select(['cn', 'sn'])->find('cn=John Doe,dc=local,dc=com');
 
 // Returns an empty collection.
 $groups = $user->groups()->get();
@@ -256,7 +256,7 @@ class User extends Model
 Now, lets retrieve a user's groups, but only return those groups that have a common name starting with 'Admin':
 
 ```php
-$user = User::find('cn=John Doe,dc=acme,dc=org');
+$user = User::find('cn=John Doe,dc=local,dc=com');
 
 $adminGroups = $user->groups()->whereStartsWith('cn', 'Admin')->get();
 ```
@@ -269,7 +269,7 @@ To request all of the relationships results, such as nested groups in groups, ca
 the `recursive()` method, prior to retrieving results via `get()`:
 
 ```php
-$user = User::find('cn=John Doe,dc=acme,dc=org');
+$user = User::find('cn=John Doe,dc=local,dc=com');
 
 $allGroups = $user->groups()->recursive()->get();
 ```
@@ -298,8 +298,8 @@ For example, you may want to attach a `Group` to a `User`, or vice-versa.
 Using the above relationship examples, lets walk through attaching a user to a group:
 
 ```php
-$user = User::find('cn=John Doe,dc=acme,dc=org');
-$group = Group::find('cn=Accounting,dc=acme,dc=org');
+$user = User::find('cn=John Doe,dc=local,dc=com');
+$group = Group::find('cn=Accounting,dc=local,dc=com');
 
 // Attaching a group to a user:
 $user->groups()->attach($user);
@@ -313,11 +313,11 @@ You may also use the `attachMany()` method to attach many models at once.
 For this example, let's say we have an organizational unit that contains groups all new users must be apart of:
 
 ```php
-$ou = OrganizationalUnit::find('ou=Groups,dc=acme,dc=org');
+$ou = OrganizationalUnit::find('ou=Groups,dc=local,dc=com');
 
 $groups = Group::in($ou)->get();
 
-$user = User::find('cn=John Doe,ou=Users,dc=acme,dc=org');
+$user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
 
 $user->groups()->attachMany($groups);
 ```
@@ -329,7 +329,7 @@ As you can see above, we took a complex LDAP operation and completed it in just 
 Using the above relationship examples, lets walk through detaching a user from a group:
 
 ```php
-$user = User::find('cn=John Doe,dc=acme,dc=org');
+$user = User::find('cn=John Doe,dc=local,dc=com');
 
 // Retrieve the first group that the user is apart of:
 $group = $user->groups()->get()->first();
@@ -343,7 +343,7 @@ leaving the company and you it is apart of your off-boarding process.
 You may accomplish this task by using the `detachAll()` method:
 
 ```php
-$user = User::find('cn=John Doe,ou=Users,dc=acme,dc=org');
+$user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
 
 $user->groups()->detachAll();
 ```
@@ -360,8 +360,8 @@ To check if a model exists inside of a relationship, use the `exists()` relation
 For example, lets determine if a `User` is a member of a `Group`:
 
 ```php
-$user = User::find('cn=John Doe,dc=acme,dc=org');
-$group = Group::find('cn=Accounting,dc=acme,dc=org');
+$user = User::find('cn=John Doe,dc=local,dc=com');
+$group = Group::find('cn=Accounting,dc=local,dc=com');
 
 if ($user->groups()->exists($group)) {
     // This user is a member of the 'Accounting' group.
@@ -373,8 +373,8 @@ This method can be used on **all** relationship types.
 For another example, lets determine if a `User` is a `manager` of another:
 
 ```php
-$user = User::find('cn=John Doe,dc=acme,dc=org');
-$manager = User::find('cn=Jane Doe,dc=acme,dc=org');
+$user = User::find('cn=John Doe,dc=local,dc=com');
+$manager = User::find('cn=Jane Doe,dc=local,dc=com');
 
 if ($user->manager()->exists($manager)) {
     // Jane Doe is John Doe's manager.
@@ -384,7 +384,7 @@ if ($user->manager()->exists($manager)) {
 You can also determine if the model has any groups or members by simply calling `exists()`:
 
 ```php
-$user = User::find('cn=John Doe,dc=acme,dc=org');
+$user = User::find('cn=John Doe,dc=local,dc=com');
 
 if ($user->manager()->exists()) {
     // This user has a manager.

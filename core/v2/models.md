@@ -190,7 +190,7 @@ class User extends Model
     protected $attributes = [
         'company' => ['Acme'],
         'description' => ['User Account'],
-        'manager' => ['cn=John Doe,dc=acme,dc=org']
+        'manager' => ['cn=John Doe,dc=local,dc=com']
     ];
 }
 ```
@@ -342,7 +342,7 @@ a variety of methods. Here is a list and usage of each:
 $user = User::first();
 
 // Retrieve a model by its distinguished name...
-$user = User::find('cn=John Doe,dc=acme,dc=org');
+$user = User::find('cn=John Doe,dc=local,dc=com');
 
 // Retrieve the first model that matches the attribute...
 $user = User::findBy('cn', 'John Doe');
@@ -374,7 +374,7 @@ try {
     $user = User::firstOrFail();
 
     // Retrieve a model by its distinguished name or fail...
-    $user = User::findOrFail('cn=John Doe,dc=acme,dc=org');
+    $user = User::findOrFail('cn=John Doe,dc=local,dc=com');
 
     // Retrieve the first model that matches the attribute or fail...
     $user = User::findByOrFail('cn', 'John Doe');
@@ -485,7 +485,7 @@ You may also pass in an LdapRecord `Model` instance. This is convenient so you
 know the container / organizational unit distinguished name is valid:
 
 ```php
-$ou = OrganizationalUnit::findOrFail('ou=Users,dc=acme,dc=org');
+$ou = OrganizationalUnit::findOrFail('ou=Users,dc=local,dc=com');
 
 $user = new User(['cn' => 'John Doe']);
 
@@ -495,7 +495,7 @@ $user->inside($ou)->save();
 The above examples will save the user inside the `Users` OU resulting in the full distinguished name:
 
 ```text
-cn=John Doe,ou=Users,dc=acme,dc=org
+cn=John Doe,ou=Users,dc=local,dc=com
 ```
 
 #### Setting A Distinguished Name
@@ -508,7 +508,7 @@ $user = new User();
 
 $user->cn = 'John Doe';
 
-$user->setDn('cn=John Doe,ou=Users,dc=acme,dc=org');
+$user->setDn('cn=John Doe,ou=Users,dc=local,dc=com');
 
 $user->save();
 ```
@@ -700,7 +700,7 @@ For example, if you would like to retrieve the users `mail`
 attribute, you must request the first key from it:
 
 ```php
-$user = User::find('cn=John Doe,dc=acme,dc=org');
+$user = User::find('cn=John Doe,dc=local,dc=com');
 
 // Get the users email address.
 echo $user->mail[0] ?? null;
@@ -709,7 +709,7 @@ echo $user->mail[0] ?? null;
 Or if you'd prefer, use the `getFirstAttribute()` method:
 
 ```php
-$user = User::find('cn=John Doe,dc=acme,dc=org');
+$user = User::find('cn=John Doe,dc=local,dc=com');
 
 // Get the users email address.
 echo $user->getFirstAttribute('mail');
@@ -719,7 +719,7 @@ When setting attributes on models, they will automatically
 be converted to an array for you if you do not provide one.
 
 ```php
-$user = User::find('cn=John Doe,dc=acme,dc=org');
+$user = User::find('cn=John Doe,dc=local,dc=com');
 
 // Both approaches will set the attribute identically:
 $user->mail = 'jdoe@acme.org';
@@ -731,7 +731,7 @@ set the attributes first value in its array, even if
 it does not currently exist on the model:
 
 ```php
-$user = User::find('cn=John Doe,dc=acme,dc=org');
+$user = User::find('cn=John Doe,dc=local,dc=com');
 
 // Set the users email address.
 $user->setFirstAttribute('mail', 'jdoe@acme.org');
@@ -795,7 +795,7 @@ Similarly, when retrieving attributes that contain a hyphen, use
 an underscore instead:
 
 ```php
-$user = User::find('cn=John Doe,dc=acme,dc=org');
+$user = User::find('cn=John Doe,dc=local,dc=com');
 
 // Each method below will act identically:
 echo $user->some_attribute[0];
@@ -828,12 +828,12 @@ The _number_ of deleted models will be returned from this method:
 <?php
 
 // Deleting single object...
-$deleted = User::destroy('cn=John Doe,dc=acme,dc=org');
+$deleted = User::destroy('cn=John Doe,dc=local,dc=com');
 
 // Deleting multiple objects...
 $deleted = User::destroy([
-    'cn=John Doe,dc=acme,dc=org',
-    'cn=Jane Doe,dc=acme,dc=org',
+    'cn=John Doe,dc=local,dc=com',
+    'cn=Jane Doe,dc=local,dc=com',
 ]);
 ```
 
@@ -850,7 +850,7 @@ another model, pass in `true` in the first parameter of the `delete()` method:
 ```php
 <?php
 
-$ou = OrganizationalUnit::find('ou=Users,dc=acme,dc=org');
+$ou = OrganizationalUnit::find('ou=Users,dc=local,dc=com');
 
 $ou->delete($recursive = true);
 ```
@@ -870,8 +870,8 @@ To see if a model is contained inside an organizational unit or another type of
 container, call the `isDescendantOf()` method:
 
 ```php
-$ou = OrganizationalUnit::find('ou=User Accounts,dc=acme,dc=org');
-$user = User::find('cn=John Doe,ou=User Accounts,dc=acme,dc=org');
+$ou = OrganizationalUnit::find('ou=User Accounts,dc=local,dc=com');
+$user = User::find('cn=John Doe,ou=User Accounts,dc=local,dc=com');
 
 if ($user->isDescendantOf($ou)) {
     // This user is contained inside this organizational unit.
@@ -882,8 +882,8 @@ You may also want to know whether a model is an ancestor of another. To
 do so, call the `isAncestorOf()` method:
 
 ```php
-$user = User::find('cn=John Doe,ou=User Accounts,dc=acme,dc=org');
-$ou = OrganizationalUnit::find('ou=User Accounts,dc=acme,dc=org');
+$user = User::find('cn=John Doe,ou=User Accounts,dc=local,dc=com');
+$ou = OrganizationalUnit::find('ou=User Accounts,dc=local,dc=com');
 
 if ($ou->isAncestorOf($user)) {
     // This OU is an ancestor of this user.
@@ -895,8 +895,8 @@ if ($ou->isAncestorOf($user)) {
 > the methods will return `true`.
 
 ```php
-$ou = OrganizationalUnit::find('ou=User Accounts,dc=acme,dc=org');
-$user = User::find('cn=John Doe,ou=Accounting,ou=User Accounts,dc=acme,dc=org');
+$ou = OrganizationalUnit::find('ou=User Accounts,dc=local,dc=com');
+$user = User::find('cn=John Doe,ou=Accounting,ou=User Accounts,dc=local,dc=com');
 
 // This will return true:
 if ($user->isDescendantOf($ou)) {
@@ -913,8 +913,8 @@ To perform non-recursive checks, such as checking if a model is a
 **direct** child of another model, call the `isChildOf` method:
 
 ```php
-$ou = OrganizationalUnit::find('ou=User Accounts,dc=acme,dc=org');
-$user = User::find('cn=John Doe,ou=User Accounts,dc=acme,dc=org');
+$ou = OrganizationalUnit::find('ou=User Accounts,dc=local,dc=com');
+$user = User::find('cn=John Doe,ou=User Accounts,dc=local,dc=com');
 
 if ($user->isChildOf($ou)) {
     //
@@ -925,8 +925,8 @@ To perform the opposite, such as checking if a model is a parent of
 another, call the `isParentOf` method:
 
 ```php
-$officeOu = OrganizationalUnit::find('ou=Office,ou=User Accounts,dc=acme,dc=org');
-$userAccountsOu = OrganizationalUnit::find('ou=User Accounts,dc=acme,dc=org');
+$officeOu = OrganizationalUnit::find('ou=Office,ou=User Accounts,dc=local,dc=com');
+$userAccountsOu = OrganizationalUnit::find('ou=User Accounts,dc=local,dc=com');
 
 if ($userAccountsOu->isParentOf($officeOu)) {
     //
