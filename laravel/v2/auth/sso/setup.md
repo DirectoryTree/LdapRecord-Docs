@@ -78,7 +78,7 @@ protected $routeMiddleware = [
 
 Then, utilize it inside your routes file:
 
-> Remember, when guarding your routes that require authentication via the
+> **Important**: When guarding your routes that require authentication via the
 > `auth` middleware, you must add both guard names into it as well.
 
 ```php
@@ -105,10 +105,10 @@ Route::middleware([
 To prevent security issues using multiple-domain authentication using the `WindowsAuthenticate`
 middleware, domain verification will be performed on the authenticating user.
 
-This verification checks if the users _domain name_ is contained inside of their
+This verification checks if the user's _domain name_ is contained inside of their
 _full distinguished name_, which is retrieved from each of your configured LDAP guards.
 
-> Only 'Domain Components' are checked in the users distinguished name. More on this below.
+> Only 'Domain Components' are checked in the user's distinguished name. More on this below.
 
 To describe this issue in further detail -- the `WindowsAuthenticate` middleware retrieves all of your configured
 authentication guards inside of your `config/auth.php` file. It then determines which one is using the `ldap`
@@ -133,7 +133,7 @@ cn=sbauman,ou=users,dc=local,dc=com
 They will be denied authentication. This is because the authenticating user has a domain of
 `ACME`, but it is not contained inside of their distinguished name domain components (`dc`).
 
-Using the same example, if the located users distinguished name is:
+Using the same example, if the located user's distinguished name is:
 
 ```text
 cn=sbauman,ou=users,dc=acme,dc=com
@@ -166,6 +166,99 @@ public function boot()
 
     WindowsAuthenticate::bypassDomainVerification();
 }
+```
+
+### Swapping the Domain Extractor
+
+> **Important**: This feature is available as of `v2.3.0`.
+
+If you would like to override the default mechanism that extracts the domain
+from the user's account that is retrieved from the PHP request key, call the
+`WindowsAuthenticate::extractDomainUsing()` method and supply a callback.
+
+The callback should return a string, or an array with two values.
+The first being the user's username, the second being the user's domain.
+
+The returned value(s) will be passed into the Domain Validator, for validation.
+
+The first (and only) argument of the closure will be equal to the
+retrieved value from the configured PHP `$_SERVER` key (default is `AUTH_USER`).
+
+```php
+WindowsAuthenticate::extractDomainUsing(function ($account) {
+    [$username, $domain] = array_pad(
+        array_reverse(explode('\\', $account)),
+        2,
+        null
+    );
+
+    return [$username, $domain];
+});
+```
+
+To bypass extraction, supply a closure and return the account's value:
+
+```php
+WindowsAuthenticate::extractDomainUsing(function ($account) {
+    return $account;
+});
+```
+
+### Swapping the Domain Validator
+
+> **Important**: This feature is available as of `v2.3.0`.
+
+If you'd like to validate the user's domain in your own way,
+call the `WindowsAuthenticate::validateDomainUsing()`
+method, and supply either a closure, or a class.
+
+The first argument will be the user's LdapRecord model, the second
+will be the user's username and the third argument will be the
+user's domain (extracted with the above Domain Extractor).
+
+Return `true`/`false` whether the user has passed validation.
+
+#### Using a Closure
+
+Register the closure into the middleware:
+
+```php
+use LdapRecord\Models\Model;
+
+WindowsAuthenticate::validateDomainUsing(function (Model $user, $username, $domain = null) {
+    // Validate the user's domain.
+});
+```
+
+#### Using a Class
+
+Create the class with an `__invoke()` method:
+
+```php
+use LdapRecord\Models\Model;
+
+class DomainValidator
+{
+    /**
+     * Determine if the user passes domain validation.
+     *
+     * @param Model       $user
+     * @param string      $username
+     * @param string|null $domain
+     *
+     * @return bool
+     */
+    public function __invoke(Model $user, $username, $domain = null)
+    {
+        // Validate the user's domain.
+    }
+}
+```
+
+Register the class into the middleware:
+
+```php
+WindowsAuthenticate::validateDomainUsing(DomainValidator::class);
 ```
 
 ## Changing the Server Key
@@ -221,7 +314,7 @@ Occasionally you may need to allow users who are not a part of the domain
 to login to your application, as well as allowing domain users to
 automatically sign in via Single-Sign-On.
 
-Depending on your web servers OS, this process can be different.
+Depending on your web servers operating system, this process can be different.
 
 ### Linux (HTTPD)
 
