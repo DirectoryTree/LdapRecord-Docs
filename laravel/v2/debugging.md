@@ -40,7 +40,7 @@ that you would like to either _bypass_ TLS / SSL certificate verification,
 or use a valid certificate that you have retrieved from your LDAP server.
 
 This process is fully documented on the [configuration](/docs/core/v2/configuration#ssl-amp-tls)
-documentation. It includes per OS level instructions on where your `ldap.conf` file
+documentation. It includes per operating system level instructions on where your `ldap.conf` file
 is located (or where it must be created), as well as what it must contain.
 
 > **Important**: You **must** restart your web server after making changes

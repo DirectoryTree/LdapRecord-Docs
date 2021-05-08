@@ -18,9 +18,9 @@ are some requirements you must know prior to creation:
 | You must set the `unicodePwd` attribute as a non-encoded string (more on this below)                      |
 | To set the users `userAccountControl`, it must be set **after** the user has been created                 |
 
-> Attributes that are set below can be cased in _any_ manor. They can be
-> `UPPERCASED`, `lowercased`, `camelCased`, etc. Use whichever casing
-> you prefer to be most readable in your application.
+> **Important**: Attributes that are set below can be cased in _any_ manor. They
+> can be `UPPERCASED`, `lowercased`, `camelCased`, `PascalCased`, etc. Use
+> whichever casing you prefer to be most readable in your application.
 
 ```php
 <?php
@@ -49,8 +49,8 @@ try {
 }
 ```
 
-> It is wise to encapsulate saving your user in a try / catch block,
-> so if it fails you can determine if the cause of failure
+> **Important**: It is wise to encapsulate saving your user in a try / catch
+> block, so if it fails you can determine if the cause of failure
 > is due to your domains password policy.
 
 ## Password Management
@@ -59,8 +59,9 @@ try {
 
 Using the included `LdapRecord\Models\ActiveDirectory\User` model, an attribute
 [mutator](/docs/core/v2/model-mutators) has been added that assists in the setting
-and changing of passwords on user objects. Feel free to take a
-peek into the source code to see how it all works.
+and changing of passwords on user objects. Feel free to take a peek into the
+[source code](https://github.com/DirectoryTree/LdapRecord/blob/master/src/Models/Concerns/HasPassword.php)
+to see how it all works.
 
 The password string you set on the users `unicodePwd` attribute is automatically encoded.
 You do not need to encode it yourself. Doing so will cause an error or exception upon
@@ -137,9 +138,10 @@ try {
 }
 ```
 
-> You must use a try / catch block upon saving. An `LdapRecord\LdapRecordException`
-> will always be thrown when an incorrect old password has been given, or the new
-> password does not abide by your password policy.
+> **Important**: You must use a try / catch block upon saving. An
+> `LdapRecord\LdapRecordException` will always be thrown when an
+> incorrect old password has been given, or the new password
+> does not abide by your password policy.
 
 ### Resetting Passwords
 
