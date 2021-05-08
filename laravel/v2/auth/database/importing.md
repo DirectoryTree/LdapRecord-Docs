@@ -286,7 +286,7 @@ Here is an example listener that accesses this event and its properties:
 
 namespace App\Listeners;
 
-use LdapRecord\Laravel\Events\DeletedMissing;
+use LdapRecord\Laravel\Events\Import\DeletedMissing;
 
 class UsersDeletedFromImport
 {
