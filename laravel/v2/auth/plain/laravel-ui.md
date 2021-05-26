@@ -252,7 +252,7 @@ class LoginController extends Controller
 }
 ```
 
-> Refer to the [Password Policy Errors](/docs/laravel/v2/active-directory/users#password-policy-errors)
+> Refer to the [Password Policy Errors](/docs/core/v2/active-directory/users#password-policy-errors)
 > documentation to see what each code means.
 
 ### Changing the Error Messages
