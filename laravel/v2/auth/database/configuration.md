@@ -315,7 +315,7 @@ By replacing the value of the array to be an array with the `attribute` and `ope
 ## Attribute Handlers
 
 If you require logic for synchronizing attributes when users sign into your application or are
-being [imported](/docs/laravel/v2/auth/importing), you can create an attribute handler class
+being [imported](/docs/laravel/v2/auth/database/importing), you can create an attribute handler class
 responsible for setting / synchronizing your database models attributes from their
 LDAP model.
 
