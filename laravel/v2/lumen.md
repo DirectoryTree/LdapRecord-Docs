@@ -15,7 +15,7 @@ LdapRecord-Lumen requires the following:
 
 | Requirements                                              |
 | --------------------------------------------------------- |
-| PHP >= 7.2                                                |
+| PHP >= 7.3                                                |
 | Lumen >= 5.6                                              |
 | PHP LDAP extension enabled                                |
 | An LDAP server (Active Directory, OpenLDAP, FreeIPA etc.) |
