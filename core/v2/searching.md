@@ -442,12 +442,16 @@ echo $query; // Returns (&(samaccountname=jdoe)(surname=Doe))
 
 ## Paginating
 
-Paginating your search results will allow you to return more results than your LDAP cap (usually 1000).
+Paginating your search results will allow you to return
+more results than your LDAP cap (usually 1000).
 
-For example, if your LDAP server contains 10,000 objects and you paginate by 1000, 10 queries will be executed.
+For example, if your LDAP server contains 10,000 objects
+and you paginate by 1000, 10 queries will be executed.
 
-> Calling `paginate()` will retrieve **all** objects from your LDAP server for the current query.
-> Be careful with large result sets, as you may run out of memory.
+> Calling `paginate()` will retrieve **all** objects from
+> your LDAP server for the current query. Be careful with
+> large result sets -- as you may run out of memory. Use
+> chunking with large directories to avoid this.
 
 ```php
 // Perform global "all" search, paginating by 1000 objects:
@@ -456,6 +460,26 @@ $results = $query->paginate(1000);
 foreach ($results as $result) {
     //
 }
+```
+
+## Chunking
+
+> **Important**: This feature is only available in LdapRecord >= v2.5.0
+
+Chunking your search results will prevent you from running out of
+memory when executing pagination requests on large directories.
+
+The `chunk` method executes a paginated request indentically to
+the above `paginate` method, except it will return each "page"
+of objects, passing them into a closure for processing.
+
+```php
+// Perform global "all" search, chunking by 1000 objects:
+$query->chunk(1000, function ($entries) {
+    foreach ($entries as $entry) {
+        //
+    }
+});
 ```
 
 ## Base DN
