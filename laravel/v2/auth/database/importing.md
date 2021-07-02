@@ -31,8 +31,8 @@ to get a further understanding on what is possible with this option.
 
 ## Password Synchronization
 
-The `sync_passwords` option you define inside of your `config/auth.php` file is used when importing
-and synchronizing users. However, there are some main takeaways you must be aware of:
+The `sync_passwords` option you define inside of your `config/auth.php` file is used when
+importing and synchronizing users. However, there are some caveats you must be aware of:
 
 - **Passwords cannot be retrieved from users who are being imported from your LDAP server.**
   <br/><br/>This would be a major security risk if this were possible. If a password is already
@@ -122,7 +122,7 @@ The above scheduled import command will:
 - Run without interaction and import new users as well as synchronize already imported users
 - Restore user models who have been re-activated in your LDAP directory (if you're using [Eloquent Soft Deletes](https://laravel.com/docs/eloquent#soft-deleting))
 - Soft-Delete user models who have been deactived in your LDAP directory (if you're using [Eloquent Soft Deletes](https://laravel.com/docs/eloquent#soft-deleting))
-- Only import users that have an `objectclass` equal to user
+- Only import objects that have an `objectclass` containing `user`
 
 > It's recommended to use [model query scopes](/docs/core/v2/models#query-scopes) instead of the `--filter`
 > option on your configured authentication LdapRecord model so LDAP users signing into your
