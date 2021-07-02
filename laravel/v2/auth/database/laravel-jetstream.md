@@ -13,7 +13,7 @@ description: Setting up LDAP authentication with Laravel JetStream
 [Laravel Jetstream](https://jetstream.laravel.com) provides robust authentication scaffolding out-of-the-box.
 It utilizes [Laravel Fortify](https://laravel.com/docs/8.x/fortify) for authentication under the hood.
 
-We will customize various aspects of Jetsream and Fortify to allow our LDAP users to sign in successfully.
+We will customize various aspects of Jetsream and Fortify to allow LDAP users to sign into the application.
 
 ## Debugging
 
@@ -451,5 +451,66 @@ return [
     'account_expired' => 'Your account has expired.',
     'user_must_reset_password' => 'You must reset your password before logging in.',
     'user_account_locked' => 'Your account is locked.',
+];
+```
+
+## Teams
+
+### Default Team Assignment
+
+Since LDAP users are not registered through Jetstream's interface and are instead created
+through an import or successful authentication, you will have to assign their default
+team by utilizing LdapRecord's `Imported` event, which is fired directly after a
+new user has been imported or created inside of your applications database.
+
+Create the event listener executing the below command:
+
+```
+php artisan make:listener AssignTeam --event="LdapRecord\Laravel\Events\Import\Imported"
+```
+
+Inside of the event listener, attach the users team as you would during
+a normal users registration through the registration interface:
+
+```php
+class AssignTeam
+{
+    /**
+     * Handle the event.
+     *
+     * @param Imported $event
+     *
+     * @return void
+     */
+    public function handle(Imported $event)
+    {
+        $user = $event->eloquent;
+
+        $user->ownedTeams()->save(Team::forceCreate([
+            'user_id' => $user->id,
+            'name' => explode(' ', $user->name, 2)[0]."'s Team",
+            'personal_team' => true,
+        ]));
+    }
+}
+```
+
+Finally, register the event inside of your `EventServiceProvider`:
+
+```php
+// app/Providers/EventServiceProvider.php
+
+use App\Listeners\AssignTeam;
+use LdapRecord\Laravel\Events\Import\Imported;
+
+/**
+ * The event listener mappings for the application.
+ *
+ * @var array
+ */
+protected $listen = [
+    Imported::class => [
+        AssignTeam::class,
+    ],
 ];
 ```
