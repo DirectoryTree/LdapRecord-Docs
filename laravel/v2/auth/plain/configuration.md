@@ -51,6 +51,53 @@ The `driver` option must be `ldap` as this is what indicates to Laravel the prop
 The `model` option must be the class name of your [LdapRecord model](/docs/core/v2/models). This model will be used
 for fetching users from your directory.
 
+### Using your own model
+
+If you're using an LDAP directory that is not directly supported by
+LdapRecord, you may publish your own model using the below command:
+
+```bash
+php artisan make:ldap-model User
+```
+
+> The model will be created inside of the `app/Ldap` directory.
+
+Once created, insert the following interface and trait onto the model:
+
+**Interface**:
+
+```php
+Illuminate\Contracts\Auth\Authenticatable
+```
+
+**Trait**:
+
+```php
+LdapRecord\Models\Concerns\CanAuthenticate
+```
+
+Finally, you must define a `$guidKey` property which will contain the name of
+the attribute your LDAP directory uses to store its unique identifier.
+
+> **Important**: Don't forget to also define the models `$objectClasses`.
+
+```php
+namespace App\Ldap;
+
+use LdapRecord\Models\Model;
+use LdapRecord\Models\Concerns\CanAuthenticate;
+use Illuminate\Contracts\Auth\Authenticatable;
+
+class User extends Model implements Authenticatable
+{
+    use CanAuthenticate;
+
+    public static $objectClasses = ['...'];
+
+    protected $guidKey = 'uuid';
+}
+```
+
 ## Rules
 
 The `rules` option must be an array of [authentication rule](#rules) class names.
