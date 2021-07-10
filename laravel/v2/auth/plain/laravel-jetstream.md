@@ -7,7 +7,9 @@ description: Setting up LDAP authentication with Laravel JetStream
 
 ## Introduction
 
-> **Important**: Before getting started, please complete the authentication [configuration](/docs/laravel/v2/auth/plain/configuration) guide.
+> **Important**: Before getting started, please complete the below guide:
+>
+> - [Configuration Guide](/docs/laravel/v2/auth/plain/configuration)
 
 Laravel Jetstream utilizes [Laravel Fortify](https://github.com/laravel/fortify) for authentication under the hood.
 We will customize various aspects of it to allow LDAP users to sign into the application.

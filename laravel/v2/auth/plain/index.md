@@ -10,7 +10,7 @@ then you can utilize plain LDAP authentication.
 
 > **It is paramount to understand that upon every request a logged in user makes to your application,
 > an LDAP search request will be made to retrieve them**. If you do not want this to occur, you must
-> use synchronized database authentication.
+> use [synchronized database authentication](/docs/laravel/v2/auth/database).
 
 When a user is successfully authenticated, the Laravel `Auth::user()` method
 will return an instance of your configured **LdapRecord** model:

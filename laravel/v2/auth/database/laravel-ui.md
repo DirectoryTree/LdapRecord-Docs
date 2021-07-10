@@ -7,8 +7,10 @@ description: Database authentication with Laravel UI
 
 ## Introduction
 
-> **Important**: Before getting started, please complete the authentication
-> [installation](/docs/laravel/v2/auth/database/installation) and [configuration](/docs/laravel/v2/auth/database/configuration) guides.
+> **Important**: Before getting started, please complete the below guides:
+> 
+> - [Installation Guide](/docs/laravel/v2/auth/database/installation)
+> - [Configuration Guide](/docs/laravel/v2/auth/database/configuration)
 
 [Laravel UI](https://laravel.com/docs/7.x/authentication#authentication-quickstart) provides basic authentication scaffolding out-of-the-box.
 
