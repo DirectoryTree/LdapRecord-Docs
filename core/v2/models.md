@@ -39,7 +39,7 @@ class User extends Model
 }
 ```
 
-As you can see above, we must add a public static property that contains the object classes of the LDAP record.
+As you can see above, we must add a **public static** property that contains the object classes of the LDAP record.
 
 These object classes are used to locate the proper objects in your LDAP directory.
 
