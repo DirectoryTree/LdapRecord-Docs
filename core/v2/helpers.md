@@ -125,13 +125,24 @@ echo $unescaped;
 
 ### `name`
 
-Get the Relative Distinguished Name's value:
+Get the Relative Distinguished Name's *value*:
 
 ```php
 $dn = DistinguishedName::make('cn=John Doe,dc=local,dc=com');
 
 // "John Doe"
 $dn->name();
+```
+
+### `head`
+
+Get the Relative Distinguished Name's *attribute*:
+
+```php
+$dn = DistinguishedName::make('cn=John Doe,dc=local,dc=com');
+
+// "cn"
+$dn->head();
 ```
 
 ### `relative`
@@ -173,7 +184,7 @@ $dn->values();
 
 ### `components`
 
-Get the relative Distinguished Name's of each DN component:
+Get the Relative Distinguished Name's of each DN component:
 
 ```php
 $dn = DistinguishedName::make('cn=John Doe,dc=local,dc=com');
@@ -203,6 +214,21 @@ $dn = DistinguishedName::make('cn=John Doe,dc=local,dc=com');
 //  ]
 // ]
 $dn->assoc();
+```
+
+### `multi`
+
+Split the Relative Distinguished Name's of each DN component into an associative array:
+
+```php
+$dn = DistinguishedName::make('cn=John Doe,dc=local,dc=com');
+
+// array: 3 [
+//   0 => ['cn', 'John'],
+//   1 => ['ou', 'local'],
+//   2 => ['dc', 'local'],
+// ]
+$dn->multi();
 ```
 
 ### `isParentOf`
