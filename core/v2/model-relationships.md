@@ -302,7 +302,7 @@ $user = User::find('cn=John Doe,dc=local,dc=com');
 $group = Group::find('cn=Accounting,dc=local,dc=com');
 
 // Attaching a group to a user:
-$user->groups()->attach($user);
+$user->groups()->attach($group);
 
 // Attaching a user to a group:
 $group->members()->attach($user);
