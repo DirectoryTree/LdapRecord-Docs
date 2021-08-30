@@ -15,18 +15,20 @@ use LdapRecord\Connection;
 
 $connection = new Connection([
     // Mandatory Configuration Options
-    'hosts'            => ['192.168.1.1'],
-    'base_dn'          => 'dc=local,dc=com',
-    'username'         => 'cn=admin,dc=local,dc=com',
-    'password'         => 'password',
+    'hosts'              => ['192.168.1.1'],
+    'base_dn'            => 'dc=local,dc=com',
+    'username'           => 'cn=admin,dc=local,dc=com',
+    'password'           => 'password',
 
     // Optional Configuration Options
-    'port'             => 389,
-    'use_ssl'          => false,
-    'use_tls'          => false,
-    'version'          => 3,
-    'timeout'          => 5,
-    'follow_referrals' => false,
+    'port'               => 389,
+    'use_ssl'            => false,
+    'use_tls'            => false,
+    'version'            => 3,
+    'timeout'            => 5,
+    'follow_referrals'   => false,
+    'host_is_dns_srv'    => false,
+    'host_is_ad_dns_srv' => false,
 
     // Custom LDAP Options
     'options' => [
@@ -53,6 +55,7 @@ This automated fail-over process will continue for each host address, until a su
 >
 > - Do not append your port (`:389`, `:636`, etc.) to your hosts. <br/> Use the `port` configuration option instead.
 > - Do not prepend your protocol (`ldap://` or `ldaps://`) to your hosts. <br/> Use the `use_ssl` configuration option instead.
+> - If you use SRV record lookup, only the first entry in the `hosts` list will be used.
 
 ### Base Distinguished Name
 
@@ -212,6 +215,14 @@ This option is defaulted to `false`.
 > **Important**: Disable this option if you're experiencing search / connectivity issues.
 > </br></br>
 > For more information, visit: [Microsoft Docs - LDAP Referrals](https://technet.microsoft.com/en-us/library/cc978014.aspx)
+
+### DNS SRV Records
+
+These boolean options indicate that the hsotname should be treated as a DNS SRV record.
+
+If you use `host_is_ad_dns_srv`, the domain name supplied will be prepended with the standard SRV record name for Active Directory. For example, if `hosts` is set to `['example.com']`, the SRV record will be `_ldap._tcp.dc._msdcs.example.com`.
+
+If you use `host_is_dns_srv`, the SRV record will be looked up exactly as entered.
 
 ### Options
 
