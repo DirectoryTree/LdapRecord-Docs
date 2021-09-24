@@ -34,14 +34,14 @@ to get a further understanding on what is possible with this option.
 The `sync_passwords` option you define inside of your `config/auth.php` file is used when
 importing and synchronizing users. However, there are some caveats you must be aware of:
 
-- **Passwords cannot be retrieved from users who are being imported from your LDAP server.**
-  <br/><br/>This would be a major security risk if this were possible. If a password is already
-  set for the user being imported, it will be left untouched. This is to retain a
-  possible synchronized password that was set upon login.<br/><br/>
-- **Passwords will always be set to a hashed 16 character string if not already present.**
-  <br/><br/>If the user being imported does not have a password, their password will be set to a
-  hashed 16 character random string using `Str::random`.<br/><br/>
-- **Passwords will not be set** if you have defined `false` for `password_column`.
+-   **Passwords cannot be retrieved from users who are being imported from your LDAP server.**
+    <br/><br/>This would be a major security risk if this were possible. If a password is already
+    set for the user being imported, it will be left untouched. This is to retain a
+    possible synchronized password that was set upon login.<br/><br/>
+-   **Passwords will always be set to a hashed 16 character string if not already present.**
+    <br/><br/>If the user being imported does not have a password, their password will be set to a
+    hashed 16 character random string using `Str::random`.<br/><br/>
+-   **Passwords will not be set** if you have defined `false` for `password_column`.
 
 ## Running the command
 
@@ -119,10 +119,10 @@ protected function schedule(Schedule $schedule)
 
 The above scheduled import command will:
 
-- Run without interaction and import new users as well as synchronize already imported users
-- Restore user models who have been re-activated in your LDAP directory (if you're using [Eloquent Soft Deletes](https://laravel.com/docs/eloquent#soft-deleting))
-- Soft-Delete user models who have been deactived in your LDAP directory (if you're using [Eloquent Soft Deletes](https://laravel.com/docs/eloquent#soft-deleting))
-- Only import objects that have an `objectclass` containing `user`
+-   Run without interaction and import new users as well as synchronize already imported users
+-   Restore user models who have been re-activated in your LDAP directory (if you're using [Eloquent Soft Deletes](https://laravel.com/docs/eloquent#soft-deleting))
+-   Soft-Delete user models who have been deactived in your LDAP directory (if you're using [Eloquent Soft Deletes](https://laravel.com/docs/eloquent#soft-deleting))
+-   Only import objects that have an `objectclass` containing `user`
 
 > It's recommended to use [model query scopes](/docs/core/v2/models#query-scopes) instead of the `--filter`
 > option on your configured authentication LdapRecord model so LDAP users signing into your
@@ -187,6 +187,20 @@ Would you like to display the user(s) to be imported / synchronized? (yes/no) [n
 ```
 
 ## Command Options
+
+### Chunk
+
+> **Important**: This option is available as of `v2.5.0`.
+
+The `--chunk` (or `-c`) option allows you to import users by chunk.
+
+The option takes a number that indicates how many users per-chunk you would like to import.
+
+Use this option if you are running out of memory during large imports.
+
+```text
+php artisan ldap:import ldap --chunk 500
+```
 
 ### Filter
 
@@ -359,18 +373,18 @@ $schedule->command('ldap:import ldap', ['--no-interaction', '--filter' => $filte
 
 ### Additional Tips
 
-- Users who already exist inside your database will be updated with your configured providers `sync_attributes`.
-- Users **will never be force deleted** from the import command. You will need to delete users manually
-  through your Eloquent model
-- If you have a password mutator (setter) on your `User` Eloquent model, it will not override it.
-  This allows you to hash the random 16 character passwords in your own way.
-- Imported (new) users will be reported in your log files:
+-   Users who already exist inside your database will be updated with your configured providers `sync_attributes`.
+-   Users **will never be force deleted** from the import command. You will need to delete users manually
+    through your Eloquent model
+-   If you have a password mutator (setter) on your `User` Eloquent model, it will not override it.
+    This allows you to hash the random 16 character passwords in your own way.
+-   Imported (new) users will be reported in your log files:
 
 ```text
 [2020-01-29 14:51:51] local.INFO: Imported user johndoe
 ```
 
-- Users that fail to be imported are also reported in your log files, alongside the message of the exception that caused the failure:
+-   Users that fail to be imported are also reported in your log files, alongside the message of the exception that caused the failure:
 
 ```text
 [2020-01-29 14:51:51] local.ERROR: Unable to import user janedoe. SQLSTATE[23000]: Integrity constraint violation: 1048
