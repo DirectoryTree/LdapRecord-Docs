@@ -307,13 +307,13 @@ class UsersDeletedFromImport
     public function handle(DeletedMissing $event)
     {
         // \Illuminate\Support\Collection
-        $event->ids;
+        $event->deleted;
 
         // \LdapRecord\Models\ActiveDirectory\User
-        $event->ldap;
+        $event->ldapModel;
 
-        // \App\User
-        $event->eloquent;
+        // \Illuminate\Database\Eloquent\Model
+        $event->eloquentModel;
     }
 }
 ```
