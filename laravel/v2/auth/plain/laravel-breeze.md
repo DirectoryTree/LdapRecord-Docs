@@ -142,7 +142,7 @@ We will first need to update the input HTML field inside of the scaffolded `logi
 
   <x-input
     id="email"
-    class="block mt-1 w-full"
+    class="block w-full mt-1"
     type="email"
     name="email"
     :value="old('email')"
@@ -163,7 +163,7 @@ We will first need to update the input HTML field inside of the scaffolded `logi
 
   <x-input
     id="username"
-    class="block mt-1 w-full"
+    class="block w-full mt-1"
     type="text"
     name="username"
     :value="old('username')"

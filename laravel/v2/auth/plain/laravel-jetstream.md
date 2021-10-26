@@ -197,7 +197,7 @@ to `username` so we can retrieve it properly in our `Fortify::authenticateUsing(
 <div>
   <x-jet-label value="Email" />
   <x-jet-input
-    class="block mt-1 w-full"
+    class="block w-full mt-1"
     type="email"
     name="email"
     :value="old('email')"
@@ -210,7 +210,7 @@ to `username` so we can retrieve it properly in our `Fortify::authenticateUsing(
 <div>
   <x-jet-label value="Username" />
   <x-jet-input
-    class="block mt-1 w-full"
+    class="block w-full mt-1"
     type="text"
     name="username"
     :value="old('username')"

@@ -498,8 +498,8 @@ Get the raw binary object GUID:
 
 > **Important**:
 >
-> - The **raw binary** GUID will be returned when connecting to **Active Directory**.
-> - The **raw string** GUID will be returned with **other LDAP directories**.
+> -   The **raw binary** GUID will be returned when connecting to **Active Directory**.
+> -   The **raw string** GUID will be returned with **other LDAP directories**.
 
 ```php
 $rawBinary = $model->getObjectGuid();

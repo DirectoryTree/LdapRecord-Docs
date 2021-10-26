@@ -102,6 +102,32 @@ $until = new \DateTime('+1 day');
 $query->cache($until, $flush = false);
 ```
 
+#### `chunk`
+
+Chunk a query
+
+> **Important**: This method is excellent for keeping memory usage
+> low, since only the number of requested objects per chunk is
+> kept in memory, not the entire result.
+
+```php
+$connection->query()->chunk(1000, function ($objects) {
+    foreach ($objects as $object) {
+        // ...
+    }
+});
+```
+
+You may also stop further chunks from being processed by returning false from the closure:
+
+```php
+$connection->query()->chunk(1000, function ($objects) {
+    // ...
+
+    return false;
+});
+```
+
 #### `clearFilters`
 
 Reset / clear all filters that have been added to the query:
@@ -149,6 +175,24 @@ $query->deleteAttributes($entry, ['member' => []]);
 $member = 'cn=John Doe,ou=Users,dc=local,dc=com';
 
 $query->deleteAttributes($entry, ['member' => [$member]]);
+```
+
+#### `each`
+
+Execute a callback over each object from a chunked query (default `1000` per chunk):
+
+```php
+$connection->query()->each(function ($object) {
+    // ...
+});
+```
+
+You may also specify a chunk size in the method's second parameter:
+
+```php
+$connection->query()->each(function ($object) {
+    // ...
+}, $chunk = 500);
 ```
 
 #### `escape`
@@ -1040,6 +1084,26 @@ $query = $connection->query();
 $myGrammarInstance = new Grammar();
 
 $query->setGrammar($myGrammarInstance);
+```
+
+#### `sole`
+
+If you want to ensure a query returns only a single matching result, you may use the `sole()` method.
+
+If nothing is returned, an `ObjectsNotFoundException` will be thrown.
+
+If more than one record is returned, a `MultipleObjectsFoundException` will be thrown.
+
+```php
+$query = $connection->query();
+
+try {
+    $object = $query->where('cn', '=', 'John Doe')->sole();
+} catch (\LdapRecord\Query\ObjectsNotFoundException $e) {
+    // Nothing was returned from the query.
+} catch (\LdapRecord\Query\MultipleObjectsFoundException $e) {
+    // Multiple objects were returned from the query.
+}
 ```
 
 #### `update`

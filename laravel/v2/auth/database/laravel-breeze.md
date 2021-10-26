@@ -147,7 +147,7 @@ We're almost there. We will now need to update the input HTML field inside of th
 
   <x-input
     id="email"
-    class="block mt-1 w-full"
+    class="block w-full mt-1"
     type="email"
     name="email"
     :value="old('email')"
@@ -168,7 +168,7 @@ We're almost there. We will now need to update the input HTML field inside of th
 
   <x-input
     id="username"
-    class="block mt-1 w-full"
+    class="block w-full mt-1"
     type="text"
     name="username"
     :value="old('username')"

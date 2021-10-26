@@ -50,6 +50,27 @@ $builder = DistinguishedName::of('cn=John Doe,dc=local,dc=com');
 $builder = DistinguishedName::of();
 ```
 
+### `isValid`
+
+Determine if the given string is a valid Distinguished Name:
+
+```php
+// true
+DistinguishedName::isValid('cn=John Doe,dc=local,dc=com');
+
+// true
+DistinguishedName::isValid('cn=John');
+
+// false
+DistinguishedName::isValid('String containing rdn cn=John');
+
+// false
+DistinguishedName::isValid(null);
+
+// false
+DistinguishedName::isValid('');
+```
+
 ### `get`
 
 Get the full value of the Distinguished Name:
@@ -125,7 +146,7 @@ echo $unescaped;
 
 ### `name`
 
-Get the Relative Distinguished Name's *value*:
+Get the Relative Distinguished Name's _value_:
 
 ```php
 $dn = DistinguishedName::make('cn=John Doe,dc=local,dc=com');
@@ -136,7 +157,7 @@ $dn->name();
 
 ### `head`
 
-Get the Relative Distinguished Name's *attribute*:
+Get the Relative Distinguished Name's _attribute_:
 
 ```php
 $dn = DistinguishedName::make('cn=John Doe,dc=local,dc=com');
@@ -231,6 +252,24 @@ $dn = DistinguishedName::make('cn=John Doe,dc=local,dc=com');
 $dn->multi();
 ```
 
+### `isEmpty`
+
+Determine if the Distinguished Name has any values:
+
+```php
+// false
+DistinguishedName::make('cn=John Doe,dc=local,dc=com')->isEmpty();
+
+// false
+DistinguishedName::make('cn=John Doe')->isEmpty();
+
+// true
+DistinguishedName::make(null)->isEmpty();
+
+// true
+DistinguishedName::make('')->isEmpty();
+```
+
 ### `isParentOf`
 
 Determine if the Distinguished Name is a _direct_ parent of the given child:
@@ -323,9 +362,9 @@ use LdapRecord\Models\Attributes\DistinguishedNameBuilder;
 
 > **Important**:
 >
-> - All transformation methods can be chained.
-> - Values given to the `prepend` and `append` are escaped.
-> - Missing method calls are forwarded to a `DistinguishedName` instance.
+> -   All transformation methods can be chained.
+> -   Values given to the `prepend` and `append` are escaped.
+> -   Missing method calls are forwarded to a `DistinguishedName` instance.
 
 ### `components`
 
