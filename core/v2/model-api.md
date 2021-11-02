@@ -86,11 +86,11 @@ $ancestors = $model->ancestors()->get();
 Convert an LDAP timestamp to a `Carbon\Carbon` instance:
 
 ```php
-$carbon = $model->asDateTime('ldap', '20200508184557Z');
+$carbon = $model->asDateTime('20200508184557Z', 'ldap');
 
-$carbon = $model->asDateTime('windows', '20200508184533.0Z');
+$carbon = $model->asDateTime('20200508184533.0Z', 'windows');
 
-$carbon = $model->asDateTime('windows-int', 132334371140000000);
+$carbon = $model->asDateTime(132334371140000000, 'windows-int');
 ```
 
 #### `attributesToArray`
