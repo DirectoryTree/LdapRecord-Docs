@@ -110,6 +110,35 @@ class User extends Model
 }
 ```
 
+#### Changing Connections
+
+> **Important**: When changing connections, be sure that the
+> connection you swap to is of the same type (i.e. Active
+> Directory, OpenLDAP, etc.), otherwise you may have
+> unintended results when performing operations.
+
+You may also swap the connection to use on a _per-query_ basis by using `Model::on($connectionName)`:
+
+```php
+// Users will be retrieved from the "domain-b"
+// connection defined in the configuration,
+// and have this connection set:
+$users = User::on('domain-b')->get();
+```
+
+You may also swap the connection to use on a _per-model_ basis by using `$model->setConnection($connectionName)`:
+
+```php
+$user = User::find('cn=john doe,dc=local,dc=com');
+
+// All further operations executed on the user
+// model will be performed on the "domain-b"
+// connection defined in the configuration:
+$user->setConnection('domain-b');
+
+$user->rename('...');
+```
+
 ### Distinguished Names
 
 To get an objects full distinguished name call the `getDn` method:
