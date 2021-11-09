@@ -843,7 +843,7 @@ Rename a model and keep it's container location:
 ```php
 $user = Model::find('cn=John Doe,dc=local,dc=com');
 
-$user->rename('cn=Jane Doe');
+$user->rename('Jane Doe');
 
 // Returns: 'cn=Jane Doe,dc=local,dc=com'
 $user->getDn();

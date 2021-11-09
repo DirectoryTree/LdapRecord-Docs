@@ -579,7 +579,7 @@ echo $user->getDn();
 
 ### Renaming
 
-To rename existing models, call the `rename()` method and supply the new objects RDN (relative distinguished name):
+To rename existing models, call the `rename()` method and supply the new objects name:
 
 > When renaming is successful, the users distinguished name is automatically
 > updated to reflect its new name in the directory, so you may run further
@@ -588,7 +588,7 @@ To rename existing models, call the `rename()` method and supply the new objects
 ```php
 $user = User::find('cn=John Doe,dc=local,dc=com');
 
-$user->rename('cn=Jane Doe');
+$user->rename('Jane Doe');
 
 // Displays 'cn=Jane Doe,dc=local,dc=com'
 echo $user->getDn();
