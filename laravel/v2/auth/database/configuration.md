@@ -223,10 +223,18 @@ to call to your LDAP server and validate it for you.
 
 ### Sync Attributes
 
-The `database => sync_attributes` array defines a set of key-value pairs or array syntax for more fine-grained control over how your models are queried:
+The `database => sync_attributes` array defines a set of key-value pairs that
+describe which database column should be set and to which LDAP property:
 
-- The **key** of each array item is the column of your `users` database table
-- The **value** is the _name_ of the users LDAP attribute to set the database value to. Alternatively, you may provide an array as the value with an `attribute` key containing the LDAP attribute name and an `operator` key to use for the query when retrieving a record from the database.
+```php
+'sync_attributes' => [
+    'email' => 'mail',
+    'name' => 'cn',
+]
+```
+
+- The **key** of each array item is the attribute of your `User` Eloquent model
+- The **value** is the _name_ of the users LDAP attribute to set the Eloquent model attribute value to
 
 > You do not need to add your users `guid` or `domain` database columns. These are done automatically for you.
 
@@ -234,17 +242,29 @@ For further control on sync attributes, see the below [attribute handler](#datab
 
 ### Sync Existing Records
 
-The `database => sync_existing` array defines a set of key-value pairs:
+The `database => sync_existing` array defines a set of key-value pairs that
+describe how existing database users should be sychronized:
+
+```php
+'sync_existing' => [
+    'email' => 'mail',
+],
+```
 
 - The **key** of each array item is the column of your `users` database table to query
-- The **value** is the _name_ of the users LDAP attribute to set the database value to. Alternatively, you may provide an array as the value with an `attribute` key containing the LDAP attribute name and an `operator` key to use for the query when retrieving a record from the database.
+- The **value** is the _name_ of the users LDAP attribute to set the database value to
 
-> If the LDAP attribute returns `null` for the given **value**, the value string will be used
-> in the query instead. This is helpful to be able to use raw strings to scope your query by.
+> Alternatively inside of each `value` key, you may provide an array with an `attribute`
+> key containing the LDAP attribute name and an `operator` key to use for the
+> query when retrieving a record from the database. More on this below.
+
+> **Important**: If the LDAP attribute returns `null` for the given **value**,
+> the actual value will be used in the query instead. This is helpful to be
+> able to use raw strings to scope your query by.
 
 Let's walk through an example.
 
-In our application, we have existing users inside of our Laravel applications database:
+In our application, we have existing users inside of our database:
 
 | id  | name         | email             | password | guid   | domain |
 | --- | ------------ | ----------------- | -------- | ------ | ------ |
@@ -280,37 +300,34 @@ Now when `sbauman@local.com` attempts to log in, if the user cannot be located
 by their GUID, they will instead be located by their email address. Their
 GUID, domain, and sync attributes you define will then synchronize.
 
-In some database drivers, such as Postgres, there is case-sensitivity when doing where clauses with the `=` operator. Consider the following data in your database:
+#### Database Compatibility
+
+In some database drivers, such as Postgres, there is case-sensitivity when executing `where`
+clauses with the equals (`=`) operator. Consider the following data in your database:
 
 | id  | name         | email             | password | guid   | domain |
 | --- | ------------ | ----------------- | -------- | ------ | ------ |
 | 1   | Steve Bauman | sbauman@local.com | ...      | `null` | `null` |
 | 2   | John Doe     | jdoe@local.com    | ...      | `null` | `null` |
 
-However, in LDAP the `mail` attribute for Steve's record is actually `SBauman@local.com`. While he could successfully authenticate, the existing record would not be found in our database due to Postgres' more strict SQL grammar. Changing the `sync_existing` configuration to the following array syntax would allow us to change the operator from `=` to `ilike`.
+However, inside of the LDAP server, the `mail` attribute for Steve's record
+is actually `SBauman@local.com`. While he could successfully authenticate,
+the existing record would not be found in our database due to Postgres'
+more strict SQL grammar. Changing the `sync_existing` configuration
+to the following array syntax would allow us to change the
+operator from an equals (`=`) to an `ilike`.
 
 ```php
-'providers' => [
-    // ...
-
-    'users' => [
-        // ...
-        'database' => [
-            // ...
-            'sync_existing' => [
-                // Originally it was
-                // 'email' => 'mail',
-                'email' => [
-                    'attribute' => 'mail',
-                    'operator' => 'ilike',
-                ],
-            ],
-        ],
+'sync_existing' => [
+    'email' => [
+        'attribute' => 'mail',
+        'operator' => 'ilike',
     ],
 ],
 ```
 
-By replacing the value of the array to be an array with the `attribute` and `operator` keys, we can fine-tune the query syntax to be more flexible to your needs. 
+By replacing the value of the array to be an array with the `attribute` and `operator`
+keys, we can fine-tune the query syntax to be more flexible to your needs.
 
 ## Attribute Handlers
 
