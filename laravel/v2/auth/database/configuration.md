@@ -165,14 +165,14 @@ LDAP authentication, they will need to be a member of the `Administrators` group
 
 > If you are caching your configuration, make sure you re-run `config:cache` to re-cache your modifications.
 
-### Database Model
+## Database Model
 
 The `database => model` key is the class name of the [Eloquent model](https://laravel.com/docs/laravel/v2/eloquent) that will be
 used for creating and retrieving LDAP users from your applications database.
 
 > Be sure to add the required [trait and interface](/docs/laravel/v2/auth/database/installation#add-required-trait-and-interface) to this model as shown in the installation guide.
 
-### Sync Password Column
+## Sync Password Column
 
 If your application uses a different password column than `password`, then you can configure
 it using the `password_column` key inside of your providers configuration:
@@ -207,7 +207,7 @@ You can also set the value to `false` if your database table does not have any p
 ],
 ```
 
-### Sync Passwords
+## Sync Passwords
 
 The `database => sync_passwords` option enables password synchronization.
 
@@ -221,7 +221,7 @@ to call to your LDAP server and validate it for you.
 > random 16 character hashed password. This hashed password is only set once upon initial
 > import or login so no needless updates are performed on user records.
 
-### Sync Attributes
+## Sync Attributes
 
 The `database => sync_attributes` array defines a set of key-value pairs that
 describe which database column should be set and to which LDAP property:
@@ -240,7 +240,7 @@ describe which database column should be set and to which LDAP property:
 
 For further control on sync attributes, see the below [attribute handler](#database-attribute-handlers) feature.
 
-### Sync Existing Records
+## Sync Existing Records
 
 The `database => sync_existing` array defines a set of key-value pairs that
 describe how existing database users should be sychronized:
@@ -300,7 +300,7 @@ Now when `sbauman@local.com` attempts to log in, if the user cannot be located
 by their GUID, they will instead be located by their email address. Their
 GUID, domain, and sync attributes you define will then synchronize.
 
-#### Database Compatibility
+### Database Compatibility
 
 In some database drivers, such as Postgres, there is case-sensitivity when executing `where`
 clauses with the equals (`=`) operator. Consider the following data in your database:
