@@ -63,7 +63,7 @@ $dispatcher = Container::getEventDispatcher();
 $message = '';
 
 $dispatcher->listen(Failed::class, function (Failed $event) use (&$message) {
-    $ldap = $event->connection->getLdapConnection();
+    $ldap = $event->getConnection();
 
     // The diagnostic message will be available here.
     $error = $ldap->getDiagnosticMessage();
