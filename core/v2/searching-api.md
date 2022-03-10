@@ -331,6 +331,20 @@ try {
 }
 ```
 
+#### `forPage`
+
+> **Important**: Your LDAP server must support [Virtual List View](https://ldapwiki.com/wiki/Virtual%20List%20View%20Control).
+
+The `forPage` supports the same arguments and executes the same underlying
+query as the [slice method](#slice), but it will  return query results
+directly, instead of being wrapped in a `Slice` object:
+
+```php
+$query = $connection->query();
+
+$results = $query->forPage($page = 1, $perPage = 1000);
+```
+
 #### `get`
 
 Get the resulting entries of a query from the directory:
@@ -1084,6 +1098,42 @@ $query = $connection->query();
 $myGrammarInstance = new Grammar();
 
 $query->setGrammar($myGrammarInstance);
+```
+
+#### `slice`
+
+> **Important**: Your LDAP server must support [Virtual List View](https://ldapwiki.com/wiki/Virtual%20List%20View%20Control).
+
+To get a "page" of an LDAP query to conserve memory and retrieve results quickly, you may use the `slice()` method.
+
+A `Slice` object will always be returned with the query results that can be retrieved via the `items()` method.
+
+> **Note**: Your query must search less than 10,000 records (this is a [configurable limit](https://ldapwiki.com/wiki/MaxTempTableSize) in Active Directory).
+
+```php
+$query = $connection->query();
+
+$slice = $query->slice($page = 1, $perPage = 100): \LdapRecord\Query\Slice;
+
+$slice->items(): array|\LdapRecord\Query\Collection;
+
+$slice->total(): int;
+
+$slice->perPage(): int;
+
+$slice->currentPage(): int;
+
+$slice->hasMorePages(): bool;
+
+$slice->hasPages(): bool;
+
+$slice->onFirstPage(): bool;
+
+$slice->onLastPage(): bool;
+
+$slice->isEmpty(): bool;
+
+$slice->isNotEmpty(): bool;
 ```
 
 #### `sole`

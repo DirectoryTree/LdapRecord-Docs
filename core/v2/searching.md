@@ -482,6 +482,47 @@ $query->chunk(1000, function ($entries) {
 });
 ```
 
+## Slicing
+
+> **Important**: 
+>
+> - This feature is only available in LdapRecord >= v2.11.0
+> - Your LDAP server must support [Virtual List View](https://ldapwiki.com/wiki/Virtual%20List%20View%20Control).
+
+Slicing your search results allows you to retrieve only a particular set
+of results based on an offset, similar to a database offset. This helps
+in dramatically reducing memory usage and query execution time.
+However, there are some caveats to be aware of:
+
+- You must provide an "order by" clause (via `$query->orderBy()`) prior to executing `slice()`. If one is not present on the query builder, then LdapRecord will sort by the `cn` attribute in an ascending manor. This is [required](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-adts/2667823e-dfd3-422b-b055-40e5b8779b0b) for the LDAP server to process the VLV request.
+- Your query must search less than 10,000 total records (this is a [configurable limit](https://ldapwiki.com/wiki/MaxTempTableSize) in Active Directory).
+
+```php
+$query = $connection->query();
+
+$slice = $query->slice($page = 1, $perPage = 100): \LdapRecord\Query\Slice;
+
+$slice->items(): array|\LdapRecord\Query\Collection;
+
+$slice->total(): int;
+
+$slice->perPage(): int;
+
+$slice->currentPage(): int;
+
+$slice->hasMorePages(): bool;
+
+$slice->hasPages(): bool;
+
+$slice->onFirstPage(): bool;
+
+$slice->onLastPage(): bool;
+
+$slice->isEmpty(): bool;
+
+$slice->isNotEmpty(): bool;
+```
+
 ## Base DN
 
 To set the base DN of your search you can use one of two methods:
