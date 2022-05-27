@@ -571,6 +571,14 @@ $rootDse = $query->query()
     ->first();
 ```
 
+Or, if you're using models:
+
+```php
+use LdapRecord\Models\Entry;
+
+$rootDse = Entry::getRootDse();
+```
+
 ## Search Options
 
 #### Recursive
