@@ -580,7 +580,7 @@ Determine if the model has an attribute with a value:
 $model = Model::findBy('cn', 'Steve Bauman');
 
 // Returns: true
-$modle->hasAttribute('cn');
+$model->hasAttribute('cn');
 
 // Returns: false
 $model->hasAttribute('non-existent');
