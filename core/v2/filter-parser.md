@@ -71,7 +71,7 @@ The filter parser should not be considered as a filter validator. Filters
 that would otherwise fail to execute on an LDAP server can still be parsed.
 
 For example, this filter that would otherwise fail due to not being enclosed
-by a surrounding and/or (`&/|`) statement, can still be parsed by the filter parser:
+by a surrounding and/or (`&` / `|`) statement, can still be parsed by the filter parser:
 
 ```php
 // array: [
