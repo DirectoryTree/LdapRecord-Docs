@@ -131,11 +131,11 @@ TLS_REQCERT never
 
 The `ldap.conf` file will likely not exist by default. Create it inside the location for your OS:
 
-| OS      | Location                            |
-| ------- | ----------------------------------- |
-| Windows | `C:\OpenLDAP\sysconf\ldap.conf`     |
-| Linux   | `/etc/ldap/ldap.conf`               |
-| macOS   | `/usr/local/etc/openldap/ldap.conf` |
+| OS      | Location                                           |
+|---------|----------------------------------------------------|
+| Windows | `C:\OpenLDAP\sysconf\ldap.conf`                    |
+| Linux   | `/etc/ldap/ldap.conf` or `/etc/openldap/ldap.conf` |
+| macOS   | `/usr/local/etc/openldap/ldap.conf`                |
 
 The above directories may not exist - you will need to create them in such case.
 
