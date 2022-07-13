@@ -155,6 +155,8 @@ on the `WindowsAuthenticate` middleware inside of your `AuthServiceProvider`:
 ```php
 // app/Providers/AuthServiceProvider.php
 
+use LdapRecord\Laravel\Middleware\WindowsAuthenticate;
+
 /**
  * Register any authentication / authorization services.
  *
@@ -224,6 +226,7 @@ Register the closure into the middleware:
 
 ```php
 use LdapRecord\Models\Model;
+use LdapRecord\Laravel\Middleware\WindowsAuthenticate;
 
 WindowsAuthenticate::validateDomainUsing(function (Model $user, $username, $domain = null) {
     // Validate the user's domain.
@@ -270,6 +273,8 @@ the `WindowsAuthenticate` middleware inside of your `AuthServiceProvider`:
 ```php
 // app/Providers/AuthServiceProvider.php
 
+use LdapRecord\Laravel\Middleware\WindowsAuthenticate;
+
 /**
  * Register any authentication / authorization services.
  *
@@ -294,6 +299,8 @@ this feature, you must call the `rememberAuthenticatedUsers` method on the
 
 ```php
 // app/Providers/AuthServiceProvider.php
+
+use LdapRecord\Laravel\Middleware\WindowsAuthenticate;
 
 /**
  * Register any authentication / authorization services.
@@ -326,6 +333,8 @@ To do this, call the `WindowsAuthenticate::serverKey()` method in your `AuthServ
 
 ```php
 // app/Providers/AuthServiceProvider.php
+
+use LdapRecord\Laravel\Middleware\WindowsAuthenticate;
 
 /**
  * Register any authentication / authorization services.
@@ -386,6 +395,8 @@ middleware in your `AuthServiceProvider::boot()` method:
 
 ```php
 // app/Providers/AuthServiceProvider.php
+
+use LdapRecord\Laravel\Middleware\WindowsAuthenticate;
 
 /**
  * Register any authentication / authorization services.
