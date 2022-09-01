@@ -306,6 +306,40 @@ $user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
 $user->update(['pwdlastset' => 0]);
 ```
 
+## Checking User Enablement / Disablement
+
+> **Important**: This feature was added in v2.17.0.
+
+To determine if a user is enabled or disabled, you may use the `isEnabled()`
+or `isDisabled()` methods on an existing `User` model instance:
+
+```php
+$user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
+
+if ($user->isEnabled()) {
+    // The user is enabled...
+}
+
+if ($user->isDisabled()) {
+    // The user is disabled...
+}
+```
+
+To access the user's User Account Control to determine other
+flags they may have set, call the `accountControl()` method:
+
+```php
+use LdapRecord\Models\Attributes\AccountControl;
+
+$user = User::find('...');
+
+if ($user->accountControl()->has(AccountControl::LOCKOUT)) {
+    // The user account is locked...
+}
+```
+
+To learn more about User Account Control, read on below.
+
 ## User Account Control
 
 A users `userAccountControl` attribute stores an integer value.
