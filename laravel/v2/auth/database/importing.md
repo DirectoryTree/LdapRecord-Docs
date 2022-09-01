@@ -190,7 +190,7 @@ Would you like to display the user(s) to be imported / synchronized? (yes/no) [n
 
 ### Chunk
 
-> **Important**: This option is available as of `v2.5.0`.
+> **Important**: This option is available as of v2.5.0.
 
 The `--chunk` (or `-c`) option allows you to import users by chunk.
 

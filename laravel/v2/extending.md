@@ -7,7 +7,7 @@ description: Extending default classes and authentication functionality
 
 ## Introduction
 
-> **Important**: Extendability has been added in `v2.3.0`.
+> **Important**: Extendability has been added in v2.3.0.
 
 LdapRecord relies on Laravel's application container for making most of the
 instances that control all of the major features of LdapRecord. This
