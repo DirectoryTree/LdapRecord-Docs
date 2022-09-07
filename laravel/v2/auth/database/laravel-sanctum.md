@@ -7,6 +7,8 @@ description: Setting up LDAP authentication with Laravel Sanctum
 
 ## Introduction
 
+[Laravel Sanctum](https://laravel.com/docs/sanctum) provides a featherweight authentication system for SPAs and simple APIs.
+
 > **Important**: Before getting started, please complete the below guides:
 >
 > - [Installation Guide](/docs/laravel/v2/auth/database/installation)
