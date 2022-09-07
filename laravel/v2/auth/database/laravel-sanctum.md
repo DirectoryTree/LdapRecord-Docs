@@ -3,6 +3,10 @@ title: Using LdapRecord-Laravel with Laravel Sanctum
 description: Setting up LDAP authentication with Laravel Sanctum
 ---
 
+# Laravel Sanctum
+
+## Introduction
+
 > **Important**: Before getting started, please complete the below guides:
 >
 > - [Installation Guide](/docs/laravel/v2/auth/database/installation)
