@@ -156,19 +156,21 @@ Artisan::call('ldap:import', [
 
 When executing the `ldap:import` command, LdapRecord-Laravel will fire various events that you may register listeners on:
 
+> **Important**: Each event listed below has the parent namespace of `LdapRecord\Laravel\Events\`.
+
 | Event                                   | Fired                                                               | Occurrence                                                                                              |
 |-----------------------------------------|---------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
-| LdapRecord\Events\Import\Completed      | When an import has fully completed.                                 | Once per `ldap:import` execution.                                                                       |
-| LdapRecord\Events\Import\Deleted        | When an import has soft-deleted a user.                             | Each time a user is soft-deleted during an `ldap:import` execution.                                     |
-| LdapRecord\Events\Import\DeletedMissing | When an import has soft-deleted missing users.                      | Once per `ldap:import` execution.                                                                       |
-| LdapRecord\Events\Import\Imported       | When a user has been imported.                                      | Each time a user is imported via `ldap:import` execution, or authentication.                            |
-| LdapRecord\Events\Import\ImportFailed   | When an exception occurs during import or synchronization.          | Each time a user fails to be synchronized or imported via  `ldap:import`  execution, or authentication. |
-| LdapRecord\Events\Import\Importing      | When a non-existent user is being imported.                         | Each time a non-existent user is imported via `ldap:import` execution, or authentication.               |
-| LdapRecord\Events\Import\Restored       | When a previously soft-deleted user is being restored (un-deleted). | Each time a soft-deleted user is restored via an `ldap:import` execution.                               |
-| LdapRecord\Events\Import\Saved          | When a user has been saved after import or synchronization.         | Each time a user is saved via `ldap:import` execution, or authentication.                               |
-| LdapRecord\Events\Import\Started        | When an import has been started.                                    | Once per `ldap:import` execution.                                                                       |
-| LdapRecord\Events\Import\Synchronized   | When a user has been synchronized with any defined sync attributes. | Each time a user is synchronized via an `ldap:import` execution, or authentication.                     |
-| LdapRecord\Events\Import\Synchronizing  | When a user is beginning to be synchronized.                        | Each time a user is synchronizing via an  `ldap:import`  execution, or authentication.                  |
+| `Completed`      | When an import has fully completed.                                 | Once per `ldap:import` execution.                                                                       |
+| `Deleted`        | When an import has soft-deleted a user.                             | Each time a user is soft-deleted during an `ldap:import` execution.                                     |
+| `DeletedMissing` | When an import has soft-deleted missing users.                      | Once per `ldap:import` execution.                                                                       |
+| `Imported`       | When a user has been imported.                                      | Each time a user is imported via `ldap:import` execution, or authentication.                            |
+| `ImportFailed`   | When an exception occurs during import or synchronization.          | Each time a user fails to be synchronized or imported via  `ldap:import`  execution, or authentication. |
+| `Importing`      | When a non-existent user is being imported.                         | Each time a non-existent user is imported via `ldap:import` execution, or authentication.               |
+| `Restored`       | When a previously soft-deleted user is being restored (un-deleted). | Each time a soft-deleted user is restored via an `ldap:import` execution.                               |
+| `Saved`          | When a user has been saved after import or synchronization.         | Each time a user is saved via `ldap:import` execution, or authentication.                               |
+| `Started`        | When an import has been started.                                    | Once per `ldap:import` execution.                                                                       |
+| `Synchronized`   | When a user has been synchronized with any defined sync attributes. | Each time a user is synchronized via an `ldap:import` execution, or authentication.                     |
+| `Synchronizing`  | When a user is beginning to be synchronized.                        | Each time a user is synchronizing via an  `ldap:import`  execution, or authentication.                  |
 
 ## Command Arguments
 
