@@ -69,7 +69,11 @@ Route::post('sanctum/token', function (Request $request) {
     ];
 
     if (Auth::validate($credentials)) {
-        return ['token' => Auth::getLastAttempted()->createToken($request->device_name)->plainTextToken];
+        $user = Auth::getLastAttempted();
+
+        return [
+            'token' => $user->createToken($request->device_name)->plainTextToken
+        ];
     }
 
     throw ValidationException::withMessages([
