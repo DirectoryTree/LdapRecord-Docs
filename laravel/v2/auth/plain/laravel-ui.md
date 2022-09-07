@@ -9,7 +9,7 @@ description: Plain authentication with Laravel UI
 
 > **Important**: Before getting started, please complete the [configuration guide](/docs/laravel/v2/auth/plain/configuration).
 
-[Laravel UI](https://laravel.com/docs/9.x/authentication#authentication-quickstart) provides basic authentication scaffolding out-of-the-box.
+[Laravel UI](https://laravel.com/docs/authentication#authentication-quickstart) provides basic authentication scaffolding out-of-the-box.
 
 This guide will show you how to integrate LdapRecord-Laravel using this scaffolding.
 

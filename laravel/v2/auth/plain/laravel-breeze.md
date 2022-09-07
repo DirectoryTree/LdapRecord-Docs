@@ -9,7 +9,7 @@ description: Using LdapRecord-Laravel with Laravel Breeze
 
 > **Important**: Before getting started, please complete the [configuration guide](/docs/laravel/v2/auth/plain/configuration).
 
-[Laravel Breeze](https://laravel.com/docs/9.x/starter-kits#laravel-breeze) provides basic authentication scaffolding out-of-the-box.
+[Laravel Breeze](https://laravel.com/docs/starter-kits#laravel-breeze) provides basic authentication scaffolding out-of-the-box.
 
 This guide will show you how to integrate LdapRecord-Laravel using this scaffolding.
 

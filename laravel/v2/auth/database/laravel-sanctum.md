@@ -9,13 +9,16 @@ description: Setting up LDAP authentication with Laravel Sanctum
 
 [Laravel Sanctum](https://laravel.com/docs/sanctum) provides a featherweight authentication system for SPAs and simple APIs.
 
+Since LdapRecord-Laravel provides a database authentication driver, it integrates
+with Sanctum directly, similarly to the built in `eloquent` driver.
+
 > **Important**: Before getting started, please complete the below guides:
 >
 > - [Installation Guide](/docs/laravel/v2/auth/database/installation)
 > - [Configuration Guide](/docs/laravel/v2/auth/database/configuration)
 > - [Sanctum Installation Guide](https://laravel.com/docs/sanctum#installation)
 
-## Preparing Your User Eloquent Model
+## Preparing The User Eloquent Model
 
 If you've followed the above guides, your Eloquent user model should resemble the below:
 
@@ -36,12 +39,147 @@ class User extends Authenticatable implements LdapAuthenticatable
 }
 ```
 
-## Issuing API Tokens
+## SPA Authentication
+
+> **Important**:
+> 
+> Please read Laravel Sanctum's [SPA Authentication setup guide](https://laravel.com/docs/sanctum#spa-authentication) before proceeding.
+
+SPA Authentication means that you have a frontend-based application that will be calling
+your own application's protected `api` endpoints (via the `auth:sanctum` middleware).
+
+### Preparing The Authentication Guard
+
+Laravel Sanctum will utilize the `web` authentication guard specified in your `config/auth.php` file by default.
+
+Make sure this guard exists and is utilizing the `session` driver:
+
+```php
+// config/auth.php
+
+'guards' => [
+    'web' => [
+        'driver' => 'session',
+        'provider' => 'users',
+    ],
+    
+    // ...
+],
+```
+
+If you want to change the guard Sanctum uses, publish it's configuration file by running the below command:
+
+> **Important**: As mentioned above, this guard must use a `session` driver.
+
+```
+php artisan vendor:publish --tag="sanctum-config"
+```
+
+Then, update the `guard` configuration option:
+
+```php
+// config/sanctum.php
+
+'guard' => ['web'],
+```
+
+### Setting Up The Sanctum Middleware
+
+If you're going to be calling your `/api` endpoints from your application's frontend, you
+must insert the Sanctum middleware into your Laravel application's `api` middleware
+group for those requests to be automatically authenticated.
+
+This means that users who have logged into your frontend application will not need
+to provide a Sanctum token to call your protected `/api` endpoints. This
+middleware is responsible for booting up the session on your server
+when a request from your frontend is received:
+
+> **Important**:
+> 
+> The position of this middleware is crucial. The `throttle:api` middleware
+> will utilize a different throttle for authenticated users than guests.
+> 
+> Since the `EnsureFrontendRequestsAreStateful` is inserted before `throttle:api`,
+> the session will be started and an authenticated user will exist, allowing
+> the `throttle:api` to access them and bind a unique throttle to them.
+>
+> You may have to tweak this `throttle:api` middleware if your
+> application sends large amounts of API requests.
+
+```php
+// app/Http/Kernel.php
+
+protected $middlewareGroups = [
+    // ...
+
+    'api' => [
+        \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class, // <-- Inserted here.
+        'throttle:api',
+        \Illuminate\Routing\Middleware\SubstituteBindings::class,
+    ],
+],
+```
+
+How does Sanctum know that the request came from your frontend? Well, it does
+this by checking the domain that the request was sent from to see if it
+matches with your application server's URL, or one of the URL's
+configured inside of the `sanctum.php` configuration file:
+
+```php
+// config/sanctum.php
+
+'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
+    '%s%s',
+    'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1',
+    Sanctum::currentApplicationUrlWithPort()
+))),
+```
+
+> As you can see, various `localhost` domains are included, which is why we can test with Sanctum locally.
+
+
+
+### Logging In
+
+As mentioned in the Laravel Sanctum documentation, you must first initialize
+a CSRF cookie by requesting one from an endpoint Sanctum integrates
+into your application automatically `/sanctum/csrf-token`.
+
+Once a successful `204` (No content) response is received, you may send
+a login request to your application which will initialize the session
+by sending back a session cookie in the header.
+
+When this session cookie is received by your web browser, `axios` (and
+other HTTP JavaScript clients) should automatically send this cookie
+along with subsequent requests. Laravel Sanctum will read this cookie
+and authenticate the user for you, allowing the user to access
+protected routes.
+
+> **Important**: It's recommended to use [Laravel Fortify](https://laravel.com/docs/fortify) for 
+
+```js
+let credentials = {
+    email: 'john@local.com',
+    password: 'secret',
+};
+
+axios.get('/sanctum/csrf-cookie').then(response => {
+    axios.post('/login', credentials).then('...');
+});
+```
+
+## API Token Authentication
+
+> **Important**:
+> 
+> Please read Laravel Sanctum's [API Token Authentication setup guide](https://laravel.com/docs/sanctum#api-token-authentication) before proceeding.
+
+### Issuing API Tokens
 
 Now that your application is configured for [database authentication](https://ldaprecord.com/docs/laravel/v2/auth/database),
 we will need an API endpoint to start issuing new user API tokens.
 
-To do this, we will take Sanctum's [default suggested endpoint for issuing tokens](https://laravel.com/docs/9.x/sanctum#issuing-mobile-api-tokens), and then tweak it a little bit.
+To do this, we will take Sanctum's [default suggested endpoint for issuing tokens](https://laravel.com/docs/sanctum#issuing-mobile-api-tokens), and then tweak it a little bit.
 
 Open your `routes/api.php` file, and paste the below:
 
@@ -96,6 +234,8 @@ To test your Sanctum endpoint with [Tinkerwell](https://tinkerwell.app), serve y
 
 ```bash
 php artisan serve
+
+> Starting Laravel development server: http://127.0.0.1:8000
 ```
 
 Then, send a post request to `api/sanctum/token`:
