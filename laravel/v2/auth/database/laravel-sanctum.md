@@ -289,7 +289,7 @@ dd($response);
 ### PHPUnit Testing
 
 > **Important**: If you are using SQLite to test, remember to install
-> `doctrin/dbal` before getting started, as mentioned in the
+> `doctrine/dbal` before getting started, as mentioned in the
 > [test guide](https://ldaprecord.com/docs/laravel/v2/auth/testing/#getting-started):
 >
 > ```bash
