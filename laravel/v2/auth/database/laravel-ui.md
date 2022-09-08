@@ -12,7 +12,7 @@ description: Database authentication with Laravel UI
 > - [Installation Guide](/docs/laravel/v2/auth/database/installation)
 > - [Configuration Guide](/docs/laravel/v2/auth/database/configuration)
 
-[Laravel UI](https://laravel.com/docs/9.x/authentication#authentication-quickstart) provides basic authentication scaffolding out-of-the-box.
+[Laravel UI](https://laravel.com/docs/authentication#authentication-quickstart) provides basic authentication scaffolding out-of-the-box.
 
 This guide will show you how to integrate LdapRecord-Laravel using this scaffolding.
 
