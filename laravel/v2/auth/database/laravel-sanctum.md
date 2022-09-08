@@ -93,9 +93,9 @@ requests to be automatically authenticated.
 
 This means that users who have logged into your frontend application
 will not need to manually provide a Sanctum token to send requests
-to your protected `/api` endpoints. **This middleware is responsible
-for booting up the session on your server when a request
-from your frontend is received**:
+to your protected `/api` endpoints. This middleware is responsible
+for booting up the session during API requests that are received
+from your frontend:
 
 > **Important**:
 > 
