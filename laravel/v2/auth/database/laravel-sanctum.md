@@ -217,6 +217,9 @@ Route::post('sanctum/token', function (Request $request) {
         'device_name' => 'required',
     ]);
 
+    // Remember, an LDAP query will be executed on all the array
+    // elements in the credentials array (excluding "password").
+    // Here, we're locating a user via their "mail" attribute.
     $credentials = [
         'mail' => $request->email,
         'password' => $request->password,
