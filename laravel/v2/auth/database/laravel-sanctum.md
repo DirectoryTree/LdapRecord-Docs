@@ -147,7 +147,7 @@ configured inside of the `sanctum.php` configuration file:
 > 
 > It's recommended to use [Laravel Fortify](https://laravel.com/docs/fortify)
 > as a starting point for authenticating users. This guide assumes you
-> have setup authentication using one documented packages.
+> have setup authentication using one of the documented packages.
 
 As mentioned in the Laravel Sanctum documentation, you must first initialize
 a CSRF cookie by requesting one from an endpoint Sanctum integrates
