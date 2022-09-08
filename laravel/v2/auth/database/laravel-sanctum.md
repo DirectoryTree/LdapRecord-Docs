@@ -45,8 +45,9 @@ class User extends Authenticatable implements LdapAuthenticatable
 > 
 > Please read Laravel Sanctum's [SPA Authentication setup guide](https://laravel.com/docs/sanctum#spa-authentication) before proceeding.
 
-SPA Authentication means that you have a frontend-based application that will be calling
-your own application's protected `api` endpoints (via the `auth:sanctum` middleware).
+SPA Authentication means that you have a frontend-based application
+that will be sending requests to your own application's protected
+route endpoints (via the `auth:sanctum` middleware).
 
 ### Preparing The Authentication Guard
 
@@ -69,7 +70,7 @@ Make sure this guard exists and is utilizing the `session` driver:
 
 If you want to change the guard Sanctum uses, publish it's configuration file by running the below command:
 
-> **Important**: As mentioned above, this guard must use a `session` driver.
+> **Important**: As mentioned above, any custom guard must use a `session` driver for Sanctum to function.
 
 ```
 php artisan vendor:publish --tag="sanctum-config"
@@ -85,26 +86,29 @@ Then, update the `guard` configuration option:
 
 ### Setting Up The Sanctum Middleware
 
-If you're going to be calling your `/api` endpoints from your application's frontend, you
-must insert the Sanctum middleware into your Laravel application's `api` middleware
-group for those requests to be automatically authenticated.
+If you're going to be sending requests to your `/api` endpoints from
+your application's frontend, you must insert a Sanctum middleware
+into your Laravel application's `api` middleware group for those
+requests to be automatically authenticated.
 
-This means that users who have logged into your frontend application will not need
-to provide a Sanctum token to call your protected `/api` endpoints. This
-middleware is responsible for booting up the session on your server
-when a request from your frontend is received:
+This means that users who have logged into your frontend application
+will not need to manually provide a Sanctum token to send requests
+to your protected `/api` endpoints. **This middleware is responsible
+for booting up the session on your server when a request
+from your frontend is received**:
 
 > **Important**:
 > 
-> The position of this middleware is crucial. The `throttle:api` middleware
-> will utilize a different throttle for authenticated users than guests.
+> The position of this middleware is crucial. The `throttle:api`
+> middleware will utilize a different throttle cache key
+> for authenticated users than guests.
 > 
 > Since the `EnsureFrontendRequestsAreStateful` is inserted before `throttle:api`,
 > the session will be started and an authenticated user will exist, allowing
-> the `throttle:api` to access them and bind a unique throttle to them.
+> the `throttle:api` to access them and bind a unique throttle key to them.
 >
 > You may have to tweak this `throttle:api` middleware if your
-> application sends large amounts of API requests.
+> frontend application sends large amounts of API requests.
 
 ```php
 // app/Http/Kernel.php
@@ -137,25 +141,34 @@ configured inside of the `sanctum.php` configuration file:
 
 > As you can see, various `localhost` domains are included, which is why we can test with Sanctum locally.
 
-
-
 ### Logging In
+
+> **Important**:
+> 
+> It's recommended to use [Laravel Fortify](https://laravel.com/docs/fortify)
+> as a starting point for authenticating users.
+>
+> This guide assumes you have setup authentication using one documented packages.
 
 As mentioned in the Laravel Sanctum documentation, you must first initialize
 a CSRF cookie by requesting one from an endpoint Sanctum integrates
-into your application automatically `/sanctum/csrf-token`.
+into your application automatically (`/sanctum/csrf-token`). When
+you send a request to this endpoint, your application will send
+cookie headers back, containing the X-CSRF token.
 
-Once a successful `204` (No content) response is received, you may send
-a login request to your application which will initialize the session
-by sending back a session cookie in the header.
+Once a successful `204` (No content) response is received from the CSRF token
+endpoint resulting in a new CSRF cookie containing the token, you may send a
+login request to your application. This login request will initialize the
+session by sending back a new session cookie in the header
+(upon providing valid credentials).
 
 When this session cookie is received by your web browser, `axios` (and
 other HTTP JavaScript clients) should automatically send this cookie
-along with subsequent requests. Laravel Sanctum will read this cookie
-and authenticate the user for you, allowing the user to access
-protected routes.
+along with any subsequent requests. Laravel Sanctum will read this
+cookie that is sent along your request and authenticate the user
+for you, allowing the user to access protected routes.
 
-> **Important**: It's recommended to use [Laravel Fortify](https://laravel.com/docs/fortify) for 
+Here's how a login request via `axios` could be made:
 
 ```js
 let credentials = {
@@ -222,7 +235,8 @@ Route::post('sanctum/token', function (Request $request) {
 });
 ```
 
-This is all that is needed to generate new API tokens, and to start using those tokens to authenticate against your server with.
+This is all that is needed to generate new API tokens, and to start
+using those tokens to authenticate against your server with.
 
 Let's make sure these endpoints work with some tests.
 
@@ -273,14 +287,15 @@ dd($response);
 
 ### PHPUnit Testing
 
-> **Important**: If you are using SQLite to test, remember to install `doctrin/dbal` before getting started, as
-> mentioned in the [test guide](https://ldaprecord.com/docs/laravel/v2/auth/testing/#getting-started):
+> **Important**: If you are using SQLite to test, remember to install
+> `doctrin/dbal` before getting started, as mentioned in the
+> [test guide](https://ldaprecord.com/docs/laravel/v2/auth/testing/#getting-started):
 >
 > ```bash
 > composer require doctrine/dbal --dev
 > ```
 
-To begin, let's create a sanctum test to make sure both our API endpoints are working:
+To begin, let's create a Sanctum test to make sure both our API endpoints are working:
 
 ```bash
 php artisan make:test SanctumTokenTest
@@ -300,7 +315,7 @@ class SanctumTokenTest extends TestCase
 }
 ```
 
-We'll need to `use` the `DatabaseMigrations` trait to run our migrations:
+We'll need to `use` the `DatabaseMigrations` trait to run our application's migrations:
 
 ```php
 // ...
