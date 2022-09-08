@@ -410,7 +410,9 @@ class SanctumTokenTest extends TestCase
             'email' => $ldapUser->mail[0],
             'password' => 'secret',
             'device_name' => 'browser',
-        ])->assertJsonValidationErrors(['email' => 'The provided credentials are incorrect.']);
+        ])->assertJsonValidationErrors([
+            'email' => 'The provided credentials are incorrect.'
+        ]);
 
         // Ensure the user was not imported:
         $this->assertDatabaseMissing(User::class, [
