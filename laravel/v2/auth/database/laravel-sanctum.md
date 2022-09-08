@@ -359,7 +359,7 @@ class SanctumTokenTest extends TestCase
 
         // Remember to supply the "sync_attributes" you have assigned inside
         // of your config/auth.php. You will receive an exception if any
-        // non-nullable fields are not present on the LDAP user:
+        // non-nullable SQL fields are not present on the LDAP user:
         $ldapUser = LdapUser::create([
             'cn' => 'John Doe',
             'mail' => 'john@local.com',
