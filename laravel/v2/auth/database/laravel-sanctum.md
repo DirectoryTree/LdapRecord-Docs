@@ -186,12 +186,14 @@ axios.get('/sanctum/csrf-cookie').then(response => {
 > 
 > Please read Laravel Sanctum's [API Token Authentication setup guide](https://laravel.com/docs/sanctum#api-token-authentication) before proceeding.
 
+If your application is going to provide an API to end users or external
+services, you will need to implement API token authentication.
+
 ### Issuing API Tokens
 
-Now that your application is configured for [database authentication](https://ldaprecord.com/docs/laravel/v2/auth/database),
-we will need an API endpoint to start issuing new user API tokens.
-
-To do this, we will take Sanctum's [default suggested endpoint for issuing tokens](https://laravel.com/docs/sanctum#issuing-mobile-api-tokens), and then tweak it a little bit.
+To start issuing new user API tokens, we will take Sanctum's
+[default suggested endpoint for issuing tokens](https://laravel.com/docs/sanctum#issuing-mobile-api-tokens),
+and then tweak it a little bit.
 
 Open your `routes/api.php` file, and paste the below:
 
