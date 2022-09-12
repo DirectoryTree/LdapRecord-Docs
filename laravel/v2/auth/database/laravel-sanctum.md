@@ -259,6 +259,8 @@ php artisan serve
 Then, send a post request to `api/sanctum/token`:
 
 ```php
+use Illuminate\Support\Facades\Http;
+
 $data = [
   'email' => 'johndoe@local.com',
   'password' => 'secret',
