@@ -256,46 +256,17 @@ contained inside the `Accounting` OU will be allowed to authenticate.
 
 ## Using Only Manually Imported Users
 
-To allow only [manually imported LDAP users](/docs/laravel/v2/importing) who exist inside of your
-database to sign in to your application, you must create an [authentication rule](/docs/laravel/v2/auth/configuration#rules).
+To enforce only [manually imported LDAP users](/docs/laravel/v2/importing) who exist inside of your
+database to sign in to your application, you must use an [authentication rule](/docs/laravel/v2/auth/configuration#rules).
 
-Let's create this rule using the below artisan command:
+LdapRecord-Laravel includes this authentication rule out-of-the-box:
 
-```bash
-php artisan make:ldap-rule OnlyImportedUsers
+```
+LdapRecord\Laravel\Auth\Rules\OnlyImported
 ```
 
-> A new rule will be created inside `app/Ldap/Rules/OnlyImportedUsers.php`
-
-Inside this rule, we will simply return whether the users Eloquent model exists:
-
-```php
-<?php
-
-namespace App\Ldap\Rules;
-
-use LdapRecord\Laravel\Auth\Rule;
-
-class OnlyImportedUsers extends Rule
-{
-    /**
-     * Check if the rule passes validation.
-     *
-     * @return bool
-     */
-    public function isValid()
-    {
-        return $this->model->exists;
-    }
-}
-```
-
-> Remember, inside the generated `Rule`, the `$model` property is
-> the Eloquent database instance of the user, while the `$user`
-> property is the LdapRecord instance.
-
-Once you've completed modifying the rule, add it into your `config/auth.php`
-file where your LDAP user provider has been configured:
+To use this rule, insert it into the `rules` array into your authentication
+provider configuration inside of the `config/auth.php` file:
 
 ```php
 // config/auth.php
@@ -307,7 +278,7 @@ file where your LDAP user provider has been configured:
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
         'rules' => [
-            App\Ldap\Rules\OnlyImportedUsers::class, // <-- Added here.
+            LdapRecord\Laravel\Auth\Rules\OnlyImported::class, // <-- Added here.
         ],
     ],
 ],
