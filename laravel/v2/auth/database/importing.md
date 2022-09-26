@@ -34,14 +34,14 @@ to get a further understanding on what is possible with this option.
 The `sync_passwords` option you define inside of your `config/auth.php` file is used when
 importing and synchronizing users. However, there are some caveats you must be aware of:
 
--   **Passwords cannot be retrieved from users who are being imported from your LDAP server.**
-    <br/><br/>This would be a major security risk if this were possible. If a password is already
-    set for the user being imported, it will be left untouched. This is to retain a
-    possible synchronized password that was set upon login.<br/><br/>
--   **Passwords will always be set to a hashed 16 character string if not already present.**
-    <br/><br/>If the user being imported does not have a password, their password will be set to a
-    hashed 16 character random string using `Str::random`.<br/><br/>
--   **Passwords will not be set** if you have defined `false` for `password_column`.
+- **Passwords cannot be retrieved from users who are being imported from your LDAP server.**
+  <br/><br/>This would be a major security risk if this were possible. If a password is already
+  set for the user being imported, it will be left untouched. This is to retain a
+  possible synchronized password that was set upon login.<br/><br/>
+- **Passwords will always be set to a hashed 16 character string if not already present.**
+  <br/><br/>If the user being imported does not have a password, their password will be set to a
+  hashed 16 character random string using `Str::random`.<br/><br/>
+- **Passwords will not be set** if you have defined `false` for `password_column`.
 
 ## Running the command
 
@@ -66,7 +66,7 @@ In our application we have a configured authentication provider named `ldap`:
 We will then insert the providers name into our import command and execute it:
 
 ```bash
-php artisan ldap:import ldap
+php artisan ldap:import users
 ```
 
 You will then be asked after a successful search in your directory:
@@ -108,7 +108,7 @@ To run the import as a scheduled job, place the following in your `app/Console/K
 protected function schedule(Schedule $schedule)
 {
     // Import LDAP users hourly.
-    $schedule->command('ldap:import ldap', [
+    $schedule->command('ldap:import users', [
         '--no-interaction',
         '--restore',
         '--delete',
@@ -119,10 +119,10 @@ protected function schedule(Schedule $schedule)
 
 The above scheduled import command will:
 
--   Run without interaction and import new users as well as synchronize already imported users
--   Restore user models who have been re-activated in your LDAP directory (if you're using [Eloquent Soft Deletes](https://laravel.com/docs/eloquent#soft-deleting))
--   Soft-Delete user models who have been deactived in your LDAP directory (if you're using [Eloquent Soft Deletes](https://laravel.com/docs/eloquent#soft-deleting))
--   Only import objects that have an `objectclass` containing `user`
+- Run without interaction and import new users as well as synchronize already imported users
+- Restore user models who have been re-activated in your LDAP directory (if you're using [Eloquent Soft Deletes](https://laravel.com/docs/eloquent#soft-deleting))
+- Soft-Delete user models who have been deactived in your LDAP directory (if you're using [Eloquent Soft Deletes](https://laravel.com/docs/eloquent#soft-deleting))
+- Only import objects that have an `objectclass` containing `user`
 
 > It's recommended to use [model query scopes](/docs/core/v2/models#query-scopes) instead of the `--filter`
 > option on your configured authentication LdapRecord model so LDAP users signing into your
@@ -148,6 +148,7 @@ Artisan::call('ldap:import', [
     '--delete' => true,
     '--delete-missing' => true,
     '--filter' => '(cn=John Doe)',
+    '--scopes' => 'App\Ldap\Scopes\OnlyAdmins',
     '--attributes' => 'cn,mail,samaccountname',
 ]);
 ```
@@ -158,19 +159,19 @@ When executing the `ldap:import` command, LdapRecord-Laravel will fire various e
 
 > **Important**: Each event listed below has the parent namespace of `LdapRecord\Laravel\Events\`.
 
-| Event                                   | Fired                                                               | Occurrence                                                                                              |
-|-----------------------------------------|---------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
-| `Completed`      | When an import has fully completed.                                 | Once per `ldap:import` execution.                                                                       |
-| `Deleted`        | When an import has soft-deleted a user.                             | Each time a user is soft-deleted during an `ldap:import` execution.                                     |
-| `DeletedMissing` | When an import has soft-deleted missing users.                      | Once per `ldap:import` execution.                                                                       |
-| `Imported`       | When a user has been imported.                                      | Each time a user is imported via `ldap:import` execution, or authentication.                            |
-| `ImportFailed`   | When an exception occurs during import or synchronization.          | Each time a user fails to be synchronized or imported via  `ldap:import`  execution, or authentication. |
-| `Importing`      | When a non-existent user is being imported.                         | Each time a non-existent user is imported via `ldap:import` execution, or authentication.               |
-| `Restored`       | When a previously soft-deleted user is being restored (un-deleted). | Each time a soft-deleted user is restored via an `ldap:import` execution.                               |
-| `Saved`          | When a user has been saved after import or synchronization.         | Each time a user is saved via `ldap:import` execution, or authentication.                               |
-| `Started`        | When an import has been started.                                    | Once per `ldap:import` execution.                                                                       |
-| `Synchronized`   | When a user has been synchronized with any defined sync attributes. | Each time a user is synchronized via an `ldap:import` execution, or authentication.                     |
-| `Synchronizing`  | When a user is beginning to be synchronized.                        | Each time a user is synchronizing via an  `ldap:import`  execution, or authentication.                  |
+| Event            | Fired                                                               | Occurrence                                                                                            |
+| ---------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `Completed`      | When an import has fully completed.                                 | Once per `ldap:import` execution.                                                                     |
+| `Deleted`        | When an import has soft-deleted a user.                             | Each time a user is soft-deleted during an `ldap:import` execution.                                   |
+| `DeletedMissing` | When an import has soft-deleted missing users.                      | Once per `ldap:import` execution.                                                                     |
+| `Imported`       | When a user has been imported.                                      | Each time a user is imported via `ldap:import` execution, or authentication.                          |
+| `ImportFailed`   | When an exception occurs during import or synchronization.          | Each time a user fails to be synchronized or imported via `ldap:import` execution, or authentication. |
+| `Importing`      | When a non-existent user is being imported.                         | Each time a non-existent user is imported via `ldap:import` execution, or authentication.             |
+| `Restored`       | When a previously soft-deleted user is being restored (un-deleted). | Each time a soft-deleted user is restored via an `ldap:import` execution.                             |
+| `Saved`          | When a user has been saved after import or synchronization.         | Each time a user is saved via `ldap:import` execution, or authentication.                             |
+| `Started`        | When an import has been started.                                    | Once per `ldap:import` execution.                                                                     |
+| `Synchronized`   | When a user has been synchronized with any defined sync attributes. | Each time a user is synchronized via an `ldap:import` execution, or authentication.                   |
+| `Synchronizing`  | When a user is beginning to be synchronized.                        | Each time a user is synchronizing via an `ldap:import` execution, or authentication.                  |
 
 ## Command Arguments
 
@@ -198,7 +199,7 @@ This argument is completely optional.
 > (if configured & enabled on your Eloquent model).
 
 ```text
-php artisan ldap:import ldap jdoe@email.com
+php artisan ldap:import users jdoe@email.com
 
 Found user 'John Doe'.
 
@@ -219,7 +220,7 @@ The option takes a number that indicates how many users per-chunk you would like
 Use this option if you are running out of memory during large imports.
 
 ```text
-php artisan ldap:import ldap --chunk 500
+php artisan ldap:import users --chunk 500
 ```
 
 ### Filter
@@ -230,7 +231,7 @@ The `--filter` (or `-f`) option allows you to apply a raw filter to further narr
 > you **must** escape the value with a backslash (`\`) before passing it into the search string. More on this below.
 
 ```text
-php artisan ldap:import ldap --filter "(cn=John Doe)"
+php artisan ldap:import users --filter "(cn=John Doe)"
 ```
 
 #### Escaping
@@ -240,10 +241,36 @@ In some cases, you may need to pass commas or other escape level characters into
 To do so, add a backslash (`\`) **before** the character to escape it properly:
 
 ```text
-php artisan ldap:import ldap --filter "(cn=Doe\, John)"
+php artisan ldap:import users --filter "(cn=Doe\, John)"
 ```
 
 If this is not done, you will receive a `Bad search filter` exception during import.
+
+### Scopes
+
+> **Important**: This feature is available as of v2.7.0.
+
+The `--scopes` (or `-s`) option allows you to specify model query scopes
+that will apply to the underlying LdapRecord query builder instance
+when searching for users to import with your configured model.
+
+This allows you to not have to extend the built-in models to apply global
+scopes, as well as having scopes that only apply during import.
+
+> **Note**: Since these scopes only apply during import, you may want to configure the
+> [OnlyImported](/docs/laravel/v2/auth/restricting-login/#using-only-manually-imported-users)
+> authentication rule so that only users who have been imported successfully
+> with your configured scopes, can log into your application.
+
+```text
+php artisan ldap:import users --scopes "App\Ldap\Scopes\OnlyAdministrators"
+```
+
+You may also provide several scopes, via comma separation:
+
+```text
+php artisan ldap:import users --scopes "App\Ldap\Scopes\OnlyUsers,App\Ldap\Scopes\ExcludeComputerObjects"
+```
 
 ### Attributes
 
@@ -256,7 +283,7 @@ This option is great for reducing memory usage for large imports, since all attr
 > [authentication provider](/docs/laravel/v2/auth/configuration/#database-sync-attributes).
 
 ```text
-php artisan ldap:import ldap --attributes "cn,mail,sn,givenname,samaccountname"
+php artisan ldap:import users --attributes "cn,mail,sn,givenname,samaccountname"
 ```
 
 ### Delete
@@ -267,7 +294,7 @@ The `--delete` (or `-d`) option allows you to soft-delete deactivated LDAP users
 will be deleted if your `User` Eloquent model does not have soft-deletes enabled.
 
 ```text
-php artisan ldap:import ldap --delete
+php artisan ldap:import users --delete
 ```
 
 ### Delete Missing
@@ -345,7 +372,7 @@ class UsersDeletedFromImport
 The `--restore` (or `-r`) option allows you to restore soft-deleted re-activated LDAP users.
 
 ```text
-php artisan ldap:import ldap --restore
+php artisan ldap:import users --restore
 ```
 
 > Typically, the `--restore` and `--delete` options would be used together to
@@ -356,7 +383,7 @@ php artisan ldap:import ldap --restore
 The `--no-log` option allows you to disable logging during the command.
 
 ```text
-php artisan ldap:import ldap --no-log
+php artisan ldap:import users --no-log
 ```
 
 By default this is enabled, regardless if `logging` is disabled in your `config/ldap.php` file.
@@ -366,7 +393,7 @@ By default this is enabled, regardless if `logging` is disabled in your `config/
 To run the import command via a schedule, use the `--no-interaction` flag:
 
 ```text
-php artisan ldap:import ldap --no-interaction
+php artisan ldap:import users --no-interaction
 ```
 
 Users will be imported automatically with no prompts.
@@ -375,11 +402,11 @@ You can also call the command from the Laravel Scheduler, or other commands:
 
 ```php
 // Importing one user
-$schedule->command('ldap:import ldap sbauman', ['--no-interaction'])
+$schedule->command('ldap:import users sbauman', ['--no-interaction'])
             ->everyMinute();
 
 // Importing all users
-$schedule->command('ldap:import ldap', ['--no-interaction'])
+$schedule->command('ldap:import users', ['--no-interaction'])
             ->everyMinute();
 
 // Importing users with a filter
@@ -387,24 +414,24 @@ $dn = 'CN=Accounting,OU=SecurityGroups,DC=local,DC=com';
 
 $filter = sprintf('(memberof:1.2.840.113556.1.4.1941:=%s)', $dn);
 
-$schedule->command('ldap:import ldap', ['--no-interaction', '--filter' => $filter])
+$schedule->command('ldap:import users', ['--no-interaction', '--filter' => $filter])
     ->everyMinute();
 ```
 
 ### Additional Tips
 
--   Users who already exist inside your database will be updated with your configured providers `sync_attributes`.
--   Users **will never be force deleted** from the import command. You will need to delete users manually
-    through your Eloquent model
--   If you have a password mutator (setter) on your `User` Eloquent model, it will not override it.
-    This allows you to hash the random 16 character passwords in your own way.
--   Imported (new) users will be reported in your log files:
+- Users who already exist inside your database will be updated with your configured providers `sync_attributes`.
+- Users **will never be force deleted** from the import command. You will need to delete users manually
+  through your Eloquent model
+- If you have a password mutator (setter) on your `User` Eloquent model, it will not override it.
+  This allows you to hash the random 16 character passwords in your own way.
+- Imported (new) users will be reported in your log files:
 
 ```text
 [2020-01-29 14:51:51] local.INFO: Imported user johndoe
 ```
 
--   Users that fail to be imported are also reported in your log files, alongside the message of the exception that caused the failure:
+- Users that fail to be imported are also reported in your log files, alongside the message of the exception that caused the failure:
 
 ```text
 [2020-01-29 14:51:51] local.ERROR: Unable to import user janedoe. SQLSTATE[23000]: Integrity constraint violation: 1048
