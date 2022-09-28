@@ -30,7 +30,7 @@ To configure LdapRecord-Laravel authentication without credentails your LDAP ser
 
 To bind anonymously to your LDAP server, set your `username` and `password` to `null` inside of your configuration.
 
-> > **Important**: A base DN must still be configured for searches to return results.
+> **Important**: A base DN must still be configured for searches to return results.
 
 If anonymous binding is disabled, you must configure a `username` and `password` to connect to your LDAP server.
 
