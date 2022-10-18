@@ -75,7 +75,7 @@ and paste the following `ldap` provider:
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
         'rules' => [],
         'database' => [
-            'model' => App\User::class,
+            'model' => App\Models\User::class,
             'sync_passwords' => false,
             'sync_attributes' => [
                 'name' => 'cn',
