@@ -169,46 +169,46 @@ to your configured LDAP server. Here is a list of all events that are fired:
     </thead>
     <tbody>
         <tr>
-            <td markdown="1">`LdapRecord\Auth\Events\Attempting`</td>
+            <td markdown="1"><code>LdapRecord\Auth\Events\Attempting</code></td>
             <td>
                 When any authentication attempt is called via:
-                <ul><li markdown="1">`$connection->auth()->attempt()`</li></ul>
+                <ul><li markdown="1"><code>$connection->auth()->attempt()</code></li></ul>
             </td>
         </tr>
         <tr>
-            <td markdown="1">`LdapRecord\Auth\Events\Passed`</td>
+            <td markdown="1"><code>LdapRecord\Auth\Events\Passed</code></td>
             <td>
                 When any authentication attempts pass via:
-                <ul><li markdown="1">`$connection->auth()->attempt()`</li></ul>
+                <ul><li markdown="1"><code>$connection->auth()->attempt()</code></li></ul>
             </td>
         </tr>
         <tr>
-            <td markdown="1">`LdapRecord\Auth\Events\Failed` </td>
+            <td markdown="1"><code>LdapRecord\Auth\Events\Failed</code></td>
             <td>
                 When any authentication attempts fail via:
                 <ul>
-                    <li markdown="1">`$connection->auth()->attempt()`</li>
-                    <li markdown="1">`$connection->auth()->bind()`</li>
+                    <li markdown="1"><code>$connection->auth()->attempt()</code></li>
+                    <li markdown="1"><code>$connection->auth()->bind()</code></li>
                 </ul>
             </td>
         </tr>
         <tr>
-            <td markdown="1">`LdapRecord\Auth\Events\Binding` </td>
+            <td markdown="1"><code>LdapRecord\Auth\Events\Binding</code></td>
             <td>
                 When any LDAP bind attempts occur via:
                 <ul>
-                    <li markdown="1">`$connection->auth()->attempt()`</li>
-                    <li markdown="1">`$connection->auth()->bind()`</li>
+                    <li markdown="1"><code>$connection->auth()->attempt()</code></li>
+                    <li markdown="1"><code>$connection->auth()->bind()</code></li>
                 </ul>
             </td>
         </tr>
         <tr>
-            <td markdown="1">`LdapRecord\Auth\Events\Bound` </td>
+            <td markdown="1"><code>LdapRecord\Auth\Events\Bound</code></td>
             <td>
                 When any LDAP bind attempts are successful via:
                 <ul>
-                    <li markdown="1">`$connection->auth()->attempt()`</li>
-                    <li markdown="1">`$connection->auth()->bind()`</li>
+                    <li markdown="1"><code>$connection->auth()->attempt()</code></li>
+                    <li markdown="1"><code>$connection->auth()->bind()</code></li>
                 </ul>
             </td>
         </tr>
@@ -230,78 +230,78 @@ Here is a list of all events that are fired:
     </thead>
     <tbody>
         <tr>
-            <td markdown="1">`LdapRecord\Models\Events\Saving`</td>
+            <td markdown="1"><code>LdapRecord\Models\Events\Saving</code></td>
             <td>
                 When a model is in the process of being saved via:
                 <ul>
-                    <li markdown="1">`$model->save()`</li>
+                    <li markdown="1"><code>$model->save()</code></li>
                 </ul>
             </td>
         </tr>
         <tr>
-            <td markdown="1">`LdapRecord\Models\Events\Saved`</td>
+            <td markdown="1"><code>LdapRecord\Models\Events\Saved</code></td>
             <td>
                 When a model has been successfully saved via:
                 <ul>
-                    <li markdown="1">`$model->save()`</li>
+                    <li markdown="1"><code>$model->save()</code></li>
                 </ul>
             </td>
         </tr>
         <tr>
-            <td markdown="1">`LdapRecord\Models\Events\Creating`</td>
+            <td markdown="1"><code>LdapRecord\Models\Events\Creating</code></td>
             <td>
                 When a model is being created via:
                 <ul>
-                    <li markdown="1">`$model->save()`</li>
-                    <li markdown="1">`$model->create()`</li>
+                    <li markdown="1"><code>$model->save()</code></li>
+                    <li markdown="1"><code>$model->create()</code></li>
                 </ul>
             </td>
         </tr>
         <tr>
-            <td markdown="1">`LdapRecord\Models\Events\Created`</td>
+            <td markdown="1"><code>LdapRecord\Models\Events\Created</code></td>
             <td>
                 When a model has been successfully created via:
                 <ul>
-                    <li markdown="1">`$model->save()`</li>
-                    <li markdown="1">`$model->create()`</li>
+                    <li markdown="1"><code>$model->save()</code></li>
+                    <li markdown="1"><code>$model->create()</code></li>
                 </ul>
             </td>
         </tr>
         <tr>
-            <td markdown="1">`LdapRecord\Models\Events\Updating`</td>
+            <td markdown="1"><code>LdapRecord\Models\Events\Updating</code></td>
             <td>
                 When a model is being updated via:
                 <ul>
-                    <li markdown="1">`$model->save()`</li>
-                    <li markdown="1">`$model->update()`</li>
+                    <li markdown="1"><code>$model->save()</code></li>
+                    <li markdown="1"><code>$model->update()</code></li>
                 </ul>
             </td>
         </tr>
         <tr>
-            <td markdown="1">`LdapRecord\Models\Events\Updated`</td>
+            <td markdown="1"><code>LdapRecord\Models\Events\Updated</code></td>
             <td>
                 When a model has been successfully updated via:
                 <ul>
-                    <li markdown="1">`$model->save()`</li>
-                    <li markdown="1">`$model->update()`</li>
+                    <li markdown="1"><code>$model->save()</code></li>
+                    <li markdown="1"><code>$model->update()</code></li>
                 </ul>
             </td>
         </tr>
         <tr>
-            <td markdown="1">`LdapRecord\Models\Events\Deleting`</td>
+            <td markdown="1"><code>LdapRecord\Models\Events\Deleting</code></td>
             <td>
                 When a model is being deleted via:
                 <ul>
-                    <li markdown="1">`$model->delete()`</li>
+                    <li markdown="1"><code>$model->delete()</code></li>
                 </ul>
             </td>
         </tr>
         <tr>
-            <td markdown="1">`LdapRecord\Models\Events\Deleted`</td>
+            <td markdown="1"><code>LdapRecord\Models\Events\Deleted</code></td>
             <td>
                 When a model has been successfully deleted via:
                 <ul>
-                    <li markdown="1">`$model->delete()`</li>
+                    <li markdown="1"><code>$model->delete()</code></li>
                 </ul>
             </td>
         </tr>
