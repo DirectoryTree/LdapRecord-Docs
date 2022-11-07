@@ -226,6 +226,29 @@ $user = User::select(['cn', 'sn'])->find('cn=John Doe,dc=local,dc=com');
 $groups = $user->groups()->get();
 ```
 
+## Returning Only Matching Models
+
+> **Important**: This feature was added in v2.19.0.
+
+When querying relationships on your LdapRecord models, you may receive
+plain `LdapRecord\Models\Entry` instances if none of the models you
+have provided in the relationship definition match the result's
+object classes.
+
+For example, an LDAP group may contain users, as well as other groups. To
+explicitly return only users, you may call the method `onlyRelated()` to
+filter the underlying query to match only `User` instances:
+
+```php
+class Group extends Model
+{
+    public function users()
+    {
+        return $this->hasMany(User::class, 'memberof')->onlyRelated();
+    }
+}
+```
+
 ## Querying Relationships
 
 LdapRecord relationships also serve as [query builders](/docs/core/v2/searching).
