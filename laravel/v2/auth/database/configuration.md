@@ -24,7 +24,7 @@ the following `users` provider:
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
         'rules' => [],
         'database' => [
-            'model' => App\User::class,
+            'model' => App\Models\User::class,
             'sync_passwords' => false,
             'sync_attributes' => [
                 'name' => 'cn',
@@ -415,7 +415,7 @@ Below is a synchronized database provider that is configured with all available 
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
         'rules' => [],
         'database' => [
-            'model' => App\User::class,
+            'model' => App\Models\User::class,
             'sync_passwords' => true,
             'sync_attributes' => [
                 'name' => 'cn',
