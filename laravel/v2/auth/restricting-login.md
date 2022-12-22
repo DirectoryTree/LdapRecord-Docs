@@ -192,9 +192,9 @@ class OnlyAccountingUsers implements Scope
      *
      * @return void
      */
-    public function apply(Builder $query, Model $model)
+    public function apply(Builder $builder, Model $model)
     {
-        $query->in('ou=Accounting,ou=Users,dc=local,dc=com');
+        $builder->in('ou=Accounting,ou=Users,dc=local,dc=com');
 
         // You can also make this "environment aware" if needed:
         // $query->in(env('LDAP_USER_SCOPE'));
