@@ -209,6 +209,7 @@ can add the global scope to the model inside your `AuthServiceProvider::boot()` 
 
 ```php
 // app/Providers/AuthServiceProvider.php
+use App\Ldap\Scopes\OnlyAccountingUsers;
 
 /**
  * Register any authentication / authorization services.
