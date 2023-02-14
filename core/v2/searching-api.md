@@ -1325,7 +1325,7 @@ $query->whereHas('department')->getUnescapedQuery();
 
 #### `whereIn`
 
-Add a "where in" clause to the query, searching for objects where the attribute does not contain any of the one given values:
+Add a "where in" clause to the query, searching for objects where the attribute contains any of the given values:
 
 ```php
 $query = $connection->query();
