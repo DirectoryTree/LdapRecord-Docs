@@ -128,6 +128,22 @@ $connection->query()->chunk(1000, function ($objects) {
 });
 ```
 
+If you need to execute sub-queries inside of your chunk callback and 
+you're working with an LDAP server that does not support it, you may 
+pass in a fourth argument (or via the parameters name `isolate`) to 
+run the chunk operation on it's own connection instance:
+
+> **Important**: This feature was added in v2.20.0.
+
+```php
+$connection->query()->chunk(1000, function ($objects) {
+    // Model::where('...')->get();
+}, isolate: true);
+``` 
+
+Once the chunk finishes (or an exception occurs), the 
+dynamically created connection will be auto-closed.
+
 #### `clearFilters`
 
 Reset / clear all filters that have been added to the query:
@@ -194,6 +210,21 @@ $connection->query()->each(function ($object) {
     // ...
 }, $chunk = 500);
 ```
+
+Similarly with `chunk`, you may pass in a fourth argument 
+(or via its named parameter `isolate`), to run the chunk 
+operation on it's own connection instance:
+
+> **Important**: This feature was added in v2.20.0.
+
+```php
+$connection->query()->each(function ($object) {
+    // Model::where('...')->get();
+}, isolate: true);
+```
+
+Once the underlying chunk finishes (or an exception occurs), 
+the dynamically created connection will be auto-closed.
 
 #### `escape`
 
