@@ -238,7 +238,7 @@ describe which database column should be set and to which LDAP property:
 
 > You do not need to add your users `guid` or `domain` database columns. These are done automatically for you.
 
-For further control on sync attributes, see the below [attribute handler](#database-attribute-handlers) feature.
+For further control on sync attributes, see the below [attribute handler](#attribute-handlers) feature.
 
 ## Sync Existing Records
 
