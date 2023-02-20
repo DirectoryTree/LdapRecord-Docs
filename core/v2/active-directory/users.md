@@ -580,6 +580,30 @@ $uac = new AccountControl(512);
 $uac->getAppliedFlags();
 ```
 
+## User Account Expiry
+
+A users `accountExpires` attribute stores a date (in [Windows Integer Time](/docs/core/v2/model-mutators/#windows-integer-type)) indicating when the account will no longer valid.
+
+This attribute is already added as a [`windows-int` date cast](/docs/core/v2/model-mutators#date-mutators) inside of the included `ActiveDirectory\User` model.
+
+To determine a user's account expiry, you will have to handle various cases depending on its value returned from the Active Directory server:
+
+```php
+use LdapRecord\Models\Attributes\Timestamp;
+
+$user = User::find('cn=jdoe,dc=local,dc=com');
+
+if ($user->accountExpires === false) {
+    // The user account has no account expiry.
+} else if (in_array($user->accountExpires, [0, Timestamp::WINDOWS_INT_MAX], $strict = true) {
+    // The user account never expires.
+} else if ($user->accountExpires->isPast())) {
+    // The user account is expired.
+} else {
+    // The user account is not expired.
+}
+```
+
 ## Group Management
 
 If you are utilizing the included `LdapRecord\Models\ActiveDirectory\User` model, the
