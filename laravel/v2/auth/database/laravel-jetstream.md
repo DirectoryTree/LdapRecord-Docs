@@ -487,6 +487,8 @@ Inside of the event listener, attach the users team as you would during
 a normal users registration through the registration interface:
 
 ```php
+use App\Models\Team;
+
 class AssignTeam
 {
     /**
