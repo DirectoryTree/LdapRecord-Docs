@@ -487,7 +487,10 @@ Inside of the event listener, attach the users team as you would during
 a normal users registration through the registration interface:
 
 ```php
+namespace App\Listeners;
+
 use App\Models\Team;
+use LdapRecord\Laravel\Events\Import\Imported;
 
 class AssignTeam
 {

@@ -14,8 +14,8 @@ Models allow you query your directory as well as create, update, and delete obje
 
 Before getting started, ensure you've added at least one connection to the [container](/docs/core/v2/connections#container).
 
-By default, there are models included with LdapRecord for popular LDAP directories (namely Active Directory &
-OpenLDAP) so you can get up and running as fast as possible. More on this [below](#predefined-models).
+By default, there are models included with LdapRecord for popular LDAP directories 
+so you can get up and running as fast as possible. More on this [below](#predefined-models).
 
 ### Defining Models
 
