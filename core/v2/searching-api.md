@@ -301,6 +301,38 @@ try {
 }
 ```
 
+#### `findByAnr`
+
+Find the first matching entry by [ambiguous naming resolution](https://social.technet.microsoft.com/wiki/contents/articles/22653.active-directory-ambiguous-name-resolution.aspx):
+
+> **Important**: If your LDAP server does not support ANR, an equivalent filter will be generated automatically.
+
+```php
+$query = $connection->query();
+
+if ($entry = $query->findByAnr('John Doe')) {
+    // Found entry!
+} else {
+    // Not found.
+}
+```
+
+#### `findByAnrOrFail`
+
+Find the first matching entry by [ambiguous naming resolution](https://social.technet.microsoft.com/wiki/contents/articles/22653.active-directory-ambiguous-name-resolution.aspx) **or fail**:
+
+> **Important**: If your LDAP server does not support ANR, an equivalent filter will be generated automatically.
+
+```php
+$query = $connection->query();
+
+try {
+    $entry = $query->findByAnrOrFail('John Doe');
+} catch (\LdapRecord\Models\ModelNotFoundException $ex) {
+    // Not found.
+}
+```
+
 #### `findMany`
 
 Find many entries in the directory by an array of Distinguished Names:
