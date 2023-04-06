@@ -5,6 +5,10 @@ description: A list of all available LdapRecord model query builder methods.
 
 # Available Model Query Methods (API)
 
+> **Important**: The model query builder extends the base query builder. 
+> 
+> All of [its methods](/docs/core/v2/searching-api) are available on model queries.
+
 ## Method Listing
 
 #### `appliedScopes`
