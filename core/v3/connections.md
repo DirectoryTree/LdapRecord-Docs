@@ -183,10 +183,10 @@ $connection = Container::getDefaultConnection();
 
 ### Checking Connection Existence
 
-To check if a connection exists, call the `exists()` method on the container instance:
+To check if a connection exists, call the `hasConnection()` method:
 
 ```php
-if (Container::getInstance()->exists('domain-b')) {
+if (Container::hasConnection('domain-b')) {
     // The 'domain-b' connection exists!
 }
 ```

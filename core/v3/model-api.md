@@ -322,7 +322,7 @@ Get the connection name from the model:
 ```php
 class Entry extends Model
 {
-    protected $connection = 'domain-b';
+    protected ?string $connection = 'domain-b';
 }
 
 // Returns 'domain-b'
@@ -593,7 +593,7 @@ Determine if the model has a 'get' mutator for the given attribute:
 ```php
 class Entry extends Model
 {
-    public function getCnAttribute($values)
+    public function getCnAttribute(array $values): mixed
     {
         // ...
     }
@@ -612,7 +612,7 @@ Determine if the model has a 'set' mutator for the given attribute:
 ```php
 class Entry extends Model
 {
-    public function setCnAttribute($values)
+    public function setCnAttribute($value): void
     {
         // ...
     }
@@ -681,7 +681,7 @@ Determine if given attribute is a date attribute on the model:
 ```php
 class Entry extends Model
 {
-    protected $dates = ['whenchanged' => 'windows'];
+    protected array $dates = ['whenchanged' => 'windows'];
 }
 
 $model = new Entry();
@@ -737,7 +737,7 @@ Make the given, typically visible, attributes hidden on the model:
 ```php
 class Entry extends Model
 {
-    protected $visible = ['cn'];
+    protected array $visible = ['cn'];
 }
 
 // This will override the above:
@@ -751,7 +751,7 @@ Make the given, typically hidden, attributes visible on the model:
 ```php
 class Entry extends Model
 {
-    protected $hidden = ['cn'];
+    protected array $hidden = ['cn'];
 }
 
 // This will override the above:

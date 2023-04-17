@@ -44,14 +44,10 @@ class User extends Model
 
     /**
      * Apply the scope to the query.
-     *
-     * @param Builder $builder
-     *
-     * @return Builder
      */
-    public function scopeLockedOut(Builder $query)
+    public function scopeLockedOut(Builder $query): void
     {
-        return $query->where('lockouttime', '>', 1);
+        $query->where('lockouttime', '>', 1);
     }
 }
 ```
@@ -71,14 +67,14 @@ Let's add another scope to our example model that will only return users of a pa
 ```php
 // User.php
 
-public function scopeLockedOut(Builder $query)
+public function scopeLockedOut(Builder $query): void
 {
-    return $query->where('lockouttime', '>', 1);
+    $query->where('lockouttime', '>', 1);
 }
 
-public function scopeCompany(Builder $query, $companyName)
+public function scopeCompany(Builder $query, $companyName): void
 {
-    return $query->where('company', '=', $companyName);
+    $query->where('company', '=', $companyName);
 }
 ```
 
@@ -120,11 +116,8 @@ class CompanyScope implements Scope
 {
     /**
      * Apply the scope to the query.
-     *
-     * @param Builder $builder
-     * @param Model   $model
      */
-    public function apply(Builder $builder, Model $model)
+    public function apply(Builder $builder, Model $model): void
     {
         $builder->where('company', '=', 'Acme Company');
     }
@@ -153,10 +146,8 @@ class User extends Model
 {
     /**
      * The "booting" method of the model.
-     *
-     * @return void
      */
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
@@ -196,10 +187,8 @@ class User extends Model
 {
     /**
      * The "booting" method of the model.
-     *
-     * @return void
      */
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 

@@ -30,7 +30,7 @@ use LdapRecord\Models\Model;
 
 class User extends Model
 {
-    public function getThumbnailphotoAttribute($value)
+    public function getThumbnailphotoAttribute(array $value): string
     {
         // Due to LDAP's multi-valued nature, all values will be
         // contained inside of an array. We will attempt to
@@ -72,7 +72,7 @@ use LdapRecord\Models\Model;
 
 class User extends Model
 {
-    public function getAppleUserHomeurlAttribute($value)
+    public function getAppleUserHomeurlAttribute(array $value): mixed
     {
         // Do something with its value.
         return $value;
@@ -102,7 +102,7 @@ use LdapRecord\Models\Model;
 
 class User extends Model
 {
-    public function setUnicodepwdAttribute($password)
+    public function setUnicodepwdAttribute(string $password): void
     {
         $this->attributes['unicodepwd'] = [Utilities::encodePassword($password)];
     }
@@ -150,7 +150,7 @@ use LdapRecord\Models\Model;
 
 class User extends Model
 {
-    protected $dates = [
+    protected array $dates = [
         'accountexpires' => 'windows-int',
     ];
 }
@@ -250,7 +250,7 @@ use LdapRecord\Models\ActiveDirectory\User as BaseUser;
 
 class User extends BaseUser
 {
-    protected $casts = [
+    protected array $casts = [
         'msExchHideFromAddressList' => 'boolean',
     ];
 }
@@ -283,9 +283,9 @@ use LdapRecord\Models\ActiveDirectory\User as BaseUser;
 
 class User extends BaseUser
 {
-    protected $appends = ['full-name'];
+    protected array $appends = ['full-name'];
 
-    public function getFullNameAttribute()
+    public function getFullNameAttribute(): string
     {
         return 'John Doe';
     }

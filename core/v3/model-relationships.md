@@ -35,12 +35,14 @@ model, and call the `hasOne()` method and return the result:
 
 use LdapRecord\Models\Model;
 
+use LdapRecord\Models\Relations\HasOne;
+
 class User extends Model
 {
     /**
      * Retrieve the manager of the current user.
      */
-    public function manager()
+    public function manager(): HasOne
     {
         return $this->hasOne(User::class, 'manager');
     }
@@ -61,12 +63,14 @@ related model is retrieved by a UID, instead of a distinguished name:
 
 use LdapRecord\Models\Model;
 
+use LdapRecord\Models\Relations\HasOne;
+
 class User extends Model
 {
     /**
      * Retrieve the manager of the current user.
      */
-    public function manager()
+    public function manager(): HasOne
     {
         return $this->hasOne(User::class, 'manager', 'uid');
     }
@@ -85,12 +89,14 @@ For example, a `User` "has many" `groups`:
 
 use LdapRecord\Models\Model;
 
+use LdapRecord\Models\Relations\HasMany;
+
 class User extends Model
 {
     /**
      * Retrieve the groups the user is apart of.
      */
-    public function groups()
+    public function groups(): HasMany
     {
         return $this->hasMany(Group::class, 'member');
     }
@@ -116,7 +122,7 @@ want to use `uniquemember` for this relationship:
 /**
  * Retrieve the groups the user is apart of.
  */
-public function groups()
+public function groups(): HasMany
 {
     return $this->hasMany(Group::class, 'uniquemember');
 }
@@ -144,12 +150,14 @@ returned from the query results.
 
 use LdapRecord\Models\Model;
 
+use LdapRecord\Models\Relations\HasMany;
+
 class Group extends Model
 {
     /**
      * Retrieve the members of the group.
      */
-    public function members()
+    public function members(): HasMany
     {
         return $this->hasMany([
             Group::class, User::class, Contact::class
@@ -199,9 +207,11 @@ Lets define a `groups()` relationship that utilizes the `hasManyIn()` method:
 
 use LdapRecord\Models\Model;
 
+use LdapRecord\Models\Relations\HasManyIn;
+
 class User extends Model
 {
-    public function groups()
+    public function groups(): HasManyIn
     {
         return $this->hasManyIn(Group::class, 'memberof');
     }
@@ -242,7 +252,7 @@ filter the underlying query to match only `User` instances:
 ```php
 class Group extends Model
 {
-    public function users()
+    public function users(): HasMany
     {
         return $this->hasMany(User::class, 'memberof')->onlyRelated();
     }
@@ -263,13 +273,14 @@ For example, lets define a `User` model that can be a member of many groups:
 
 use App\Group;
 use LdapRecord\Models\Model;
+use LdapRecord\Models\Relations\HasMany;
 
 class User extends Model
 {
     /**
      * Retrieve groups that the current user is apart of.
      */
-    public function groups()
+    public function groups(): HasMany
     {
         return $this->hasMany(Group::class, 'member');
     }

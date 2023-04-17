@@ -30,7 +30,7 @@ If you are required to determine which events are fired from alternate connectio
 To register a listener on an event, retrieve the event dispatcher and call the `listen()` method:
 
 ```php
-$dispatcher = \LdapRecord\Container::getEventDispatcher();
+$dispatcher = \LdapRecord\Container::getDispatcher();
 
 $dispatcher->listen(Binding::class, function (Binding $event) {
     $event->connection; // LdapRecord\Connections\Ldap instance
@@ -47,7 +47,7 @@ second is either a closure or class name that should handle the event.
 > When using just a class name, the class must contain a public `handle()` method that will handle the event.
 
 ```php
-$dispatcher = \LdapRecord\Container::getEventDispatcher();
+$dispatcher = \LdapRecord\Container::getDispatcher();
 
 $dispatcher->listen(Binding::class, MyApp\BindingEventHandler::class);
 ```
@@ -59,7 +59,7 @@ use LdapRecord\Auth\Events\Binding;
 
 class BindingEventHandler
 {
-    public function handle(Binding $event)
+    public function handle(Binding $event): void
     {
         // Handle the event...
     }
@@ -76,7 +76,7 @@ Simply call the event dispatcher `listen()` method with the model event you are 
 use LdapRecord\Container;
 use LdapRecord\Models\Events\Saving;
 
-$dispatcher = Container::getEventDispatcher();
+$dispatcher = Container::getDispatcher();
 
 $dispatcher->listen(Saving::class, function (Saving $event) {
     // Returns the model instance being saved,
@@ -94,7 +94,7 @@ Wildcard listeners will receive the event name as their first argument, and the 
 ```php
 use LdapRecord\Container;
 
-$dispatcher = Container::getEventDispatcher();
+$dispatcher = Container::getDispatcher();
 
 // Listen for all model events.
 $dispatcher->listen('LdapRecord\Models\Events\*', function ($eventName, array $data) {
@@ -125,7 +125,7 @@ Here's an example:
 use LdapRecord\Container;
 use LdapRecord\Models\Events\Creating;
 
-$dispatcher = Container::getEventDispatcher();
+$dispatcher = Container::getDispatcher();
 
 $dispatcher->listen(Creating::class, function ($event) {
     $connection = $event->model->getConnection();
@@ -142,7 +142,7 @@ Example with authentication events:
 use LdapRecord\Container;
 use LdapRecord\Auth\Events\Binding;
 
-$dispatcher = Container::getEventDispatcher();
+$dispatcher = Container::getDispatcher();
 
 $dispatcher->listen(Binding::class, function ($event) {
     $connection = $event->connection;

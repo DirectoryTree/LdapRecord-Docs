@@ -58,7 +58,7 @@ an expired password, or account lockout. You can do this one of two ways:
 use LdapRecord\Container;
 use LdapRecord\Auth\Events\Failed;
 
-$dispatcher = Container::getEventDispatcher();
+$dispatcher = Container::getDispatcher();
 
 $message = '';
 

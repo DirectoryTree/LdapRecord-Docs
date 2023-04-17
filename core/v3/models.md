@@ -30,7 +30,7 @@ use LdapRecord\Models\Model;
 
 class User extends Model
 {
-    public static $objectClasses = [
+    public static array $objectClasses = [
         'top',
         'person',
         'organizationalperson',
@@ -106,7 +106,7 @@ use LdapRecord\Models\Model;
 
 class User extends Model
 {
-    protected $connection = 'domain-b';
+    protected ?string $connection = 'domain-b';
 }
 ```
 
@@ -200,7 +200,7 @@ define a `$guidKey` attribute inside of your model:
 ```php
 class User extends Model
 {
-    protected $guidKey = 'entryuuid';
+    protected string $guidKey = 'entryuuid';
 }
 ```
 
@@ -216,7 +216,7 @@ static default values when creating objects in your directory:
 ```php
 class User extends Model
 {
-    protected $attributes = [
+    protected array $attributes = [
         'company' => ['Acme'],
         'description' => ['User Account'],
         'manager' => ['cn=John Doe,dc=local,dc=com']
@@ -465,10 +465,8 @@ Since _most_ LDAP objects require a Common Name (`cn`) this is defaulted to:
 ```php
 /**
  * Get a creatable RDN for the model.
- *
- * @return string
  */
-public function getCreatableRdn()
+public function getCreatableRdn(string $name = null, string $attribute = null): string
 {
     $name = $this->escape($this->getFirstAttribute('cn'))->dn();
 
@@ -485,7 +483,7 @@ rather than creating them yourself manually. For example, here is how we would s
 Distinguished Name (RDN) for an Active Directory `OrganizationalUnit` model:
 
 ```php
-public function getCreatableRdn()
+public function getCreatableRdn(string $name = null, string $attribute = null): string
 {
     $name = $this->escape($this->getFirstAttribute('ou'))->dn();
 
@@ -987,7 +985,7 @@ to retrieve the dispatcher, then call `listen()` on the returned dispatcher:
 use LdapRecord\Container;
 use LdapRecord\Models\Events\Creating;
 
-$dispatcher = Container::getEventDispatcher();
+$dispatcher = Container::getDispatcher();
 
 $dispatcher->listen(Creating::class, function ($event) {
     $model = $event->getModel();
@@ -1023,7 +1021,7 @@ use LdapRecord\Models\Model;
 
 class User extends Model
 {
-    protected $hidden = ['userPassword'];
+    protected array $hidden = ['userPassword'];
 }
 ```
 
@@ -1037,7 +1035,7 @@ use LdapRecord\Models\Model;
 
 class User extends Model
 {
-    protected $visible = ['cn', 'mail', 'sn'];
+    protected array $visible = ['cn', 'mail', 'sn'];
 }
 ```
 
@@ -1061,7 +1059,7 @@ use LdapRecord\Models\Model;
 
 class User extends Model
 {
-    protected function convertAttributesForJson(array $attributes = [])
+    protected function convertAttributesForJson(array $attributes = []): array
     {
         if ($this->hasAttribute('objectguid')) {
             // If the model has a GUID set, we need to convert it due to it being in
