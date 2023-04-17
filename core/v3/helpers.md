@@ -690,119 +690,174 @@ Password::sha512Crypt('secret');
 Password::sha512Crypt('secret', 'salt');
 ```
 
-## Utilities
+## GUID
+
+A utility class for parsing and validating Object GUIDs.
 
 ```php
-use LdapRecord\Utilities;
+use LdapRecord\Models\Attributes\Guid;
 ```
 
-Provides methods for various LDAP related tasks.
+### `isValid`
 
-### `explodeDn`
-
-Converts a DN string into an array of RDNs. Returns `false` if an invalid DN is given.
+Determine if a given string is a valid GUID:
 
 ```php
-// array:3 [
-//   0 => "john"
-//   1 => "local"
-//   2 => "com"
-// ]
-Utilities::explodeDn('cn=john,dc=local,dc=com');
+// Returns "true"
+Guid::isValid('59e5e143-a50e-41a9-bf2b-badee699a577');
+Guid::isValid('8be90b30-0bbb-4638-b468-7aaeb32c74f9');
+Guid::isValid('17bab266-05ac-4e30-9fad-1c7093e4dd83');
 
-// array:3 [
-//   0 => "cn=john"
-//   1 => "dc=local"
-//   2 => "dc=com"
-// ]
-Utilities::explodeDn('cn=john,dc=local,dc=com', $removeAttributePrefixes = false);
+// Returns "false"
+Guid::isValid('Invalid GUID');
+Guid::isValid('17bab266-05ac-4e30-9fad');
+Guid::isValid('');
 ```
 
-### `unescape`
+### `getHex`
 
-Un-escapes a hexadecimal string into its original string representation.
+Get the hexadecimal representation of the GUID string:
 
 ```php
-$value = "\44\6f\65\2c\20\4a\6f\68\6e"
+$guid = '270db4d0-249d-46a7-9cc5-eb695d9af9ac';
 
-// "Doe, John"
-Utilities::unescape($value);
+// "d0b40d279d24a7469cc5eb695d9af9ac"
+(new Guid($guid))->getEncodedHex();
 ```
 
-### `binarySidToString`
+### `getEncodedHex`
 
-Convert a binary SID to a string SID.
-
-```php
-Utilities::binarySidToString($binarySID);
-```
-
-### `binaryGuidToString`
-
-Convert a binary GUID to a string GUID.
-
-```php
-Utilities::binaryGuidToString($binaryGUID);
-```
-
-### `stringGuidToHex`
-
-Converts a string GUID to it's hex variant.
+Get the encoded hexadecimal representation of the GUID string:
 
 ```php
 $guid = '270db4d0-249d-46a7-9cc5-eb695d9af9ac';
 
 // "\d0\b4\0d\27\9d\24\a7\46\9c\c5\eb\69\5d\9a\f9\ac"
-Utilities::stringGuidToHex($guid);
+(new Guid($guid))->getEncodedHex();
 ```
 
-### `convertWindowsTimeToUnixTime`
+### `getValue`
 
-Round a Windows timestamp down to seconds and remove
-the seconds between 1601-01-01 and 1970-01-01.
+Get the string representation of the GUID:
 
 ```php
-Utilities::convertWindowsTimeToUnixTime($windowsTimestamp);
+$guid = '270db4d0-249d-46a7-9cc5-eb695d9af9ac';
+
+// "270db4d0-249d-46a7-9cc5-eb695d9af9ac"
+(new Guid($guid))->getValue();
 ```
 
-### `convertUnixTimeToWindowsTime`
+### `getBinary`
 
-Convert a Unix timestamp to Windows timestamp.
+Get the binary representation of the GUID string:
 
 ```php
-Utilities::convertUnixTimeToWindowsTime($unixTimestamp);
+$guid = '270db4d0-249d-46a7-9cc5-eb695d9af9ac';
+
+// "b"ð┤\r'Ø$ºF£┼Ùi]Ü¨¼""
+(new Guid($guid))->getBinary();
 ```
 
-### `isValidSid`
+## SID
 
-Validates that the inserted string is an object SID.
+A utility class for parsing and validating Object SIDs.
 
 ```php
-// Returns "true"
-Utilities::isValidSid('S-1-5-21-362381101-336104434-3030082-101');
-Utilities::isValidSid('S-1-5-21-362381101-336104434');
-Utilities::isValidSid('S-1-5-21-362381101');
-Utilities::isValidSid('S-1-5-21');
-Utilities::isValidSid('S-1-5');
-
-// Returns "false"
-Utilities::isValidSid('Invalid SID');
-Utilities::isValidSid('S-1');
-Utilities::isValidSid('');
+use LdapRecord\Models\Attributes\Sid;
 ```
 
-### `isValidGuid`
+### `isValid`
 
-Validates that the inserted string is an object GUID.
+Determine if a string is a valid SID:
 
 ```php
 // Returns "true"
-Utilities::isValidGuid('59e5e143-a50e-41a9-bf2b-badee699a577');
-Utilities::isValidGuid('8be90b30-0bbb-4638-b468-7aaeb32c74f9');
-Utilities::isValidGuid('17bab266-05ac-4e30-9fad-1c7093e4dd83');
+Sid::isValid('S-1-5-21-362381101-336104434-3030082-101');
+Sid::isValid('S-1-5-21-362381101-336104434');
+Sid::isValid('S-1-5-21-362381101');
+Sid::isValid('S-1-5-21');
+Sid::isValid('S-1-5');
 
 // Returns "false"
-Utilities::isValidGuid('Invalid GUID');
-Utilities::isValidGuid('17bab266-05ac-4e30-9fad');
-Utilities::isValidGuid('');
+Sid::isValid('Invalid SID');
+Sid::isValid('S-1');
+Sid::isValid('');
+```
+
+### `getValue`
+
+Get the string representation value of the SID:
+
+```php
+$sid = 'S-1-5-21-362381101-336104434-3030082-101';
+
+// "S-1-5-21-362381101-336104434-3030082-101"
+(new Sid($sid))->getValue();
+```
+
+### `getBinary`
+
+Get the binary representation value of the SID:
+
+```php
+$sid = 'S-1-5-21-362381101-336104434-3030082-101';
+
+// "b"\x01\x05\x00\x00\x00\x00\x00\x05\x15\x00\x00\x00-\x7F™\x15ò‹\x08\x14B<.\x00e\x00\x00\x00"
+(new Sid($sid))->getBinary();
+```
+
+## Timestamp
+
+A utility class for transforming dates to and from LDAP timestamps. 
+
+```php
+use LdapRecord\Models\Attributes\Timestamp;
+```
+
+### Timestamp Types
+
+To begin, create a new `Timestamp` instance with the type of timestamp you are looking to convert:
+
+```php
+$timestamp = new Timestamp(Timestamp::TYPE_LDAP);
+
+$timestamp = new Timestamp(Timestamp::TYPE_WINDOWS);
+
+$timestamp = new Timestamp(Timestamp::TYPE_WINDOWS_INT);
+```
+
+### Converting to an LDAP Timestamp
+
+Call `fromDateTime()` to convert a `string`, `int`, `DateTime`, or `Carbon` instance to the LDAP timestamp:
+
+```php
+// "20230417210756Z"
+$ldapTimestamp = (new Timestamp(Timestamp::TYPE_LDAP))
+    ->fromDateTime(new \DateTime());
+
+// "20230417210824.0Z"
+$windowsTime = (new Timestamp(Timestamp::TYPE_WINDOWS))
+    ->fromDateTime(new \DateTime());
+
+// 133262392690000000
+$windowsIntegerTime = (new Timestamp(Timestamp::TYPE_WINDOWS_INT))
+    ->fromDateTime(new \DateTime());
+```
+
+### Converting from an LDAP Timestamp
+
+Call `toDateTime()` to convert an LDAP timestamp into a PHP `Carbon` instance:
+
+```php
+// Carbon\Carbon
+$ldapTimestampAsCarbon = (new Timestamp(Timestamp::TYPE_LDAP))
+    ->toDateTime('20230417210756Z');
+
+// Carbon\Carbon
+$windowsTimeAsCarbon = (new Timestamp(Timestamp::TYPE_WINDOWS))
+    ->toDateTime('20230417210824.0Z');
+
+// Carbon\Carbon
+$windowsIntegerTimeAsCarbon = (new Timestamp(Timestamp::TYPE_WINDOWS_INT))
+    ->toDateTime(133262392690000000);
 ```
