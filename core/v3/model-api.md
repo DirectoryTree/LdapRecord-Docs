@@ -7,6 +7,18 @@ description: A list of all available LdapRecord model methods.
 
 ## Method Listing
 
+#### `addAttribute`
+
+Immediately inserts a new attribute value on the model.
+
+Performs an `ldap_mod_add` under the hood.
+
+> **Important**: This does not create attributes that do not exist on your LDAP schema for the object.
+
+```php
+$model->addAttribute('telephonenumber', '+1 555 555 1717');
+```
+
 #### `addAttributeValue`
 
 Add a value into an array of attribute values:
@@ -134,15 +146,7 @@ $model->countAttributes();
 
 #### `createAttribute`
 
-Immediately inserts a new attribute value on the model.
-
-Performs an `ldap_mod_add` under the hood.
-
-> **Important**: This does not create attributes that do not exist on your LDAP schema for the object.
-
-```php
-$model->createAttribute('telephonenumber', '+1 555 555 1717');
-```
+This method was renamed to [addAttribute](#addattribute) in v3.0.
 
 #### `delete`
 
@@ -163,15 +167,7 @@ $model->delete($recursive = true);
 
 #### `deleteAttribute`
 
-Immediately delete an attribute on a model.
-
-Performs an `ldap_mod_del` under the hood.
-
-```php
-$model->deleteAttribute('telephonenumber');
-
-$model->telephonenumber; // Returns null
-```
+This method was renamed to [removeAttribute](#removeattribute) in v3.0.
 
 #### `descendants`
 
@@ -832,9 +828,21 @@ This will affect the current model instance:
 $model->refresh();
 ```
 
+#### `removeAttribute`
+
+Immediately delete an attribute on a model.
+
+Performs an `ldap_mod_del` under the hood.
+
+```php
+$model->removeAttribute('telephonenumber');
+
+$model->telephonenumber; // Returns null
+```
+
 #### `rename`
 
-Rename a model and keep it's container location:
+Rename a model and keep its container location:
 
 > **Important**: When renaming is successful, the models distinguished name is
 > automatically updated to reflect its new name in the directory, so you may
@@ -847,6 +855,16 @@ $user->rename('Jane Doe');
 
 // Returns: 'cn=Jane Doe,dc=local,dc=com'
 $user->getDn();
+```
+
+#### `replaceAttribute`
+
+Immediately replaces the entire attribute value on the model.
+
+Performs an `ldap_mod_replace` under the hood.
+
+```php
+$model->updateAttribute('proxyaddresses', ['foo', 'bar']);
 ```
 
 #### `save`
@@ -1028,10 +1046,4 @@ $model->update(['cn' => 'John Doe']);
 
 #### `updateAttribute`
 
-Immediately updates an attribute value on the model.
-
-Performs an `ldap_mod_replace` under the hood.
-
-```php
-$model->updateAttribute('proxyaddresses', ['foo', 'bar']);
-```
+This method was renamed to [replaceAttribute](#replaceattribute) in v3.0.
