@@ -532,6 +532,14 @@ $model->getParentDn();
 $model->getParentDn('cn=Steve Bauman,ou=Users,dc=local,dc=com');
 ```
 
+#### `getRawAttribute`
+
+Get a model's raw value from an attribute:
+
+```php
+$timestamp = $model->getRawAttribute('modifytimestamp');
+```
+
 #### `getRdn`
 
 Get the models Relative Distinguished Name:
