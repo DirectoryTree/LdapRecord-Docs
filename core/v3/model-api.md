@@ -165,9 +165,9 @@ To delete nested objects contained in the model recursively, pass in `true`:
 $model->delete($recursive = true);
 ```
 
-#### `deleteAttribute`
+#### `deleteAttributes`
 
-This method was renamed to [removeAttribute](#removeattribute) in v3.0.
+This method was renamed to [removeAttributes](#removeattributes) in v3.0.
 
 #### `descendants`
 
@@ -830,14 +830,35 @@ $model->refresh();
 
 #### `removeAttribute`
 
-Immediately delete an attribute on a model.
+Immediately remove an attribute on a model.
 
 Performs an `ldap_mod_del` under the hood.
 
 ```php
+// Remove one value from a single-value attribute:
 $model->removeAttribute('telephonenumber');
 
-$model->telephonenumber; // Returns null
+// Remove all values from a multi-value attribute:
+$model->removeAttribute('memberuid');
+```
+
+#### `removeAttributes`
+
+Immediately remove multiple attributes on a model.
+
+Performs an `ldap_mod_del` under the hood.
+
+```php
+// Removing one value from an attribute:
+$model->removeAttribute(["memberuid" => "jdoe"]);
+
+// Removing multiple values from an attribute:
+$model->removeAttribute([
+    "memberuid" => ["jdoe", "jsmith"]
+]);
+
+// Removing all values from an attribute:
+$model->removeAttribute(["memberuid" => []]);
 ```
 
 #### `rename`
