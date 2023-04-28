@@ -376,7 +376,7 @@ Then inside of your `config/auth.php` file for your provider, set the attribute 
         // ...
         'database' => [
             // ...
-            'sync_attributes' => \App\Ldap\LdapAttributeHandler::class,
+            'sync_attributes' => \App\Ldap\AttributeHandler::class,
         ],
     ],
 ],
