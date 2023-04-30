@@ -1,5 +1,5 @@
 ---
-title: v3 Upgrade Guide
+title: Upgrade to v3
 description: Upgrading from LdapRecord v2
 ---
 

@@ -24,6 +24,7 @@ $connection = new Connection([
     'port'             => 389,
     'use_ssl'          => false,
     'use_tls'          => false,
+    'use_sasl'         => false,
     'version'          => 3,
     'timeout'          => 5,
     'follow_referrals' => false,
@@ -32,7 +33,16 @@ $connection = new Connection([
     'options' => [
         // See: http://php.net/ldap_set_option
         LDAP_OPT_X_TLS_REQUIRE_CERT => LDAP_OPT_X_TLS_HARD
-    ]
+    ],
+    
+    // See: https://www.php.net/manual/en/function.ldap-sasl-bind.php
+    'sasl_options' => [
+        'mech' => null,
+        'realm' => null,
+        'authc_id' => null,
+        'authz_id' => null,
+        'props' => null,
+    ],
 ]);
 ```
 
@@ -81,11 +91,11 @@ as the root. This would allow all objects _below_ it to be retrieved from result
 > **Important**:
 >
 > - If you do not define a base DN, you will not retrieve any search results from queries.
-> - Your base DN is **case insensitive**. You do not need to worry about incorrect casing.
+> - Your base DN is **case-insensitive**. You do not need to worry about incorrect casing.
 
 ### Username & Password
 
-To connect to your LDAP server, a username and password is required to be able to query and run operations on your server(s).
+To connect to your LDAP server, you must provide a username and password to be able to query and run operations on your server(s).
 
 > **Important**:
 >
@@ -116,9 +126,72 @@ It is recommended to use _one_ of these options if you have the ability to. This
 
 > **Important**:
 >
-> - Only **one** can be set to `true`. You must chose either or.
+> - Only **one** can be set to `true`. You must choose either or.
 > - You **must** enable SSL or TLS to set / change / reset passwords in Active Directory.
 > - **TLS is recommended over SSL**. SSL is labelled as a deprecated mechanism for securely running LDAP operations.
+
+### SASL
+
+This boolean option enables connecting to your LDAP server using SASL (Simple Authentication and Security Layer) via `ldap_sasl_bind`.
+
+SASL allows you to authenticate a user with various mechanisms, such as `DIGEST-MD5`, `CRAM-MD5`, `GSSAPI`, etc.
+
+#### Options
+
+**`mech`** (string): This specifies the SASL mechanism to use for authentication. Common 
+mechanisms include `DIGEST-MD5`, `CRAM-MD5`, and `GSSAPI`. If not specified, the server 
+will choose the best available mechanism based on the client and server capabilities.
+
+**`realm`** (string): This is the authentication realm or domain. It is used by some
+SASL mechanisms to group users into different security domains or to map usernames 
+to distinguished names. If not specified, the server will use its default realm.
+Here's an example:
+
+```php
+$options = ['realm' => 'example.com'];
+```
+
+**`authc_id`** (string): This is the authentication ID, which is used by some SASL 
+mechanisms to identify the user during the authentication process. It may be a 
+simple username or a more complex identifier (such as distinguished name), 
+depending on the mechanism being used. Here's an example:
+
+```php
+$options = ['authc_id' => 'uid=jdoe,ou=admin,dc=example,dc=com'];
+```
+
+**`authz_id`** (string): This is the authorization ID, which is used by some SASL 
+mechanisms to identify the user for authorization purposes after authentication 
+has been completed. It may be the same as the authentication ID or a different 
+identifier (such as a distinguished name), depending on the mechanism being used. 
+Here's an example:
+
+```php
+$options = ['authc_id' => 'jdoe'];
+```
+
+**`props`** (string): This parameter allows you to specify additional security 
+properties for the SASL mechanism being used. These properties can control 
+various aspects of the security layer, such as encryption strength, integrity 
+protection, and more. The format and available properties depend on the 
+specific SASL mechanism being used.
+
+When using the `DIGEST-MD5` SASL mechanism, you may use `props` to specify the
+quality of protection (qop) and cipher options. The property string would be a
+comma-separated list of key-value pairs, with keys and values separated by an 
+equals sign (=). Here's an example:
+
+```php
+$options = ['props' => 'qop=auth-conf,cipher=rc4-56'];
+```
+
+When using the GSSAPI SASL mechanism, you may use `props` to specify the 
+`GSSAPI` flags, such as mutual authentication, delegation, and more.
+Here's an example:
+
+```php
+$options = ['props' => 'gssapi_flags=mutual_required,delegate_cred'];
+```
 
 #### Debugging
 
