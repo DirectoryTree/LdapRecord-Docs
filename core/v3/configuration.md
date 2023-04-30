@@ -148,7 +148,12 @@ to distinguished names. If not specified, the server will use its default realm.
 Here's an example:
 
 ```php
-$options = ['realm' => 'example.com'];
+$config = [
+    // ...
+    'sasl_options' => [
+        'realm' => 'example.com',
+    ],
+];
 ```
 
 **`authc_id`** (string): This is the authentication ID, which is used by some SASL 
@@ -157,7 +162,12 @@ simple username or a more complex identifier (such as distinguished name),
 depending on the mechanism being used. Here's an example:
 
 ```php
-$options = ['authc_id' => 'uid=jdoe,ou=admin,dc=example,dc=com'];
+$config = [
+    // ...
+    'sasl_options' => [
+        'authc_id' => 'uid=jdoe,ou=admin,dc=example,dc=com'
+    ]
+];
 ```
 
 **`authz_id`** (string): This is the authorization ID, which is used by some SASL 
@@ -167,7 +177,12 @@ identifier (such as a distinguished name), depending on the mechanism being used
 Here's an example:
 
 ```php
-$options = ['authc_id' => 'jdoe'];
+$config = [
+    // ...
+    'sasl_options' => [
+        'authc_id' => 'jdoe'
+    ]
+];
 ```
 
 **`props`** (string): This parameter allows you to specify additional security 
@@ -182,7 +197,12 @@ comma-separated list of key-value pairs, with keys and values separated by an
 equals sign (=). Here's an example:
 
 ```php
-$options = ['props' => 'qop=auth-conf,cipher=rc4-56'];
+$config = [
+    // ...
+    'sasl_options' => [
+        'props' => 'qop=auth-conf,cipher=rc4-56'
+    ]
+];
 ```
 
 When using the GSSAPI SASL mechanism, you may use `props` to specify the 
@@ -190,7 +210,12 @@ When using the GSSAPI SASL mechanism, you may use `props` to specify the
 Here's an example:
 
 ```php
-$options = ['props' => 'gssapi_flags=mutual_required,delegate_cred'];
+$config = [
+    // ...
+    'sasl_options' => [
+        'props' => 'gssapi_flags=mutual_required,delegate_cred'
+    ]
+];
 ```
 
 #### Debugging
