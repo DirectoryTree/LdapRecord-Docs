@@ -136,7 +136,7 @@ This boolean option enables connecting to your LDAP server using SASL (Simple Au
 
 SASL allows you to authenticate a user with various mechanisms, such as `DIGEST-MD5`, `CRAM-MD5`, `GSSAPI`, etc.
 
-#### Options
+#### SASL Options
 
 **`mech`** (string): This specifies the SASL mechanism to use for authentication. Common 
 mechanisms include `DIGEST-MD5`, `CRAM-MD5`, and `GSSAPI`. If not specified, the server 
