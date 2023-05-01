@@ -308,8 +308,6 @@ $user->update(['pwdlastset' => 0]);
 
 ## Checking User Enablement / Disablement
 
-> **Important**: This feature was added in v2.17.0.
-
 To determine if a user is enabled or disabled, you may use the `isEnabled()`
 or `isDisabled()` methods on an existing `User` model instance:
 

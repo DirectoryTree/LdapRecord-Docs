@@ -133,8 +133,6 @@ you're working with an LDAP server that does not support it, you may
 pass in a fourth argument (or via the parameters name `isolate`) to 
 run the chunk operation on it's own connection instance:
 
-> **Important**: This feature was added in v2.20.0.
-
 ```php
 $connection->query()->chunk(1000, function ($objects) {
     // Model::where('...')->get();
@@ -214,8 +212,6 @@ $connection->query()->each(function ($object) {
 Similarly with `chunk`, you may pass in a fourth argument 
 (or via its named parameter `isolate`), to run the chunk 
 operation on it's own connection instance:
-
-> **Important**: This feature was added in v2.20.0.
 
 ```php
 $connection->query()->each(function ($object) {

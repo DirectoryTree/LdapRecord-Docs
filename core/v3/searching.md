@@ -464,8 +464,6 @@ foreach ($results as $result) {
 
 ## Chunking
 
-> **Important**: This feature is only available in LdapRecord >= v2.5.0
-
 Chunking your search results will prevent you from running out of
 memory when executing pagination requests on large directories.
 
@@ -484,10 +482,7 @@ $query->chunk(1000, function ($entries) {
 
 ## Slicing
 
-> **Important**: 
->
-> - This feature is only available in LdapRecord >= v2.11.0
-> - Your LDAP server must support [Virtual List View](https://ldapwiki.com/wiki/Virtual%20List%20View%20Control).
+> **Important**: Your LDAP server must support [Virtual List View](https://ldapwiki.com/wiki/Virtual%20List%20View%20Control).
 
 Slicing your search results allows you to retrieve only a particular set
 of results based on an offset, similar to a database offset. This helps

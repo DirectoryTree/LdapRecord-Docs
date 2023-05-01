@@ -10,8 +10,6 @@ description: Parsing LDAP Query Filters
 LdapRecord comes with a built-in LDAP filter parser, giving you the
 ability to read the nodes within to extract all of their attributes.
 
-> **Important**: This feature is available as of v2.13.0.
-
 Let's start with a small example by parsing the filter `(cn=Steve)`:
 
 ```php

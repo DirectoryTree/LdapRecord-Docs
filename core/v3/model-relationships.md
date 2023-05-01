@@ -238,8 +238,6 @@ $groups = $user->groups()->get();
 
 ## Returning Only Matching Models
 
-> **Important**: This feature was added in v2.19.0.
-
 When querying relationships on your LdapRecord models, you may receive
 plain `LdapRecord\Models\Entry` instances if none of the models you
 have provided in the relationship definition match the result's
