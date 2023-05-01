@@ -171,3 +171,9 @@ $user = User::find('...');
 // Returns "void"
 $user->manager()->attach($manager);
 ```
+
+### LdapRecord\Models\OpenLDAP\User & Group Relations Adjusted
+
+The built-in OpenLDAP `User` and `Group` model relationships (`Group::members()` 
+and `User::groups()`) have been adjusted with their proper configuration, 
+and now have full integration tests on the repository.
