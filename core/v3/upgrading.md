@@ -5,6 +5,14 @@ description: Upgrading from LdapRecord v2
 
 # Upgrading to Version 3
 
+We strive to record all potential breaking changes. However, as some of
+these changes occur in lesser-known areas of the library, only a 
+fraction of them might have an impact on your application.
+
+If you encounter any changes not documented here that have affected you, 
+please create a bug report on the [LdapRecord-Docs repository](https://github.com/DirectoryTree/LdapRecord-Docs) 
+so that we can address the issue promptly.
+
 ## High Impact Changes
 
 ### Updating Dependencies
@@ -90,7 +98,7 @@ clearly convey the LDAP action that they will execute:
 | `createAttribute()` | `addAttribute()`     |
 | `updateAttribute()` | `replaceAttribute()` |
 | `deleteAttribute()` | `removeAttributes()` |
-| N\A                 | `removeAttribute()`  |
+| `N/A`               | `removeAttribute()`  |
 
 ## Low Impact Changes
 
@@ -98,7 +106,7 @@ clearly convey the LDAP action that they will execute:
 
 #### `bind`
 
-The `Ldap::bind()` method now returns an `LdapRecord\LdapResultRepsonse`, 
+The `Ldap::bind()` method now returns an `LdapRecord\LdapResultResponse`, 
 which provides a class for interacting with an LDAP response in detail:
 
 ```php
@@ -118,17 +126,17 @@ $response->failed(); // bool
 
 #### `parseResult`
 
-The `Ldap::parseResult()` method now returns an `LdapRecord\LdapResultRepsonse`, 
+The `Ldap::parseResult()` method now returns an `LdapRecord\LdapResultResponse`, 
 as with the `bind()` method mentioned above.
 
 ### LdapRecord\Models\Relations\OneToMany Method Return Types Changed
 
-The methods listed below now no longer return a value (`void`):
+The methods listed have had their return type changed:
 
-| Method              |
-|---------------------|
-| `attach()`          |
-| `detach()`          |
+| Method     | New Return Type |
+|------------|-----------------|
+| `attach()` | `void`          |
+| `detach()` | `void`          |
 
 ```php
 $groups = ['...'];
