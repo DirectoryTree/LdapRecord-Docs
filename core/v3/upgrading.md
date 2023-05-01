@@ -48,6 +48,22 @@ You may replace these methods with their listed equivalent:
 | `getEventDispatcher()` | `getDisptacher()`   |
 | `setEventDispatcher()` | `setDispatcher()`   |
 
+### LdapRecord\ConnectionManager Methods Renamed
+
+The below `LdapRecord\ConnectionManager` methods have been renamed:
+
+| Old Method               | New Method               |
+|--------------------------|--------------------------|
+| `add()`                  | `addConnection()`        |
+| `remove()`               | `removeConnection()`     |
+| `all()`                  | `getConnections()`       |
+| `get()`                  | `getConnection()`        |
+| `getDefault()`           | `getDefaultConnection()` |
+| `setDefault()`           | `setDefaultConnection()` |
+| `dispatcher()`           | `getDispatcher()`        |
+| `setDispatcher()`        | `setDispatcher()`        |
+| `unsetEventDispatcher()` | `unsetDispatcher()`      |
+
 ### LdapRecord\Utilities Removed
 
 The `LdapRecord\Utilities` class has been removed in favor of
@@ -122,6 +138,18 @@ $user = User::find('...');
 // Returns "void"
 $user->groups()->attach($groups);
 ```
+
+### LdapRecord\Models\Relations\OneToMany Methods Removed
+
+The methods listed below have been removed:
+
+| Method         |
+|----------------|
+| `attachMany()` |
+| `detachMany()` |
+
+You may now simply provide a variable that is `iterable` (such as an `array` 
+or `Collection`), to attach or detach many models for a relationship.
 
 ### LdapRecord\Models\Relations\HasOne Method Return Type Changed
 
