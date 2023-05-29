@@ -7,7 +7,7 @@ description: Configuring the LDAP authentication provider
 
 ## Introduction
 
-To configure LDAP authentication, you must define or update a `provider` inside of your `config/auth.php` file.
+To configure LDAP authentication, you must define or update a `provider` inside your `config/auth.php` file.
 
 Let's walk through configuring both LDAP authentication mechanisms.
 
@@ -98,7 +98,7 @@ used for creating and retrieving LDAP users from your applications database.
 ### Password Column
 
 If your application uses a different password column than `password`, then you can configure
-it using the `password_column` key inside of your providers configuration:
+it using the `password_column` key inside your provider's configuration:
 
 ```php
 'providers' => [
@@ -157,14 +157,14 @@ For further control on sync attributes, see the below [attribute handler](#attri
 The `database => sync_existing` array defines a set of key-value pairs:
 
 - The **key** of each array item is the column of your `users` database table to query
-- The **value** is the _name_ of the users LDAP attribute to query inside of your database for
+- The **value** is the _name_ of the users LDAP attribute to query inside your database for
 
 > If the LDAP attribute returns `null` for the given **value**, the value string will be used
 > in the query instead. This is helpful to be able to use raw strings to scope your query by.
 
 Let's walk through an example.
 
-In our application, we have existing users inside of our Laravel applications database:
+In our application, we have existing users inside our Laravel applications database:
 
 | id  | name         | email             | password | guid   | domain |
 | --- | ------------ | ----------------- | -------- | ------ | ------ |
@@ -232,7 +232,7 @@ Here is a synchronized database provider fully configured with all available opt
 
 ## Attribute Handlers
 
-If you require logic for synchronizing attributes when users sign into your application or are
+If you require logic for synchronizing attributes when users sign in to your application or are
 being [imported](/docs/laravel/v2/auth/database/importing), you can create an attribute handler class
 responsible for setting / synchronizing your database models attributes from their
 LDAP model.
@@ -240,7 +240,7 @@ LDAP model.
 This class you define must have a `handle` method. This method must accept the LDAP model you
 have configured as the first parameter and your Eloquent database model as the second.
 
-For the example below, we will create a handler named `AttributeHandler.php` inside of your `app/Ldap` folder:
+For the example below, we will create a handler named `AttributeHandler.php` inside your `app/Ldap` folder:
 
 > You do not need to call `save()` on your Eloquent database model.
 > This is called for you after attribute synchronization.
@@ -267,7 +267,7 @@ class AttributeHandler
 > any dependencies you require in your handlers constructor to be made available
 > during synchronization.
 
-Then inside of your `config/auth.php` file for your provider, set the attribute handler class as the `sync_attributes` value:
+Then inside your `config/auth.php` file for your provider, set the attribute handler class as the `sync_attributes` value:
 
 ```php
 'providers' => [

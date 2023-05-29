@@ -15,7 +15,7 @@ This guide will show you how to integrate LdapRecord-Laravel using this scaffold
 
 ## Debugging
 
-Inside of your `config/ldap.php` file, ensure you have `logging` enabled during the setup of authentication.
+inside your `config/ldap.php` file, ensure you have `logging` enabled during the setup of authentication.
 Doing this will help you immensely in debugging connectivity and authentication issues.
 
 If you encounter issues along the way, be sure to open your `storage/logs` directory after you
@@ -103,8 +103,8 @@ Auth::user()->getName()
 
 ## Using Usernames
 
-In corporate environments, users are often used to signing into their computers with their username.
-You can certainly keep this flow easy for them - we just need to change a couple things.
+In corporate environments, users are often used to signing in to their computers with their username.
+You can certainly keep this flow easy for them - we just need to change a couple of things.
 
 First, let's jump into our `auth/login.blade.php` view and update our input field to use `username` instead of `email`:
 
@@ -260,7 +260,7 @@ class LoginController extends Controller
 If you need to modify the translations of these error messages, create a new translation
 file named `errors.php` in your `resources` directory at the following path:
 
-> The `vendor` directory (and each sub-directory) will have to be created manually.
+> The `vendor` directory (and each subdirectory) will have to be created manually.
 
 #### Laravel >= 9
 

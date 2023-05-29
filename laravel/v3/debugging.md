@@ -61,9 +61,9 @@ php artisan ldap:browse
 
 ## Logging In
 
-To debug issues logging in, its recommended to first complete the following steps:
+To debug issues logging in, it's recommended to first complete the following steps:
 
-1. Enabled logging via the `logging` key inside of your `config/ldap.php` file <br/>
+1. Enabled logging via the `logging` key inside your `config/ldap.php` file <br/>
    (or by enabling it via your `.env` by using the `LDAP_LOGGING` key)
 2. Clear your configurations cache (if enabled) by running the `php artisan config:clear` command
 3. Add the `ListensForLdapBindFailure` [trait](/docs/laravel/v2/auth/setup/#displaying-ldap-error-messages) onto your `LoginController`
@@ -75,8 +75,8 @@ field.
 
 If you do not see any error message and are immediately returned back to
 the login page, then you have likely changed the username field on your
-`resources/views/auth/login.blade.php` but have not updated it inside
-of your `LoginController`, or vice versa.
+`resources/views/auth/login.blade.php` but have not updated it inside 
+your `LoginController`, or vice versa.
 
 For example, if you want users to login by a `username` instead of their
 `email`, make sure you've changed this via the `username` method,
@@ -108,6 +108,6 @@ protected function credentials(Request $request)
 ```
 
 If you simply see an **Invalid Credentials**, or **Can't contact LDAP server**
-error, refer to your log files inside of your applications `storage/logs`
+error, refer to your log files inside your applications `storage/logs`
 directory to investigate further. With `logging` enabled, all LDAP
 searches, binds, failures and exceptions will be reported there.

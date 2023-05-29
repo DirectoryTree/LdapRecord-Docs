@@ -21,19 +21,19 @@ The Directory Emulator dynamically replaces the LDAP connection you specify with
 one. This fake connection sets up an SQLite database that resembles an LDAP directory
 and allows you to store, update, delete, move, rename, and query LDAP objects through LdapRecord.
 
-The SQLite database can be stored as file so you can utilize it in your application,
+The SQLite database can be stored as file, so you can utilize it in your application,
 or you can use an in-memory database for running unit tests. It's the perfect
 suite for testing the LDAP integration in your Laravel applications.
 
-When you query a model that uses the connection you have setup with the Directory Emulator,
+When you query a model that uses the connection you have set up with the Directory Emulator,
 LdapRecord dynamically swaps query filters with Eloquent SQL queries, effectively
-allowing you to query objects you create inside of your emulated directory.
+allowing you to query objects you create inside your emulated directory.
 
 ## Getting Started
 
-To begin, let's say we have an application that lists LDAP users inside of your configured directory.
+To begin, let's say we have an application that lists LDAP users inside your configured directory.
 
-Inside of our `config/ldap.php` file, we have defined our single `default` connection:
+inside our `config/ldap.php` file, we have defined our single `default` connection:
 
 ```php
 // config/ldap.php
@@ -152,7 +152,7 @@ and ensure your application is querying the proper objects.
 
 > The examples below use LdapRecord models, but you may also use a raw LdapRecord `Connection`.
 
-Let's update our example controller to retrieve users inside of a specific OU, and a company name:
+Let's update our example controller to retrieve users inside a specific OU, and a company name:
 
 ```php
 public class UsersController extends Controller
@@ -169,7 +169,7 @@ public class UsersController extends Controller
 ```
 
 Now we can update our test by creating an Organizational Unit and then creating a user
-inside of that OU and assert that we only see the proper user:
+inside that OU and assert that we only see the proper user:
 
 ```php
 public function test_index_works()
@@ -214,7 +214,7 @@ $manager = User::create(['cn' => 'John']);
 $user->manager()->attach($manager);
 ```
 
-Then, you can retrieve the users manager:
+Then, you can retrieve the user's manager:
 
 ```php
 $manager = $user->manager()->first();
@@ -222,7 +222,7 @@ $manager = $user->manager()->first();
 
 ### Has Many
 
-Since some attributes are virtual in LDAP (such as the the `memberof` attribute on User
+Since some attributes are virtual in LDAP (such as the `memberof` attribute on User
 objects in Active Directory), you will have to populate some attributes manually
 to mimic these virtual attributes. Let's walk through an example.
 

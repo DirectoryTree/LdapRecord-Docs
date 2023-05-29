@@ -147,4 +147,4 @@ foreach (LdapGroup::get() as $group) {
 ```
 
 The above can easily be placed into a [scheduled job](https://laravel.com/docs/scheduling)
-if you'd prefer the import to be ran in the background of your application.
+if you'd prefer the import to be run in the background of your application.

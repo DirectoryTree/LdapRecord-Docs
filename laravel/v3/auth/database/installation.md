@@ -7,7 +7,7 @@ description: LdapRecord-Laravel authentication install guide
 
 ## Introduction
 
-Database authentication requires the addition of two (2) database columns inside of your `users` database table:
+Database authentication requires the addition of two (2) database columns inside your `users` database table:
 
 - **`guid`** <br/> This is for storing your LDAP users `objectguid`. It is used for locating and synchronizing your LDAP user.<br/><br/>
 - **`domain`** <br/> This is for storing your LDAP users connection name. It is used to identify users from different domains.
@@ -56,7 +56,7 @@ This trait and interface provide LdapRecord the ability of setting and getting y
 
 You may change the database column names in the published migration to anything you would like.
 However, once you have done so, you must override the following methods in your Eloquent
-`User` model that are provided by the above mentioned LdapRecord trait and interface:
+`User` model that are provided by the above-mentioned LdapRecord trait and interface:
 
 ```php
 // app/User.php

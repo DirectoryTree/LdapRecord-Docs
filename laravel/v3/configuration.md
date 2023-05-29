@@ -21,9 +21,9 @@ To publish the `ldap.php` configuration file, execute the below artisan command:
 php artisan vendor:publish --provider="LdapRecord\Laravel\LdapServiceProvider"
 ```
 
-The `ldap.php` file will then be created inside of your applications `config`, directory.
+The `ldap.php` file will then be created inside your applications `config`, directory.
 
-Inside the configuration file, setup your LDAP connections, or paste the following in your `.env` file to get started quicky:
+Inside the configuration file, set up your LDAP connections, or paste the following in your `.env` file to get started quicky:
 
 > Review the [LDAP configuration documentation](/docs/core/v2/configuration) to see what each option is used for.
 
@@ -64,7 +64,7 @@ LDAP_DEFAULT_SSL=false
 LDAP_DEFAULT_TLS=false
 ```
 
-To setup multiple connections, you may use a comma-separated list of connection names using the `LDAP_CONNECTIONS` variable:
+To set up multiple connections, you may use a comma-separated list of connection names using the `LDAP_CONNECTIONS` variable:
 
 ```dotenv
 LDAP_CONNECTIONS=alpha,bravo
@@ -113,7 +113,7 @@ LDAP_ALPHA_OPT_X_TLS_CERTFILE=/usr/bin/etc/path
 
 ## Testing your connection
 
-Once you have your connection(s) configured, run a quick test to make sure they've been setup properly:
+Once you have your connection(s) configured, run a quick test to make sure they've been set up properly:
 
 ```bash
 php artisan ldap:test

@@ -18,7 +18,7 @@ This guide will show you how to integrate LdapRecord-Laravel using this scaffold
 
 ## Debugging
 
-Inside of your `config/ldap.php` file, ensure you have `logging` enabled during the setup of authentication.
+inside your `config/ldap.php` file, ensure you have `logging` enabled during the setup of authentication.
 Doing this will help you immensely in debugging connectivity and authentication issues.
 
 If you encounter issues along the way, be sure to open your `storage/logs` directory after you
@@ -65,8 +65,8 @@ login page normally with the "Invalid credentials" error message.
 
 ## Using Usernames
 
-In corporate environments, users are often used to signing into their computers with their username.
-You can certainly keep this flow easy for them - we just need to change a couple things.
+In corporate environments, users are often used to signing in to their computers with their username.
+You can certainly keep this flow easy for them - we just need to change a couple of things.
 
 First, you will need to change the `email` column in the database migration that creates your `users`
 table to `username`, as this represents what it will now contain:
@@ -180,8 +180,8 @@ For example, given the following `users` database table:
 | --- | ------------ | ------------------- | -------- | ------ | ------ |
 | 1   | Steve Bauman | sbauman@outlook.com | ...      | `null` | `null` |
 
-If a user attempts to login with the above email address and this user does
-not exist inside of your LDAP directory, then standard Eloquent authentication
+If a user attempts to log in with the above email address and this user does
+not exist inside your LDAP directory, then standard Eloquent authentication
 will be performed instead.
 
 This feature is ideal for environments where:
@@ -189,8 +189,8 @@ This feature is ideal for environments where:
 - LDAP server connectivity may be intermittent.
 - **Or**; You have regular users registering normally in your application.
 
-To enable this feature, you must define a `fallback` array inside of the credentials
-you return from the `credentials()` method inside of your `LoginController`:
+To enable this feature, you must define a `fallback` array inside the credentials
+you return from the `credentials()` method inside your `LoginController`:
 
 ```php
 protected function credentials(Request $request)
@@ -321,7 +321,7 @@ class LoginController extends Controller
 If you need to modify the translations of these error messages, create a new translation
 file named `errors.php` in your `resources` directory at the following path:
 
-> The `vendor` directory (and each sub-directory) will have to be created manually.
+> The `vendor` directory (and each subdirectory) will have to be created manually.
 
 #### Laravel >= 9
 

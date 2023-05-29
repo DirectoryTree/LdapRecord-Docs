@@ -15,7 +15,7 @@ This guide will show you how to integrate LdapRecord-Laravel using this scaffold
 
 ## Debugging
 
-Inside of your `config/ldap.php` file, ensure you have `logging` enabled during the setup of authentication.
+inside your `config/ldap.php` file, ensure you have `logging` enabled during the setup of authentication.
 Doing this will help you immensely in debugging connectivity and authentication issues.
 
 If you encounter issues along the way, be sure to open your `storage/logs` directory after you
@@ -127,7 +127,7 @@ In the following example, we will authenticate users by their `sAMAccountName`.
 
 ### Login Form
 
-We will first need to update the input HTML field inside of the scaffolded `login.blade.php` view:
+We will first need to update the input HTML field inside the scaffolded `login.blade.php` view:
 
 **From**:
 
@@ -173,7 +173,7 @@ We will first need to update the input HTML field inside of the scaffolded `logi
 
 ### Login Request
 
-Lastly, we must adjust the `rules()` and `authenticate()` methods inside of the scaffolded `LoginRequest.php` class:
+Lastly, we must adjust the `rules()` and `authenticate()` methods inside the scaffolded `LoginRequest.php` class:
 
 **From**:
 
@@ -238,4 +238,4 @@ public function authenticate()
 }
 ```
 
-You are now ready to login LDAP users by their username!
+You are now ready to log in LDAP users by their username!

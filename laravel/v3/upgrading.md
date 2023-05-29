@@ -47,32 +47,27 @@ properties or methods with their respective types.
 
 ### LdapRecord\Laravel\Auth\Rule changes
 
-The `LdapRecord\Laravel\Auth\Rule` abstract class has been moved to an interface.
+The `LdapRecord\Laravel\Auth\Rule` abstract class has been moved to an interface,
+and the `isValid` method has also been renamed to `passes`, and now accepts the
 
 ```diff
 namespace App\Ldap;
 
+use LdapRecord\Models\Model as LdapRecord;
+use Illuminate\Database\Eloquent\Model as Eloquent;
+
 use LdapRecord\Laravel\Auth\Rule;
 
-+ class MyRule extends Rule
-- class MyRule implements Rule
-{
-    // ...
-}
-```
-
-The `isValid` method has also been renamed to `passes`, and now accepts the 
-
-```diff
-use Illuminate\Database\Eloquent\Model as Eloquent;
-use LdapRecord\Models\Model as LdapRecord;
-
-class MyRule implements Rule
+- class MyRule extends Rule
++ class MyRule implements Rule
 {
     /**
      * Determine if the rule passes validation.
      */
-    - public function isValid();
-    + public function passes(LdapRecord $user, Eloquent $model = null): bool;
+-    public function isValid();
++    public function passes(LdapRecord $user, Eloquent $model = null): bool
+    {
+        // ...
+    }
 }
 ```

@@ -26,7 +26,7 @@ Require LdapRecord-Laravel via [composer](https://getcomposer.org/):
 composer require directorytree/ldaprecord-lumen
 ```
 
-Once composer completes, register the `LdapServiceProvider` inside of your `bootstrap/app.php` file:
+Once composer completes, register the `LdapServiceProvider` inside your `bootstrap/app.php` file:
 
 ```php
 // bootstrap/app.php
@@ -44,7 +44,7 @@ php artisan make:ldap-config
 
 A new LDAP configuration file will be created in your `config` directory.
 
-Then, inside of your `.env` file, paste the following to configure your LDAP connection:
+Then, inside your `.env` file, paste the following to configure your LDAP connection:
 
 ```text
 LDAP_LOGGING=true
@@ -61,7 +61,7 @@ LDAP_TLS=false
 
 ## Usage
 
-You can now begin using LdapRecord inside of your Lumen application:
+You can now begin using LdapRecord inside your Lumen application:
 
 ```php
 // routes/web.php

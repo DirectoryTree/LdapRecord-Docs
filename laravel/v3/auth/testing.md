@@ -15,7 +15,7 @@ test authentication [rules](/docs/laravel/v2/auth/configuration#rules),
 ## Getting Started
 
 Before we begin, you must require the `doctrine/dbal` into your composers `require-dev` for testing.
-This is due to the `$table->dropColumns(['guid', 'domain'])` call inside of the additional
+This is due to the `$table->dropColumns(['guid', 'domain'])` call inside the additional
 LdapRecord auth migration and that we are using SQLite in our test environment.
 
 This package is required for modifying columns - as described in the
@@ -35,7 +35,7 @@ Let's whip up a test by running the following command:
 php artisan make:test LdapAuthenticationTest
 ```
 
-Inside of our generated test, we'll make use of the following traits:
+inside our generated test, we'll make use of the following traits:
 
 **DatabaseMigrations**
 
@@ -119,9 +119,9 @@ $user = User::create([
 ]);
 ```
 
-On the second line, we're creating our fake LDAP user who will be signing into our application.
-You'll notice that we assign the attributes that are inside of our `sync_attributes`
-specified inside of our `config/auth.php` file, as well as the users `objectguid`.
+On the second line, we're creating our fake LDAP user who will be signing in to our application.
+You'll notice that we assign the attributes that are inside our `sync_attributes`
+specified inside our `config/auth.php` file, as well as the users `objectguid`.
 
 > If you're using OpenLDAP, the `objectguid` field may be `entryUUID` or `uid`.
 
@@ -174,13 +174,13 @@ To test scopes that you apply to the LdapRecord model you are using for authenti
 you will need to apply the attributes to the fake user you create to test that
 they can be properly located during authentication.
 
-For example, if you created a scope that enforces users to be inside of an Organizational
-Unit, then we must create our fake user inside of that Organizational Unit for the
+For example, if you created a scope that enforces users to be inside an Organizational
+Unit, then we must create our fake user inside that Organizational Unit for the
 user to be located - as you would using a real LDAP directory.
 Let's walk through this.
 
 Below we have our scope that will enforce users to be located
-inside of an Organizational Unit named `Administrators`:
+inside an Organizational Unit named `Administrators`:
 
 ```php
 namespace App\Ldap\Scopes;
@@ -220,8 +220,8 @@ class User extends Model
 }
 ```
 
-Now let's create our test. To do so, we'll setup everything as we have in the above test
-example, but we will create our user inside of the `Administrators` Organizational Unit:
+Now let's create our test. To do so, we'll set up everything as we have in the above test
+example, but we will create our user inside the `Administrators` Organizational Unit:
 
 ```php
 public function test_auth_works()
@@ -302,11 +302,13 @@ With that requirement, here is our created authentication rule:
 namespace App\Ldap\Rules;
 
 use LdapRecord\Laravel\Auth\Rule;
+use LdapRecord\Models\Model as LdapRecord;
 use LdapRecord\Models\ActiveDirectory\Group;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class HelpDeskEmployee extends Rule
+class HelpDeskEmployee implements Rule
 {
-    public function isValid()
+    public function passes(LdapRecord $user, Eloquent $model = null): bool
     {
         $group = Group::where('name', '=', 'Help Desk')->first();
 
@@ -393,7 +395,7 @@ public function test_auth_fails()
 ```
 
 The above test passes because we have not added our LDAP user into any groups -
-so the `exists()` check inside of our rule returns `false`.
+so the `exists()` check inside our rule returns `false`.
 
 ## SSO / Windows Authentication
 
@@ -404,7 +406,7 @@ as a server variable.
 This server variable (typically `$_SERVER['AUTH_USER']`) is what the `WindowsAuthenticate`
 middleware reads to locate the authenticated user from your LDAP directory.
 
-To set server variables for upcoming requests inside of your Laravel tests, use the `withServerVariables()` method:
+To set server variables for upcoming requests inside your Laravel tests, use the `withServerVariables()` method:
 
 ```php
 public function test_windows_authentication_works()

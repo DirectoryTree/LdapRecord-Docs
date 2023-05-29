@@ -16,7 +16,7 @@ As it is with signing users into your application, the Eloquent database model y
 
 ## Attribute Synchronization
 
-The `sync_attributes` you define inside of your `config/auth.php` file for your provider will be used
+The `sync_attributes` you define inside your `config/auth.php` file for your provider will be used
 for importing and synchronizing users.
 
 Be sure to look at the [documentation](/docs/laravel/v2/auth/database/configuration#database-sync-attributes)
@@ -24,14 +24,14 @@ to get a further understanding on what is possible with this option.
 
 ## Syncing Existing Records
 
-The `sync_existing` array you define inside of your `config/auth.php` will be used to synchronize existing database records with your LDAP users.
+The `sync_existing` array you define inside your `config/auth.php` will be used to synchronize existing database records with your LDAP users.
 
 Be sure to look at the [documentation](/docs/laravel/v2/auth/database/configuration#database-sync-existing)
 to get a further understanding on what is possible with this option.
 
 ## Password Synchronization
 
-The `sync_passwords` option you define inside of your `config/auth.php` file is used when
+The `sync_passwords` option you define inside your `config/auth.php` file is used when
 importing and synchronizing users. However, there are some caveats you must be aware of:
 
 - **Passwords cannot be retrieved from users who are being imported from your LDAP server.**
@@ -45,8 +45,8 @@ importing and synchronizing users. However, there are some caveats you must be a
 
 ## Running the command
 
-To run the command you must insert the `provider` name that you have setup for LDAP database synchronization
-inside of your `config/auth.php` file. Let's walk through an example.
+To run the command you must insert the `provider` name that you have set up for LDAP database synchronization
+inside your `config/auth.php` file. Let's walk through an example.
 
 In our application we have a configured authentication provider named `ldap`:
 
@@ -78,7 +78,7 @@ Would you like to display the user(s) to be imported / synchronized? (yes/no) [n
 > y
 ```
 
-A table will then be shown so you can confirm the import of the located users:
+A table will then be shown, so you can confirm the import of the located users:
 
 ```text
 +-------------+-------------------+---------------------+
@@ -125,13 +125,13 @@ The above scheduled import command will:
 - Only import objects that have an `objectclass` containing `user`
 
 > It's recommended to use [model query scopes](/docs/core/v2/models#query-scopes) instead of the `--filter`
-> option on your configured authentication LdapRecord model so LDAP users signing into your
+> option on your configured authentication LdapRecord model so LDAP users signing in to your
 > application are applied the same search filter.
 
 ## Programmatically Executing
 
 You can call the `ldap:import` command using Laravel's [Artisan](https://laravel.com/docs/artisan#programmatically-executing-commands)
-facade to programmatically execute the import inside of your application wherever you'd like:
+facade to programmatically execute the import inside your application wherever you'd like:
 
 ```php
 Artisan::call('ldap:import', ['provider' => 'ldap', '--no-interaction']);
@@ -303,7 +303,7 @@ php artisan ldap:import users --delete
 
 The `--delete-missing` option allows you to soft-delete all LDAP users that
 were missing from the import. This is useful when a user has been deleted
-in your LDAP server, and therefore should be soft-deleted inside of your
+in your LDAP server, and therefore should be soft-deleted inside your
 application, since they will not be returned in search results.
 
 This option has been designed to have the utmost safety of user data in mind.
@@ -311,7 +311,7 @@ Here are some paramount things to understand with this option:
 
 **No users will be deleted if soft-deletes are not enabled on your `User` eloquent model.**
 
-Deletion will not occur. You must setup [Soft Deletes](https://laravel.com/docs/eloquent#soft-deleting)
+Deletion will not occur. You must set up [Soft Deletes](https://laravel.com/docs/eloquent#soft-deleting)
 on your `User` eloquent model.
 
 **If no users have been successfully imported, no users will be soft-deleted.**
@@ -386,7 +386,7 @@ The `--no-log` option allows you to disable logging during the command.
 php artisan ldap:import users --no-log
 ```
 
-By default this is enabled, regardless if `logging` is disabled in your `config/ldap.php` file.
+By default, this is enabled, regardless if `logging` is disabled in your `config/ldap.php` file.
 
 ### No Interaction
 

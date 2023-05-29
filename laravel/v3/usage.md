@@ -23,14 +23,14 @@ If you would like to create your own models, you can generate one via the `make:
 php artisan make:ldap-model User
 ```
 
-This will create a new LdapRecord model inside of your application in the `app/Ldap` folder.
+This will create a new LdapRecord model inside your application in the `app/Ldap` folder.
 
 > If the `Ldap` folder does not exist, it will be created automatically.
 
 By default, the generated model will not have any `$objectClasses` set. LdapRecord requires
 this attribute to be set for objects to be created properly in your directory.
 
-If no `$objectClasses` are set, queries will not be scoped to the object you are querying
+If no `$objectClasses` are set, queries will not be scoped to the object you are querying,
 and you will have to set the models `$objectClasses` manually before creating new objects.
 
 ```php

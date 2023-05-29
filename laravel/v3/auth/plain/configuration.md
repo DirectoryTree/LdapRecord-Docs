@@ -8,7 +8,7 @@ description: Configuring the plain LDAP authentication provider
 ## Introduction
 
 To configure a plain LDAP authentication provider, navigate to the `providers` array
-inside of your `config/auth.php` file, and paste the following `users` provider:
+inside your `config/auth.php` file, and paste the following `users` provider:
 
 > You will have to remove/alter the default `users` provider, or create your own.
 
@@ -22,6 +22,7 @@ inside of your `config/auth.php` file, and paste the following `users` provider:
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
         'rules' => [],
+        'scopes' => [],
     ],
 ],
 ```
@@ -60,7 +61,7 @@ LdapRecord, you may publish your own model using the below command:
 php artisan make:ldap-model User
 ```
 
-> The model will be created inside of the `app/Ldap` directory.
+> The model will be created inside the `app/Ldap` directory.
 
 Once created, insert the following interface and trait onto the model:
 
@@ -104,7 +105,7 @@ The `rules` option must be an array of [authentication rule](#rules) class names
 
 ### Overview
 
-LDAP authentication rules give you the ability to allow or deny users from signing into your
+LDAP authentication rules give you the ability to allow or deny users from signing in to your
 application using a condition you would like to apply. These rules are executed **after**
 a user successfully passes LDAP authentication against your configured server.
 
@@ -130,15 +131,15 @@ A rule will then be created in your applications `app/Ldap/Rules` directory:
 namespace App\Ldap\Rules;
 
 use LdapRecord\Laravel\Auth\Rule;
+use LdapRecord\Models\Model as LdapRecord;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class OnlyAdministrators extends Rule
+class OnlyAdministrators implements Rule
 {
     /**
      * Check if the rule passes validation.
-     *
-     * @return bool
      */
-    public function isValid()
+    public function passes(LdapRecord $user, Eloquent $model = null): bool
     {
         //
     }
@@ -155,20 +156,22 @@ Now, we will update the `isValid` method to check the LDAP users `groups` relati
 namespace App\Ldap\Rules;
 
 use LdapRecord\Laravel\Auth\Rule;
+use LdapRecord\Models\Model as LdapRecord;
 use LdapRecord\Models\ActiveDirectory\Group;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class OnlyAdministrators extends Rule
+class OnlyAdministrators implements Rule
 {
-    public function isValid()
+    public function passes(LdapRecord $user, Eloquent $model = null): bool
     {
         $administrators = Group::find('cn=Administrators,dc=local,dc=com');
 
-        return $this->user->groups()->recursive()->exists($administrators);
+        return $user->groups()->recursive()->exists($administrators);
     }
 }
 ```
 
-> We call the `recursive` method on the relationship to make sure that we load groups of
+> We call the `recursive` method on the relationship to make sure we load groups of
 > groups in case the user is not an immediate member of the `Administrators` group.
 
 Once we have our rule defined, we will add it into our authentication provider in the `config/auth.php` file:
@@ -187,7 +190,15 @@ Once we have our rule defined, we will add it into our authentication provider i
 ],
 ```
 
-Now when you attempt to login to your application with a LDAP user that successfully passes
+Now when you attempt to log in to your application with an LDAP user that successfully passes
 LDAP authentication, they will need to be a member of the `Administrators` group.
 
 If you are caching your configuration, make sure you re-run `config:cache` to re-cache your modifications.
+
+## Scopes
+
+The `scopes` option must be an array of [LdapRecord scope](/docs/core/v3/model-scopes.md) class names.
+
+### Overview
+
+LdapRecord scopes inserted in this option allow you to apply query scopes to your configured model, only during authentication and importing.

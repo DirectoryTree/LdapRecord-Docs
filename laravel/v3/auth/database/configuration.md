@@ -8,7 +8,7 @@ description: Configuring the database LDAP authentication provider
 ## Introduction
 
 To configure a synchronized database LDAP authentication provider, navigate
-to the `providers` array inside of your `config/auth.php` file, and paste
+to the `providers` array inside your `config/auth.php` file, and paste
 the following `users` provider:
 
 > You will have to remove/alter the default `users` provider, or create your own.
@@ -70,7 +70,7 @@ The `rules` option must be an array of [authentication rule](#rules) class name'
 
 ### Overview
 
-LDAP authentication rules give you the ability to allow or deny users from signing into your
+LDAP authentication rules give you the ability to allow or deny users from signing in to your
 application using a condition you would like to apply. These rules are executed **after**
 a user successfully passes LDAP authentication against your configured server.
 
@@ -96,15 +96,15 @@ A rule will then be created in your applications `app/Ldap/Rules` directory:
 namespace App\Ldap\Rules;
 
 use LdapRecord\Laravel\Auth\Rule;
+use LdapRecord\Models\Model as LdapRecord;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class OnlyAdministrators extends Rule
+class OnlyAdministrators implements Rule
 {
     /**
      * Check if the rule passes validation.
-     *
-     * @return bool
      */
-    public function isValid()
+    public function passes(LdapRecord $user, Eloquent $model = null): bool
     {
         //
     }
@@ -124,11 +124,13 @@ Now, we will update the `isValid` method to check the LDAP users `groups` relati
 namespace App\Ldap\Rules;
 
 use LdapRecord\Laravel\Auth\Rule;
+use LdapRecord\Models\Model as LdapRecord;
 use LdapRecord\Models\ActiveDirectory\Group;
+use Illuminate\Database\Eloquent\Model as Eloquent;
 
-class OnlyAdministrators extends Rule
+class OnlyAdministrators implements Rule
 {
-    public function isValid()
+    public function passes(LdapRecord $user, Eloquent $model = null): bool
     {
         $administrators = Group::find('cn=Administrators,dc=local,dc=com');
 
@@ -160,7 +162,7 @@ Once we have our rule defined, we will add it into our authentication provider i
 ],
 ```
 
-Now when you attempt to login to your application with a LDAP user that successfully passes
+Now when you attempt to log in to your application with an LDAP user that successfully passes
 LDAP authentication, they will need to be a member of the `Administrators` group.
 
 > If you are caching your configuration, make sure you re-run `config:cache` to re-cache your modifications.
@@ -175,7 +177,7 @@ used for creating and retrieving LDAP users from your applications database.
 ## Sync Password Column
 
 If your application uses a different password column than `password`, then you can configure
-it using the `password_column` key inside of your providers configuration:
+it using the `password_column` key inside your provider's configuration:
 
 ```php
 'providers' => [
@@ -254,7 +256,7 @@ describe how existing database users should be sychronized:
 - The **key** of each array item is the column of your `users` database table to query
 - The **value** is the _name_ of the users LDAP attribute to set the database value to
 
-> Alternatively inside of each `value` key, you may provide an array with an `attribute`
+> Alternatively inside each `value` key, you may provide an array with an `attribute`
 > key containing the LDAP attribute name and an `operator` key to use for the
 > query when retrieving a record from the database. More on this below.
 
@@ -264,7 +266,7 @@ describe how existing database users should be sychronized:
 
 Let's walk through an example.
 
-In our application, we have existing users inside of our database:
+In our application, we have existing users inside our database:
 
 | id  | name         | email             | password | guid   | domain |
 | --- | ------------ | ----------------- | -------- | ------ | ------ |
@@ -310,7 +312,7 @@ clauses with the equals (`=`) operator. Consider the following data in your data
 | 1   | Steve Bauman | sbauman@local.com | ...      | `null` | `null` |
 | 2   | John Doe     | jdoe@local.com    | ...      | `null` | `null` |
 
-However, inside of the LDAP server, the `mail` attribute for Steve's record
+However, inside the LDAP server, the `mail` attribute for Steve's record
 is actually `SBauman@local.com`. While he could successfully authenticate,
 the existing record would not be found in our database due to Postgres'
 more strict SQL grammar. Changing the `sync_existing` configuration
@@ -331,7 +333,7 @@ keys, we can fine-tune the query syntax to be more flexible to your needs.
 
 ## Attribute Handlers
 
-If you require logic for synchronizing attributes when users sign into your application or are
+If you require logic for synchronizing attributes when users sign in to your application or are
 being [imported](/docs/laravel/v2/auth/database/importing), you can create an attribute handler class
 responsible for setting / synchronizing your database models attributes from their
 LDAP model.
@@ -339,7 +341,7 @@ LDAP model.
 This class you define must have a `handle` method. This method must accept the LDAP model you
 have configured as the first parameter and your Eloquent database model as the second.
 
-For the example below, we will create a handler named `AttributeHandler.php` inside of your `app/Ldap` folder:
+For the example below, we will create a handler named `AttributeHandler.php` inside your `app/Ldap` folder:
 
 > You do not need to call `save()` on your Eloquent database model.
 > This is called for you after attribute synchronization.
@@ -366,7 +368,7 @@ class AttributeHandler
 > any dependencies you require in your handlers constructor to be made available
 > during synchronization.
 
-Then inside of your `config/auth.php` file for your provider, set the attribute handler class as the `sync_attributes` value:
+Then inside your `config/auth.php` file for your provider, set the attribute handler class as the `sync_attributes` value:
 
 ```php
 'providers' => [

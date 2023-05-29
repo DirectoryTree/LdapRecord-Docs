@@ -37,14 +37,17 @@ Let's walk through each example.
 When checking for a single group, we will use the relation `exists()` method:
 
 ```php
+use LdapRecord\Models\Model as LdapRecord;
+use Illuminate\Database\Eloquent\Model as Eloquent;
+
 /**
  * Check if the rule passes validation.
  *
  * @return bool
  */
-public function isValid()
+public function passes(LdapRecord $user, Eloquent $model = null): bool
 {
-    return $this->user->groups()->exists(
+    return $user->groups()->exists(
         'cn=Help Desk,ou=Groups,dc=local,dc=com'
     );
 }
@@ -55,9 +58,9 @@ With the `exists()` method, we can also use an LdapRecord `Model` instance:
 > This approach is useful, so an exception will be thrown when the group cannot be located.
 
 ```php
-public function isValid()
+public function passes(LdapRecord $user, Eloquent $model = null): bool
 {
-    return $this->user->groups()->exists(
+    return $user->groups()->exists(
         Group::findOrFail('cn=Help Desk,ou=Groups,dc=local,dc=com')
     );
 }
@@ -66,9 +69,9 @@ public function isValid()
 Or; A Common Name (`cn`):
 
 ```php
-public function isValid()
+public function passes(LdapRecord $user, Eloquent $model = null): bool
 {
-    return $this->user->groups()->exists('Help Desk');
+    return $user->groups()->exists('Help Desk');
 }
 ```
 
@@ -77,9 +80,9 @@ public function isValid()
 To check that the user has **all** of a given set of groups, we will use the `exists()` method:
 
 ```php
-public function isValid()
+public function passes(LdapRecord $user, Eloquent $model = null): bool
 {
-    return $this->user->groups()->exists(
+    return $user->groups()->exists(
         'cn=Help Desk,ou=Groups,dc=local,dc=com',
         'cn=Site Admins,ou=Groups,dc=local,dc=com'
     );
@@ -89,9 +92,9 @@ public function isValid()
 We can also use `Model` instances:
 
 ```php
-public function isValid()
+public function passes(LdapRecord $user, Eloquent $model = null): bool
 {
-    return $this->user->groups()->exists([
+    return $user->groups()->exists([
         Group::findOrFail('cn=Help Desk,ou=Groups,dc=local,dc=com'),
         Group::findOrFail('cn=Site Admins,ou=Groups,dc=local,dc=com'),
     ]);
@@ -101,9 +104,9 @@ public function isValid()
 Or; Common Names (`cn`):
 
 ```php
-public function isValid()
+public function passes(LdapRecord $user, Eloquent $model = null): bool
 {
-    return $this->user->groups()->exists([
+    return $user->groups()->exists([
         'Help Desk', 'Site Admins'
     ]);
 }
@@ -114,9 +117,9 @@ public function isValid()
 To check that a user has **any** of a given set of groups, we will use the `contains()` method:
 
 ```php
-public function isValid()
+public function passes(LdapRecord $user, Eloquent $model = null): bool
 {
-    return $this->user->groups()->contains([
+    return $user->groups()->contains([
         'Help Desk', 'Accounting'
     ]);
 }
@@ -135,9 +138,9 @@ For example, if a user is a member of an `Accounting` group, and this
 LdapRecord to search recursively for the `Office` group:
 
 ```php
-public function isValid()
+public function passes(LdapRecord $user, Eloquent $model = null): bool
 {
-    return $this->user->groups()->recursive()->exists('Office');
+    return $user->groups()->recursive()->exists('Office');
 }
 ```
 
@@ -146,10 +149,10 @@ determine the users group membership, since LdapRecord is only
 searching for immediate memberships of the user:
 
 ```php
-public function isValid()
+public function passes(LdapRecord $user, Eloquent $model = null): bool
 {
     // Only searching immediate group memberships:
-    return $this->user->groups()->exists('Office');
+    return $user->groups()->exists('Office');
 }
 ```
 
@@ -170,8 +173,8 @@ Let's create a new model scope using the below command:
 php artisan make:ldap-scope OnlyAccountingUsers
 ```
 
-Now inside of the generated scope, we will limit the query to only
-return users who are contained inside the our `Accounting` OU:
+Now inside the generated scope, we will limit the query to only
+return users who are contained inside our `Accounting` OU:
 
 ```php
 <?php
@@ -209,6 +212,7 @@ can add the global scope to the model inside your `AuthServiceProvider::boot()` 
 
 ```php
 // app/Providers/AuthServiceProvider.php
+
 use App\Ldap\Scopes\OnlyAccountingUsers;
 
 /**
@@ -257,7 +261,7 @@ contained inside the `Accounting` OU will be allowed to authenticate.
 
 ## Using Only Manually Imported Users
 
-To enforce only [manually imported LDAP users](/docs/laravel/v2/importing) who exist inside of your
+To enforce only [manually imported LDAP users](/docs/laravel/v2/importing) who exist inside your
 database to sign in to your application, you must use an [authentication rule](/docs/laravel/v2/auth/configuration#rules).
 
 LdapRecord-Laravel includes this authentication rule out-of-the-box:
@@ -267,7 +271,7 @@ LdapRecord\Laravel\Auth\Rules\OnlyImported
 ```
 
 To use this rule, insert it into the `rules` array into your authentication
-provider configuration inside of the `config/auth.php` file:
+provider configuration inside the `config/auth.php` file:
 
 ```php
 // config/auth.php
@@ -288,4 +292,4 @@ provider configuration inside of the `config/auth.php` file:
 > Make sure you run `php artisan config:clear` if you are caching your configuration files.
 
 Now when you attempt to sign in to your application, you will only be able to sign in
-with a user who has already been imported into your local applications database.
+with a user who has already been imported into your local application's database.

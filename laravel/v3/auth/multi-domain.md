@@ -53,7 +53,7 @@ php artisan make:ldap-model Alpha\User
 php artisan make:ldap-model Bravo\User
 ```
 
-> The `Alpha` and `Bravo` sub-directories will be created for you automatically.
+> The `Alpha` and `Bravo` subdirectories will be created for you automatically.
 
 Then, we must edit their connections to reflect the connection name in the `config/ldap.php` file:
 
@@ -84,8 +84,8 @@ class User extends Model
 
 ### Configuring the Authentication Guards
 
-For each of our LDAP connections, we will setup new [authentication providers](/docs/laravel/v2/auth/configuration),
-as well as their own guard inside of our `config/auth.php` file:
+For each of our LDAP connections, we will set up new [authentication providers](/docs/laravel/v2/auth/configuration),
+as well as their own guard inside our `config/auth.php` file:
 
 ```php
 // config/auth.php
@@ -119,8 +119,8 @@ as well as their own guard inside of our `config/auth.php` file:
 
 ## Authentication Approaches
 
-Due to each domain requiring it's own `guard` that we've configured in our `config/auth.php` file,
-we need to be able to determine which domain the user who is attempting to login in is from,
+Due to each domain requiring its own `guard` that we've configured in our `config/auth.php` file,
+we need to be able to determine which domain the user who is attempting to log in is from,
 so we can tell Laravel which guard to use for authenticating the user.
 
 Let's walk through two examples of how we could determine their domain:
@@ -133,7 +133,7 @@ Let's walk through two examples of how we could determine their domain:
 ### Domain Selection
 
 In this example, we will add an HTML `<select>` input containing an `<option>` for each
-domain we want to allow users to login to. This allows the user to select the domain
+domain we want to allow users to log in to. This allows the user to select the domain
 from the dropdown, enter their credentials, and then attempt signing in.
 
 First, we will open up our `login.blade.php` file, and add the select option:
@@ -202,13 +202,13 @@ if (Auth::attempt($credentials)) {
 ## Updating Your Web Routes
 
 Having multiple authentication guards means that we need to update the `auth` middleware
-that is covering our protected application routes inside of our `routes/web.php` file.
+that is covering our protected application routes inside our `routes/web.php` file.
 
 Luckily, this middleware accepts a comma separated list of guards you would like to
 protect your routes by. You will need to add both of the guards you created above:
 
 > By default, if no guards are given to the Laravel `auth` middleware, it will attempt
-> to use the `default` guard configured inside of your `config/auth.php` file.
+> to use the `default` guard configured inside your `config/auth.php` file.
 
 **Before**:
 

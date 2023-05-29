@@ -18,7 +18,7 @@ This guide will show you how to integrate LdapRecord-Laravel using this scaffold
 
 ## Debugging
 
-Inside of your `config/ldap.php` file, ensure you have `logging` enabled during the setup of authentication.
+inside your `config/ldap.php` file, ensure you have `logging` enabled during the setup of authentication.
 Doing this will help you immensely in debugging connectivity and authentication issues.
 
 If you encounter issues along the way, be sure to open your `storage/logs` directory after you
@@ -80,7 +80,7 @@ In the following example, we will authenticate users by their `sAMAccountName`.
 
 ### Sync Attributes
 
-We will first need to adjust our `sync_attributes` array, located inside of our `config/auth.php` file.
+We will first need to adjust our `sync_attributes` array, located inside our `config/auth.php` file.
 
 The only thing we need to change is the `email` key:
 
@@ -108,9 +108,9 @@ The only thing we need to change is the `email` key:
 
 ### User Migration
 
-Now that we have adjusted our synchronized attributes, we need to adjust the `users` database table migration.
+Now we have adjusted our synchronized attributes, we need to adjust the `users` database table migration.
 
-Similarly as above, we only need to change the `email` column to `username`:
+Similarly, as above, we only need to change the `email` column to `username`:
 
 **From**:
 
@@ -134,7 +134,7 @@ Schema::create('users', function (Blueprint $table) {
 
 ### Login Form
 
-We're almost there. We will now need to update the input HTML field inside of the scaffolded `login.blade.php` view:
+We're almost there. We will now need to update the input HTML field inside the scaffolded `login.blade.php` view:
 
 **From**:
 
@@ -180,7 +180,7 @@ We're almost there. We will now need to update the input HTML field inside of th
 
 ### Login Request
 
-This last step requires adjusting the `rules()` and `authenticate()` methods inside of the scaffolded `LoginRequest.php` class:
+This last step requires adjusting the `rules()` and `authenticate()` methods inside the scaffolded `LoginRequest.php` class:
 
 **From**:
 
@@ -245,7 +245,7 @@ public function authenticate()
 }
 ```
 
-You are now ready to login LDAP users by their username!
+You are now ready to log in LDAP users by their username!
 
 ## Fallback Authentication
 
@@ -260,8 +260,8 @@ For example, given the following `users` database table:
 | --- | ------------ | ------------------- | -------- | ------ | ------ |
 | 1   | Steve Bauman | sbauman@outlook.com | ...      | `null` | `null` |
 
-If a user attempts to login with the above email address and this user does
-not exist inside of your LDAP directory, then standard Eloquent authentication
+If a user attempts to log in with the above email address and this user does
+not exist inside your LDAP directory, then standard Eloquent authentication
 will be performed instead.
 
 This feature is ideal for environments where:
@@ -269,8 +269,8 @@ This feature is ideal for environments where:
 - LDAP server connectivity may be intermittent.
 - **Or**; You have regular users registering normally in your application.
 
-To enable this feature, you must define a `fallback` array inside of the `$credentials`
-you pass to the `Auth::attempt()` method inside of your `LoginRequest`:
+To enable this feature, you must define a `fallback` array inside the `$credentials`
+you pass to the `Auth::attempt()` method inside your `LoginRequest`:
 
 ```php
 // app/Http/Requests/Auth/LoginRequest.php
@@ -415,7 +415,7 @@ class AuthenticatedSessionController extends Controller
 If you need to modify the translations of these error messages, create a new translation
 file named `errors.php` in your `resources` directory at the following path:
 
-> The `vendor` directory (and each sub-directory) will have to be created manually.
+> The `vendor` directory (and each subdirectory) will have to be created manually.
 
 #### Laravel >= 9
 

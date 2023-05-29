@@ -68,7 +68,7 @@ Make sure this guard exists and is utilizing the `session` driver:
 ],
 ```
 
-If you want to change the guard Sanctum uses, publish it's configuration file by running the below command:
+If you want to change the guard Sanctum uses, publish its configuration file by running the below command:
 
 > **Important**: As mentioned above, any custom guard must use a `session` driver for Sanctum to function.
 
@@ -127,7 +127,7 @@ protected $middlewareGroups = [
 How does Sanctum know that the request came from your frontend? Well, it does
 this by checking the domain that the request was sent from to see if it
 matches with your application server's URL, or one of the URL's
-configured inside of the `sanctum.php` configuration file:
+configured inside the `sanctum.php` configuration file:
 
 ```php
 // config/sanctum.php
@@ -147,7 +147,7 @@ configured inside of the `sanctum.php` configuration file:
 > 
 > It's recommended to use [Laravel Fortify](https://laravel.com/docs/fortify)
 > as a starting point for authenticating users. This guide assumes you
-> have setup authentication using one of the documented packages.
+> have set up authentication using one of the documented packages.
 
 As mentioned in the Laravel Sanctum documentation, you must first initialize
 a CSRF cookie by requesting one from an endpoint Sanctum integrates
@@ -359,11 +359,11 @@ class SanctumTokenTest extends TestCase
 
     public function testLdapUserCanRetrieveToken()
     {
-        // Setup the directory emulator to create a fake, existing LDAP user:
+        // Set up the directory emulator to create a fake, existing LDAP user:
         $fake = DirectoryEmulator::setup();
 
         // Remember to supply the "sync_attributes" you have assigned inside
-        // of your config/auth.php. You will receive an exception if any
+        // your config/auth.php. You will receive an exception if any
         // non-nullable SQL fields are not present on the LDAP user:
         $ldapUser = LdapUser::create([
             'cn' => 'John Doe',

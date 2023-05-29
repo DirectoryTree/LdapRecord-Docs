@@ -105,13 +105,13 @@ Route::middleware([
 To prevent security issues using multiple-domain authentication using the `WindowsAuthenticate`
 middleware, domain verification will be performed on the authenticating user.
 
-This verification checks if the user's _domain name_ is contained inside of their
+This verification checks if the user's _domain name_ is contained inside their
 _full distinguished name_, which is retrieved from each of your configured LDAP guards.
 
 > Only 'Domain Components' are checked in the user's distinguished name. More on this below.
 
 To describe this issue in further detail -- the `WindowsAuthenticate` middleware retrieves all of your configured
-authentication guards inside of your `config/auth.php` file. It then determines which one is using the `ldap`
+authentication guards inside your `config/auth.php` file. It then determines which one is using the `ldap`
 driver, and attempts to locate the authenticating users from **each connection**.
 
 Since there is the possibility of users having the same `sAMAccountName` on two separate domains,
@@ -131,7 +131,7 @@ cn=sbauman,ou=users,dc=local,dc=com
 ```
 
 They will be denied authentication. This is because the authenticating user has a domain of
-`ACME`, but it is not contained inside of their distinguished name domain components (`dc`).
+`ACME`, but it is not contained inside their distinguished name domain components (`dc`).
 
 Using the same example, if the located user's distinguished name is:
 
@@ -139,12 +139,12 @@ Using the same example, if the located user's distinguished name is:
 cn=sbauman,ou=users,dc=acme,dc=com
 ```
 
-Then they will be allowed to authenticate, as their `ACME` domain exists inside
-of their distinguished name domain components (`dc=acme`). Comparison against
+Then they will be allowed to authenticate, as their `ACME` domain exists inside 
+their distinguished name domain components (`dc=acme`). Comparison against
 each domain component will be performed in a **case-insensitive** manor.
 
 If you would like to disable this check, you must call the static method `bypassDomainVerification`
-on the `WindowsAuthenticate` middleware inside of your `AuthServiceProvider`:
+on the `WindowsAuthenticate` middleware inside your `AuthServiceProvider`:
 
 > **Important**: This is a security issue if you use multi-domain authentication,
 > since users who have the same `sAMAccountName` could sign in as each other.
@@ -266,9 +266,9 @@ WindowsAuthenticate::validateDomainUsing(DomainValidator::class);
 
 ## Changing the Server Key
 
-By default, the `WindowsAuthenticate` middleware uses the `AUTH_USER` key inside of PHP's `$_SERVER`
+By default, the `WindowsAuthenticate` middleware uses the `AUTH_USER` key inside PHP's `$_SERVER`
 array (`$_SERVER['AUTH_USER']`). If you would like to change this, call the `serverKey` method on
-the `WindowsAuthenticate` middleware inside of your `AuthServiceProvider`:
+the `WindowsAuthenticate` middleware inside your `AuthServiceProvider`:
 
 ```php
 // app/Providers/AuthServiceProvider.php
@@ -295,7 +295,7 @@ As of LdapRecord-Laravel version `v1.9.0`, users signed in to your application v
 
 This shouldn't have any effect on your application, but if you need to re-enable
 this feature, you must call the `rememberAuthenticatedUsers` method on the
-`WindowsAuthenticate` middleware inside of your `AuthServiceProvider`:
+`WindowsAuthenticate` middleware inside your `AuthServiceProvider`:
 
 ```php
 // app/Providers/AuthServiceProvider.php
@@ -318,7 +318,7 @@ public function boot()
 ## Selective / Bypassing Single-Sign-On
 
 Occasionally you may need to allow users who are not a part of the domain
-to login to your application, as well as allowing domain users to
+to log in to your application, as well as allowing domain users to
 automatically sign in via Single-Sign-On.
 
 Depending on your web servers operating system, this process can be different.
@@ -360,8 +360,8 @@ on your entire web application instance. This means, you cannot enable a single 
 application to use Single-Sign-On or exempt a portion of your application. However, there is a
 workaround that is used frequently in the industry.
 
-The goal is to have two URL's that point to the same Laravel application. One has Windows authentication
-enabled, and another does not. This is typically identified by an `sso` sub-domain:
+The goal is to have two URLs that point to the same Laravel application. One has Windows authentication
+enabled, and another does not. This is typically identified by an `sso` subdomain:
 
 ```html
 <!-- Standard URL -->

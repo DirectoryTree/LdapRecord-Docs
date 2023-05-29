@@ -10,7 +10,7 @@ description: Setting up LDAP authentication with Laravel JetStream
 > **Important**: Before getting started, please complete the [configuration guide](/docs/laravel/v2/auth/plain/configuration).
 
 Laravel Jetstream utilizes [Laravel Fortify](https://github.com/laravel/fortify) for authentication under the hood.
-We will customize various aspects of it to allow LDAP users to sign into the application.
+We will customize various aspects of it to allow LDAP users to sign in to the application.
 
 ## Fortify Setup
 
@@ -65,7 +65,7 @@ login page normally with the "_Invalid credentials_" error message.
 ### Feature Configuration
 
 Since we are synchronizing data from our LDAP server, we must disable the following
-features by commenting them out inside of the `config/fortify.php` file:
+features by commenting them out inside the `config/fortify.php` file:
 
 ```php
 // config/fortify.php
@@ -94,7 +94,7 @@ features by commenting them out inside of the `config/fortify.php` file:
 > **Important**: You may keep `Features::registration()` enabled if you would like
 > to continue accepting local application user registration. Keep in mind, if you
 > continue to allow registration, you will need to either use multiple Laravel
-> authentication guards, or setup the [login fallback](#fallback-auth) feature.
+> authentication guards, or set up the [login fallback](#fallback-auth) feature.
 
 ## Sessions
 
@@ -139,7 +139,7 @@ In the following example, we will authenticate users by their `sAMAccountName`.
 #### Authentication Callback
 
 With our Fortiy configuration updated, we will jump into our `AuthServiceProvider.php` file
-and setup our authentication callback using the `Fortify::authenticateUsing()` method:
+and set up our authentication callback using the `Fortify::authenticateUsing()` method:
 
 ```php
 // app/Providers/AuthServiceProvider.php
@@ -170,7 +170,7 @@ class AuthServiceProvider extends ServiceProvider
 
 #### Username Configuration
 
-Inside of our `config/fortify.php` file, we must change the `username` option to `username` from `email`:
+inside our `config/fortify.php` file, we must change the `username` option to `username` from `email`:
 
 ```php
 // config/fortify.php
@@ -182,7 +182,7 @@ Inside of our `config/fortify.php` file, we must change the `username` option to
 'username' => 'username',
 ```
 
-You will notice above that we are passing in an array of credentials with
+You will notice above we are passing in an array of credentials with
 `samaccountname` as the key, and the requests `username` form input.
 
 ### Login View
@@ -229,7 +229,7 @@ on the `LoginController`.
 
 Since this functionality is now automatically registered, if you would like to modify how
 an error is handled, call the `setErrorHandler` method on the `BindFailureListener`
-class inside of your `AuthServiceProvider.php` file:
+class inside your `AuthServiceProvider.php` file:
 
 ```php
 // app/Providers/AuthServiceProvider.php
@@ -263,7 +263,7 @@ class AuthServiceProvider extends ServiceProvider
 If you need to modify the translations of these error messages, create a new translation
 file named `errors.php` in your `resources` directory at the following path:
 
-> The `vendor` directory (and each sub-directory) will have to be created manually.
+> The `vendor` directory (and each subdirectory) will have to be created manually.
 
 #### Laravel >= 9
 

@@ -15,11 +15,11 @@ description: Setting up LDAP authentication with Laravel JetStream
 [Laravel Jetstream](https://jetstream.laravel.com) provides robust authentication scaffolding out-of-the-box.
 It utilizes [Laravel Fortify](https://laravel.com/docs/fortify) for authentication under the hood.
 
-We will customize various aspects of Jetsream and Fortify to allow LDAP users to sign into the application.
+We will customize various aspects of Jetsream and Fortify to allow LDAP users to sign in to the application.
 
 ## Debugging
 
-Inside of your `config/ldap.php` file, ensure you have `logging` enabled during the setup of authentication.
+inside your `config/ldap.php` file, ensure you have `logging` enabled during the setup of authentication.
 Doing this will help you immensely in debugging connectivity and authentication issues.
 
 If you encounter issues along the way, be sure to open your `storage/logs` directory after you
@@ -84,7 +84,7 @@ login page normally with the "_Invalid credentials_" error message.
 ### Feature Configuration
 
 Since we are synchronizing data from our LDAP server, we must disable the following
-features by commenting them out inside of the `config/fortify.php` file:
+features by commenting them out inside the `config/fortify.php` file:
 
 ```php
 // config/fortify.php
@@ -113,7 +113,7 @@ features by commenting them out inside of the `config/fortify.php` file:
 > **Important**: You may keep `Features::registration()` enabled if you would like
 > to continue accepting local application user registration. Keep in mind, if you
 > continue to allow registration, you will need to either use multiple Laravel
-> authentication guards, or setup the [login fallback](#fallback-auth) feature.
+> authentication guards, or set up the [login fallback](#fallback-auth) feature.
 
 ## Using Usernames
 
@@ -126,7 +126,7 @@ In the following example, we will authenticate users by their `sAMAccountName`.
 #### Authentication Callback
 
 With our Fortiy configuration updated, we will jump into our `AuthServiceProvider.php` file
-and setup our authentication callback using the `Fortify::authenticateUsing()` method:
+and set up our authentication callback using the `Fortify::authenticateUsing()` method:
 
 ```php
 // app/Providers/AuthServiceProvider.php
@@ -157,7 +157,7 @@ class AuthServiceProvider extends ServiceProvider
 
 #### Username Configuration
 
-Inside of our `config/fortify.php` file, we must change the `username` option to `username` from `email`:
+inside our `config/fortify.php` file, we must change the `username` option to `username` from `email`:
 
 ```php
 // config/fortify.php
@@ -169,7 +169,7 @@ Inside of our `config/fortify.php` file, we must change the `username` option to
 'username' => 'username',
 ```
 
-You will notice above that we are passing in an array of credentials with
+You will notice above we are passing in an array of credentials with
 `samaccountname` as the key, and the requests `username` form input.
 
 ### Database Migration
@@ -189,7 +189,7 @@ $table->string('username')->unique();
 ### Sync Attributes
 
 When using usernames, we must also adjust the `sync_attributes` option inside
-of our `config/auth.php` file. We will adjust it to reflect our `username`
+our `config/auth.php` file. We will adjust it to reflect our `username`
 database column to be synchronized with the `samaccountname` attribute:
 
 ```php
@@ -280,7 +280,7 @@ class User extends Authenticatable implements LdapAuthenticatable
 Database fallback allows the authentication of local database users if **LDAP
 connectivity is not present**, or **an LDAP user cannot be found**.
 
-To enable this feature, you must define a `fallback` array inside of the credentials
+To enable this feature, you must define a `fallback` array inside the credentials
 you insert into the `Auth::validate()` method in your `Fortify::authenticateUsing()` callback:
 
 ```php
@@ -319,8 +319,8 @@ For example, given the following `users` database table:
 | --- | ------------ | ------------------- | -------- | ------ | ------ |
 | 1   | Steve Bauman | sbauman@outlook.com | ...      | `null` | `null` |
 
-If a user attempts to login with the above email address and this user does
-not exist inside of your LDAP directory, then standard Eloquent authentication
+If a user attempts to log in with the above email address and this user does
+not exist inside your LDAP directory, then standard Eloquent authentication
 will be performed instead.
 
 This feature is ideal for environments where:
@@ -394,7 +394,7 @@ on the `LoginController`.
 
 Since this functionality is now automatically registered, if you would like to modify how
 an error is handled, call the `setErrorHandler` method on the `BindFailureListener`
-class inside of your `AuthServiceProvider.php` file:
+class inside your `AuthServiceProvider.php` file:
 
 ```php
 // app/Providers/AuthServiceProvider.php
@@ -428,7 +428,7 @@ class AuthServiceProvider extends ServiceProvider
 If you need to modify the translations of these error messages, create a new translation
 file named `errors.php` in your `resources` directory at the following path:
 
-> The `vendor` directory (and each sub-directory) will have to be created manually.
+> The `vendor` directory (and each subdirectory) will have to be created manually.
 
 #### Laravel >= 9
 
@@ -475,7 +475,7 @@ return [
 Since LDAP users are not registered through Jetstream's interface and are instead created
 through an import or successful authentication, you will have to assign their default
 team by utilizing LdapRecord's `Imported` event, which is fired directly after a
-new user has been imported or created inside of your applications database.
+new user has been imported or created inside your application's database.
 
 Create the event listener executing the below command:
 
@@ -483,7 +483,7 @@ Create the event listener executing the below command:
 php artisan make:listener AssignTeam --event="LdapRecord\Laravel\Events\Import\Imported"
 ```
 
-Inside of the event listener, attach the users team as you would during
+inside the event listener, attach the users team as you would during
 a normal users registration through the registration interface:
 
 ```php
@@ -514,7 +514,7 @@ class AssignTeam
 }
 ```
 
-Finally, register the event inside of your `EventServiceProvider`:
+Finally, register the event inside your `EventServiceProvider`:
 
 ```php
 // app/Providers/EventServiceProvider.php

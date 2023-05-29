@@ -19,7 +19,7 @@ To get started, we will create an event listener in the `app/Ldap/Listeners`
 directory and create a new file named `ObjectModified.php`. This will
 contain a class that will listen for the `Saved` model event.
 
-> You will have to create the `Ldap` and `Listeners` sub directories.
+> You will have to create the `Ldap` and `Listeners` subdirectories.
 
 ```php
 <?php
@@ -45,7 +45,7 @@ class ObjectModified
 }
 ```
 
-For a list of all LdapRecord events, view the core [events documentation](/docs/core/v2/events#list-of-events).
+For a list of all LdapRecord events, view the core [event's documentation](/docs/core/v2/events#list-of-events).
 
 ## Creating the Service Provider
 

@@ -6,7 +6,7 @@ description: LdapRecord-Laravel database synchronization authentication overview
 # Database Authentication Overview
 
 Synchronized Database LDAP Authentication means that an LDAP user which successfully passes LDAP authentication
-will be created & synchronized to your local applications database. This is helpful as you can attach typical
+will be created & synchronized to your local application's database. This is helpful as you can attach typical
 relational database information to them, such as blog posts, attachments, etc.
 
 When a user is successfully authenticated, the Laravel `Auth::user()` method
@@ -28,7 +28,7 @@ if (Auth::attempt($credentials)) {
 }
 ```
 
-Subsequent requests to your application with logged in users will retrieve the
-logged in user from your database, rather than your LDAP directory. This means
+Subsequent requests to your application with logged-in users will retrieve the
+logged-in user from your database, rather than your LDAP directory. This means
 your application will stay operational if connectivity to your LDAP server
 is dropped.
