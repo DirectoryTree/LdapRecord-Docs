@@ -29,6 +29,14 @@ You should update the following dependency in your application's `composer.json`
 "directorytree/ldaprecord": "^3.0"
 ```
 
+#### `iconv` PHP Extension Required
+
+The `iconv` extension is now required, as it is used for encoding passwords 
+using the default mechanism when setting Active Directory user passwords.
+
+It has always been used in LdapRecord, however an exception would 
+have been thrown previosuly upon executing code utilizing it.
+
 ### Strict PHP Types Implemented
 
 LdapRecord now has strict types implemented in all classes for all methods and properties.
