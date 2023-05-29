@@ -120,7 +120,15 @@ Only insert a port if your LDAP server uses a unique port.
 
 ### SSL & TLS
 
-These boolean options enable an TLS or SSL connection to your LDAP server.
+These boolean options enable an TLS or SSL connection to your LDAP server:
+
+```php
+$config = [
+    // ...
+    'use_tls' => false,
+    'use_ssl' => false,
+];
+```
 
 It is recommended to use _one_ of these options if you have the ability to. This ensures secure connectivity.
 
@@ -132,7 +140,14 @@ It is recommended to use _one_ of these options if you have the ability to. This
 
 ### SASL
 
-This boolean option enables connecting to your LDAP server using SASL (Simple Authentication and Security Layer) via `ldap_sasl_bind`.
+This boolean option enables connecting to your LDAP server using SASL (Simple Authentication and Security Layer) via `ldap_sasl_bind`:
+
+```php
+$config = [
+    // ...
+    'use_sasl' => false,
+];
+```
 
 SASL allows you to authenticate a user with various mechanisms, such as `DIGEST-MD5`, `CRAM-MD5`, `GSSAPI`, etc.
 
