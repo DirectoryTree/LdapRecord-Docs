@@ -57,6 +57,7 @@ LDAP_BASE_DN="dc=local,dc=com"
 LDAP_TIMEOUT=5
 LDAP_SSL=false
 LDAP_TLS=false
+LDAP_SASL=false
 ```
 
 ## Usage

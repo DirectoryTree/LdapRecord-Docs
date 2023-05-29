@@ -38,6 +38,7 @@ LDAP_BASE_DN="dc=local,dc=com"
 LDAP_TIMEOUT=5
 LDAP_SSL=false
 LDAP_TLS=false
+LDAP_SASL=false
 ```
 
 If you'd like to configure more options that are specified in the `ldap.php`
@@ -62,6 +63,7 @@ LDAP_DEFAULT_BASE_DN="dc=local,dc=com"
 LDAP_DEFAULT_TIMEOUT=5
 LDAP_DEFAULT_SSL=false
 LDAP_DEFAULT_TLS=false
+LDAP_DEFAULT_SASL=false
 ```
 
 To set up multiple connections, you may use a comma-separated list of connection names using the `LDAP_CONNECTIONS` variable:
@@ -91,6 +93,7 @@ LDAP_ALPHA_BASE_DN="dc=alpha,dc=com"
 LDAP_ALPHA_TIMEOUT=5
 LDAP_ALPHA_SSL=false
 LDAP_ALPHA_TLS=false
+LDAP_ALPHA_SASL=false
 
 LDAP_BRAVO_HOSTS=11.0.0.1,11.0.0.2
 LDAP_BRAVO_USERNAME="cn=admin,dc=bravo,dc=com"
@@ -100,6 +103,7 @@ LDAP_BRAVO_BASE_DN="dc=bravo,dc=com"
 LDAP_BRAVO_TIMEOUT=5
 LDAP_BRAVO_SSL=false
 LDAP_BRAVO_TLS=false
+LDAP_BRAVO_SASL=false
 ```
 
 To configure [PHP LDAP options](https://www.php.net/manual/en/function.ldap-set-option.php) for
