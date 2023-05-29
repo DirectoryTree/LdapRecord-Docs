@@ -79,12 +79,12 @@ class User extends Model
 }
 ```
 
-> You may want these models to extend the [built-in models](/docs/core/v2/models/#predefined-models), as they
+> You may want these models to extend the [built-in models](/docs/core/v3/models/#predefined-models), as they
 > include functionality that you do not need to build yourself. It's completely up to you.
 
 ### Configuring the Authentication Guards
 
-For each of our LDAP connections, we will set up new [authentication providers](/docs/laravel/v2/auth/configuration),
+For each of our LDAP connections, we will set up new [authentication providers](/docs/laravel/v3/auth/configuration),
 as well as their own guard inside our `config/auth.php` file:
 
 ```php

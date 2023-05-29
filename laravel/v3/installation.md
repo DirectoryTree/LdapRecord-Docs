@@ -20,4 +20,4 @@ Require LdapRecord-Laravel via [composer](https://getcomposer.org/):
 composer require directorytree/ldaprecord-laravel
 ```
 
-Now you're ready to start [configuring your connection(s)](/docs/laravel/v2/configuration).
+Now you're ready to start [configuring your connection(s)](/docs/laravel/v3/configuration).

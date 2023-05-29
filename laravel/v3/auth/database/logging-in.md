@@ -5,7 +5,7 @@ description: Logging in with LdapRecord-Laravel database authentication
 
 # Logging In
 
-Once you have [configured a new authentication provider](/docs/laravel/v2/auth/database/configuration),
+Once you have [configured a new authentication provider](/docs/laravel/v3/auth/database/configuration),
 you're ready to start logging users into your application.
 
 Logging in is simple -- you only need to use Laravel's `Auth` facade:

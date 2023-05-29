@@ -39,7 +39,7 @@ to place an `ldap.conf` file onto your local / production server to indicate
 that you would like to either _bypass_ TLS / SSL certificate verification,
 or use a valid certificate that you have retrieved from your LDAP server.
 
-This process is fully documented on the [configuration](/docs/core/v2/configuration#ssl-amp-tls)
+This process is fully documented on the [configuration](/docs/core/v3/configuration#ssl-amp-tls)
 documentation. It includes per operating system level instructions on where your `ldap.conf` file
 is located (or where it must be created), as well as what it must contain.
 
@@ -66,7 +66,7 @@ To debug issues logging in, it's recommended to first complete the following ste
 1. Enabled logging via the `logging` key inside your `config/ldap.php` file <br/>
    (or by enabling it via your `.env` by using the `LDAP_LOGGING` key)
 2. Clear your configurations cache (if enabled) by running the `php artisan config:clear` command
-3. Add the `ListensForLdapBindFailure` [trait](/docs/laravel/v2/auth/setup/#displaying-ldap-error-messages) onto your `LoginController`
+3. Add the `ListensForLdapBindFailure` [trait](/docs/laravel/v3/auth/setup/#displaying-ldap-error-messages) onto your `LoginController`
 4. Attempt logging in again
 
 After completing the above, the first thing to lookout for is whether a

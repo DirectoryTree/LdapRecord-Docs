@@ -8,9 +8,9 @@ description: LdapRecord-Laravel testing guide
 ## Introduction
 
 LdapRecord-Laravel prides itself on giving you a great and easy testing experience using
-the [Directory Emulator](/docs/laravel/v2/testing#directory-emulator). Using it, we can
-test authentication [rules](/docs/laravel/v2/auth/configuration#rules),
-[scopes](/docs/laravel/v2/models#query-scopes) and group memberships.
+the [Directory Emulator](/docs/laravel/v3/testing#directory-emulator). Using it, we can
+test authentication [rules](/docs/laravel/v3/auth/configuration#rules),
+[scopes](/docs/laravel/v3/models#query-scopes) and group memberships.
 
 ## Getting Started
 
@@ -19,7 +19,7 @@ This is due to the `$table->dropColumns(['guid', 'domain'])` call inside the add
 LdapRecord auth migration and that we are using SQLite in our test environment.
 
 This package is required for modifying columns - as described in the
-[Laravel documentation](https://laravel.com/docs/laravel/v2/migrations#modifying-columns).
+[Laravel documentation](https://laravel.com/docs/laravel/v3/migrations#modifying-columns).
 
 To do so, run the following command:
 
@@ -150,7 +150,7 @@ Fourth, we are sending a post request to our `login` page, with our LDAP users e
 The password can be anything, since we asserted above (using the `actingAs()` method) that
 the user **will** pass, regardless of what password we use.
 
-If your application has [password synchronization](/docs/laravel/v2/auth/configuration/#database)
+If your application has [password synchronization](/docs/laravel/v3/auth/configuration/#database)
 enabled, this is a good place to send various passwords and assert that the hashes
 match after a successful login.
 

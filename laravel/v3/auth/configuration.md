@@ -32,7 +32,7 @@ array, and paste the following `ldap` provider:
 
 If your application requires more than one LDAP connection, you must create a new provider for each connection.
 
-This new provider must have its own unique `model` class set which must use your [alternate configured connection](/docs/core/v2/models#connections)
+This new provider must have its own unique `model` class set which must use your [alternate configured connection](/docs/core/v3/models#connections)
 using the `$connection` property.
 
 In the scenario of having multiple LDAP connections, it may be helpful to namespace the LDAP models
@@ -50,7 +50,7 @@ The `driver` option must be `ldap` as this is what indicates to Laravel the prop
 
 ### Model
 
-The `model` option must be the class name of your [LdapRecord model](/docs/core/v2/models). This model will be used
+The `model` option must be the class name of your [LdapRecord model](/docs/core/v3/models). This model will be used
 for fetching users from your directory.
 
 ### Rules
@@ -93,7 +93,7 @@ As you can see above, a `database` array is used to configure the association be
 The `database => model` key is the class name of the [Eloquent model](https://laravel.com/docs/eloquent) that will be
 used for creating and retrieving LDAP users from your applications database.
 
-> Be sure to add the required [trait and interface](/docs/laravel/v2/auth/database/installation) to this model as shown in the installation guide.
+> Be sure to add the required [trait and interface](/docs/laravel/v3/auth/database/installation) to this model as shown in the installation guide.
 
 ### Password Column
 
@@ -233,7 +233,7 @@ Here is a synchronized database provider fully configured with all available opt
 ## Attribute Handlers
 
 If you require logic for synchronizing attributes when users sign in to your application or are
-being [imported](/docs/laravel/v2/auth/database/importing), you can create an attribute handler class
+being [imported](/docs/laravel/v3/auth/database/importing), you can create an attribute handler class
 responsible for setting / synchronizing your database models attributes from their
 LDAP model.
 

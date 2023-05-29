@@ -43,7 +43,7 @@ As you can see above, a `database` array is used to configure the association be
 > must create a new provider for each connection.
 > <br/><br/>
 > This new provider must have its own unique `model` class which must use your
-> [alternate configured connection](/docs/core/v2/models#connections) name
+> [alternate configured connection](/docs/core/v3/models#connections) name
 > using the `$connection` property.
 
 In the scenario of having multiple LDAP connections, it may be helpful to namespace the LDAP models
@@ -61,7 +61,7 @@ The `driver` option must be `ldap` as this is what indicates to Laravel the prop
 
 ## Model
 
-The `model` option must be the class name of your [LdapRecord model](/docs/core/v2/models). This model will be used
+The `model` option must be the class name of your [LdapRecord model](/docs/core/v3/models). This model will be used
 for fetching users from your directory.
 
 ## Rules
@@ -169,10 +169,10 @@ LDAP authentication, they will need to be a member of the `Administrators` group
 
 ## Database Model
 
-The `database => model` key is the class name of the [Eloquent model](https://laravel.com/docs/laravel/v2/eloquent) that will be
+The `database => model` key is the class name of the [Eloquent model](https://laravel.com/docs/laravel/v3/eloquent) that will be
 used for creating and retrieving LDAP users from your applications database.
 
-> Be sure to add the required [trait and interface](/docs/laravel/v2/auth/database/installation#add-required-trait-and-interface) to this model as shown in the installation guide.
+> Be sure to add the required [trait and interface](/docs/laravel/v3/auth/database/installation#add-required-trait-and-interface) to this model as shown in the installation guide.
 
 ## Sync Password Column
 
@@ -334,7 +334,7 @@ keys, we can fine-tune the query syntax to be more flexible to your needs.
 ## Attribute Handlers
 
 If you require logic for synchronizing attributes when users sign in to your application or are
-being [imported](/docs/laravel/v2/auth/database/importing), you can create an attribute handler class
+being [imported](/docs/laravel/v3/auth/database/importing), you can create an attribute handler class
 responsible for setting / synchronizing your database models attributes from their
 LDAP model.
 

@@ -7,7 +7,7 @@ description: Setting up LDAP authentication with Laravel JetStream
 
 ## Introduction
 
-> **Important**: Before getting started, please complete the [configuration guide](/docs/laravel/v2/auth/plain/configuration).
+> **Important**: Before getting started, please complete the [configuration guide](/docs/laravel/v3/auth/plain/configuration).
 
 Laravel Jetstream utilizes [Laravel Fortify](https://github.com/laravel/fortify) for authentication under the hood.
 We will customize various aspects of it to allow LDAP users to sign in to the application.
@@ -222,7 +222,7 @@ to `username` so we can retrieve it properly in our `Fortify::authenticateUsing(
 
 When using Laravel Jetstream, LDAP error messages will now be displayed automatically
 to users. You do not need to configure or include the `ListensForLdapBindFailure`
-trait as you would using [Laravel UI](/docs/laravel/v2/auth/plain/laravel-ui#displaying-ldap-error-messages)
+trait as you would using [Laravel UI](/docs/laravel/v3/auth/plain/laravel-ui#displaying-ldap-error-messages)
 on the `LoginController`.
 
 ### Altering the Response
@@ -255,7 +255,7 @@ class AuthServiceProvider extends ServiceProvider
 }
 ```
 
-> Refer to the [Password Policy Errors](/docs/core/v2/active-directory/users#password-policy-errors)
+> Refer to the [Password Policy Errors](/docs/core/v3/active-directory/users#password-policy-errors)
 > documentation to see what each code means.
 
 ### Changing the Error Messages

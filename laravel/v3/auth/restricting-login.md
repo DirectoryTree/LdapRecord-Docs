@@ -13,7 +13,7 @@ from logging into your application. Let's walk through some approaches.
 ## Using a Group Membership
 
 To use a group membership for authorizing signing in to your application, we
-will use an [authentication rule](/docs/laravel/v2/auth/configuration#rules).
+will use an [authentication rule](/docs/laravel/v3/auth/configuration#rules).
 
 In our example application, we want to only allow users who are members of
 a single group to authenticate. This group will be called `Help Desk`.
@@ -159,7 +159,7 @@ public function passes(LdapRecord $user, Eloquent $model = null): bool
 ## Using an Organizational Unit
 
 To use an Organizational Unit which contains your users that you want to
-allow sign in to your application, we will leverage LdapRecord [model scopes](/docs/core/v2/models#query-scopes).
+allow sign in to your application, we will leverage LdapRecord [model scopes](/docs/core/v3/models#query-scopes).
 
 In our application, we have an Organizational Unit named `Accounting` with the following Distinguished Name:
 
@@ -207,7 +207,7 @@ class OnlyAccountingUsers implements Scope
 
 After modifying the scope, we can now add the scope to our LDAP user model.
 
-If you are using one of the [built-in predefined models](/docs/core/v2/models#predefined-models), you
+If you are using one of the [built-in predefined models](/docs/core/v3/models#predefined-models), you
 can add the global scope to the model inside your `AuthServiceProvider::boot()` method:
 
 ```php
@@ -261,8 +261,8 @@ contained inside the `Accounting` OU will be allowed to authenticate.
 
 ## Using Only Manually Imported Users
 
-To enforce only [manually imported LDAP users](/docs/laravel/v2/importing) who exist inside your
-database to sign in to your application, you must use an [authentication rule](/docs/laravel/v2/auth/configuration#rules).
+To enforce only [manually imported LDAP users](/docs/laravel/v3/importing) who exist inside your
+database to sign in to your application, you must use an [authentication rule](/docs/laravel/v3/auth/configuration#rules).
 
 LdapRecord-Laravel includes this authentication rule out-of-the-box:
 

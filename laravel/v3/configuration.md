@@ -25,7 +25,7 @@ The `ldap.php` file will then be created inside your applications `config`, dire
 
 Inside the configuration file, set up your LDAP connections, or paste the following in your `.env` file to get started quicky:
 
-> Review the [LDAP configuration documentation](/docs/core/v2/configuration) to see what each option is used for.
+> Review the [LDAP configuration documentation](/docs/core/v3/configuration) to see what each option is used for.
 
 ```dotenv
 LDAP_LOGGING=true

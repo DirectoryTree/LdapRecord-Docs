@@ -45,7 +45,7 @@ class ObjectModified
 }
 ```
 
-For a list of all LdapRecord events, view the core [event's documentation](/docs/core/v2/events#list-of-events).
+For a list of all LdapRecord events, view the core [event's documentation](/docs/core/v3/events#list-of-events).
 
 ## Creating the Service Provider
 

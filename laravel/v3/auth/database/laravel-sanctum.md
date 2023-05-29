@@ -14,8 +14,8 @@ with Sanctum directly, similarly to the built in `eloquent` driver.
 
 > **Important**: Before getting started, please complete the below guides:
 >
-> - [Installation Guide](/docs/laravel/v2/auth/database/installation)
-> - [Configuration Guide](/docs/laravel/v2/auth/database/configuration)
+> - [Installation Guide](/docs/laravel/v3/auth/database/installation)
+> - [Configuration Guide](/docs/laravel/v3/auth/database/configuration)
 > - [Sanctum Installation Guide](https://laravel.com/docs/sanctum#installation)
 
 ## Preparing The User Eloquent Model
@@ -295,7 +295,7 @@ dd($response);
 
 > **Important**: If you are using SQLite to test, remember to install
 > `doctrine/dbal` before getting started, as mentioned in the
-> [test guide](https://ldaprecord.com/docs/laravel/v2/auth/testing/#getting-started):
+> [test guide](https://ldaprecord.com/docs/laravel/v3/auth/testing/#getting-started):
 >
 > ```bash
 > composer require doctrine/dbal --dev

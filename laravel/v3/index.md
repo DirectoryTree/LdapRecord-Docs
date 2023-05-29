@@ -9,8 +9,8 @@ LdapRecord-Laravel is a package providing you the ability to search
 your LDAP directory, perform operations, and authenticate
 LDAP users into your Laravel application.
 
-It uses the core [LdapRecord](/docs/core/v2) package under the hood, so be sure to look at its
-[documentation](/docs/core/v2), so you have an understanding of how everything works.
+It uses the core [LdapRecord](/docs/core/v3) package under the hood, so be sure to look at its
+[documentation](/docs/core/v3), so you have an understanding of how everything works.
 It was created with the mindset of porting Laravel's fantastic Eloquent
 database ORM to an LDAP equivalent.
 

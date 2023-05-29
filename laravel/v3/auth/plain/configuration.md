@@ -31,7 +31,7 @@ inside your `config/auth.php` file, and paste the following `users` provider:
 > must create a new provider for each connection.
 > <br/><br/>
 > This new provider must have its own unique `model` class which must use your
-> [alternate configured connection](/docs/core/v2/models#connections) name
+> [alternate configured connection](/docs/core/v3/models#connections) name
 > using the `$connection` property.
 
 In the scenario of having multiple LDAP connections, it may be helpful to namespace the LDAP models
@@ -49,7 +49,7 @@ The `driver` option must be `ldap` as this is what indicates to Laravel the prop
 
 ## Model
 
-The `model` option must be the class name of your [LdapRecord model](/docs/core/v2/models). This model will be used
+The `model` option must be the class name of your [LdapRecord model](/docs/core/v3/models). This model will be used
 for fetching users from your directory.
 
 ### Using your own model

@@ -8,14 +8,14 @@ description: LdapRecord-Laravel Usage Guide
 ## Models
 
 > This usage documentation is intentionally kept short and sweet to prevent duplication.
-> Be sure to review the core [LdapRecord documentation](/docs/core/v2) as it explains
+> Be sure to review the core [LdapRecord documentation](/docs/core/v3) as it explains
 > all of LdapRecord's features in-depth.
 
 Once you've configured your connections in your `config/ldap.php` file,
 you're ready to start running queries and operations on your LDAP server.
 
 If you're connecting to an Active Directory or OpenLDAP server, you may utilize the
-[built-in models](/docs/core/v2/models#predefined-models) to get up and running right away.
+[built-in models](/docs/core/v3/models#predefined-models) to get up and running right away.
 
 If you would like to create your own models, you can generate one via the `make:ldap-model` command:
 
@@ -56,7 +56,7 @@ class User extends Model
 
 ### Searching
 
-To begin querying your model, you can statically call [query methods](/docs/core/v2/searching) off of the model:
+To begin querying your model, you can statically call [query methods](/docs/core/v3/searching) off of the model:
 
 ```php
 $users = User::where('company', '=', 'Acme')->get();
@@ -109,7 +109,7 @@ $user->save();
 ```
 
 > If you need help understanding user creation and management, take a look at the Active Directory
-> [user management tutorial](/docs/laravel/v2/active-directory/users/).
+> [user management tutorial](/docs/laravel/v3/active-directory/users/).
 
 ### Scopes
 
@@ -117,7 +117,7 @@ Sometimes you may need to utilize several of the same query filters around your 
 Model scopes are a perfect for this, as you can extract these filters into its own class
 and apply it to a model query.
 
-> Be sure to take a peek at the [query scopes](/docs/core/v2/models#query-scopes)
+> Be sure to take a peek at the [query scopes](/docs/core/v3/models#query-scopes)
 > documentation for a more in-depth look.
 
 To create a new model scope, call the command:
@@ -185,7 +185,7 @@ As you may have noticed above, you must provide a named string for the scope you
 
 Sometimes you simply want to know if a users LDAP credentials are valid.
 To do this, you must retrieve your LDAP connection from the LdapRecord
-[connection container](/docs/core/v2/connections/#container).
+[connection container](/docs/core/v3/connections/#container).
 
 To do so, you must call the `getConnection` method on the `Container` and pass in the name of
 your connection that appears in your `config/ldap.php` file:

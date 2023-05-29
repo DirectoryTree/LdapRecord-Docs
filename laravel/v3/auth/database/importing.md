@@ -9,7 +9,7 @@ description: Running the import command
 
 LdapRecord-Laravel allows you to import users from your LDAP directories into your local database.
 This is done by executing the `php artisan ldap:import` command and is only available to LDAP
-authentication providers you configure with [database synchronization](/docs/laravel/v2/auth/database).
+authentication providers you configure with [database synchronization](/docs/laravel/v3/auth/database).
 
 As it is with signing users into your application, the Eloquent database model you specify in your
 `config/auth.php` file is used for the creation and retrieval of users in your database.
@@ -19,14 +19,14 @@ As it is with signing users into your application, the Eloquent database model y
 The `sync_attributes` you define inside your `config/auth.php` file for your provider will be used
 for importing and synchronizing users.
 
-Be sure to look at the [documentation](/docs/laravel/v2/auth/database/configuration#database-sync-attributes)
+Be sure to look at the [documentation](/docs/laravel/v3/auth/database/configuration#database-sync-attributes)
 to get a further understanding on what is possible with this option.
 
 ## Syncing Existing Records
 
 The `sync_existing` array you define inside your `config/auth.php` will be used to synchronize existing database records with your LDAP users.
 
-Be sure to look at the [documentation](/docs/laravel/v2/auth/database/configuration#database-sync-existing)
+Be sure to look at the [documentation](/docs/laravel/v3/auth/database/configuration#database-sync-existing)
 to get a further understanding on what is possible with this option.
 
 ## Password Synchronization
@@ -124,7 +124,7 @@ The above scheduled import command will:
 - Soft-Delete user models who have been deactived in your LDAP directory (if you're using [Eloquent Soft Deletes](https://laravel.com/docs/eloquent#soft-deleting))
 - Only import objects that have an `objectclass` containing `user`
 
-> It's recommended to use [model query scopes](/docs/core/v2/models#query-scopes) instead of the `--filter`
+> It's recommended to use [model query scopes](/docs/core/v3/models#query-scopes) instead of the `--filter`
 > option on your configured authentication LdapRecord model so LDAP users signing in to your
 > application are applied the same search filter.
 
@@ -177,7 +177,7 @@ When executing the `ldap:import` command, LdapRecord-Laravel will fire various e
 
 ### Provider
 
-To execute the import command, you **must** supply an [authentication provider](/docs/laravel/v2/auth/database/configuration)
+To execute the import command, you **must** supply an [authentication provider](/docs/laravel/v3/auth/database/configuration)
 name. This will retrieve the users from your configured LdapRecord model, and import them using your configured Eloquent model.
 
 For example, if you have kept the default `users` authentication provider name in your `config/auth.php` file, then you would execute:
@@ -258,7 +258,7 @@ This allows you to not have to extend the built-in models to apply global
 scopes, as well as having scopes that only apply during import.
 
 > **Note**: Since these scopes only apply during import, you may want to configure the
-> [OnlyImported](/docs/laravel/v2/auth/restricting-login/#using-only-manually-imported-users)
+> [OnlyImported](/docs/laravel/v3/auth/restricting-login/#using-only-manually-imported-users)
 > authentication rule so that only users who have been imported successfully
 > with your configured scopes, can log into your application.
 
@@ -280,7 +280,7 @@ This option is great for reducing memory usage for large imports, since all attr
 
 > **Important**: To use this option, you **must** comma separate each attribute in the
 > command and include the attributes you have configured in your
-> [authentication provider](/docs/laravel/v2/auth/configuration/#database-sync-attributes).
+> [authentication provider](/docs/laravel/v3/auth/configuration/#database-sync-attributes).
 
 ```text
 php artisan ldap:import users --attributes "cn,mail,sn,givenname,samaccountname"

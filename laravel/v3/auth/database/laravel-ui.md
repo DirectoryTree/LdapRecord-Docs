@@ -9,8 +9,8 @@ description: Database authentication with Laravel UI
 
 > **Important**: Before getting started, please complete the below guides:
 > 
-> - [Installation Guide](/docs/laravel/v2/auth/database/installation)
-> - [Configuration Guide](/docs/laravel/v2/auth/database/configuration)
+> - [Installation Guide](/docs/laravel/v3/auth/database/installation)
+> - [Configuration Guide](/docs/laravel/v3/auth/database/configuration)
 
 [Laravel UI](https://laravel.com/docs/authentication#authentication-quickstart) provides basic authentication scaffolding out-of-the-box.
 
@@ -399,5 +399,5 @@ class LoginController extends Controller
 }
 ```
 
-> Refer to the [Password Policy Errors](/docs/core/v2/active-directory/users#password-policy-errors)
+> Refer to the [Password Policy Errors](/docs/core/v3/active-directory/users#password-policy-errors)
 > documentation to see what each code means.

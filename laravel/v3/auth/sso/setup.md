@@ -33,7 +33,7 @@ If you have a web server that is joined to the **alpha.local** domain that is ho
 Laravel application, it must allow users to authenticate to the **bravo.local** domain.
 
 Once you have a working trust defined between your domains, you must follow the steps of
-[setting up multi-domain authentication](/docs/laravel/v2/auth/multi-domain/).
+[setting up multi-domain authentication](/docs/laravel/v3/auth/multi-domain/).
 You may skip step 2, if you do not need a login page for your users.
 
 After completing the above linked guide, you must instruct the `WindowsAuthenticate` middleware to
