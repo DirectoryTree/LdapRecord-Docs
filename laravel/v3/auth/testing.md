@@ -90,7 +90,7 @@ class LdapAuthenticationTest extends TestCase
 
         $user = Auth::user();
 
-        $this->assertInstanceOf(\App\User::class, $user);
+        $this->assertInstanceOf(\App\Models\User::class, $user);
         $this->assertEquals($ldapUser->mail[0], $user->email);
         $this->assertEquals($ldapUser->cn[0], $user->name);
     }
@@ -159,7 +159,7 @@ match after a successful login.
 ```php
 $user = Auth::user();
 
-$this->assertInstanceOf(\App\User::class, $user);
+$this->assertInstanceOf(\App\Models\User::class, $user);
 $this->assertEquals($ldapUser->mail[0], $user->email);
 $this->assertEquals($ldapUser->cn[0], $user->name);
 ```
@@ -247,7 +247,7 @@ public function test_auth_works()
 
     $user = Auth::user();
 
-    $this->assertInstanceOf(\App\User::class, $user);
+    $this->assertInstanceOf(\App\Models\User::class, $user);
     $this->assertEquals($ldapUser->mail[0], $user->email);
     $this->assertEquals($ldapUser->cn[0], $user->name);
 }
@@ -361,7 +361,7 @@ public function test_auth_works()
 
     $user = Auth::user();
 
-    $this->assertInstanceOf(\App\User::class, $user);
+    $this->assertInstanceOf(\App\Models\User::class, $user);
     $this->assertEquals($ldapUser->mail[0], $user->email);
     $this->assertEquals($ldapUser->cn[0], $user->name);
 }

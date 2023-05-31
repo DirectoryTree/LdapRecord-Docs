@@ -366,7 +366,7 @@ available on their Eloquent model via the `ldap` property:
 > If their LDAP model cannot be located, the returned value will be `null`.
 
 ```php
-// Instance of App\User
+// Instance of App\Models\User
 $user = Auth::user();
 
 // Instance of App\Ldap\User

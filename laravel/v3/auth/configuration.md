@@ -215,7 +215,7 @@ Here is a synchronized database provider fully configured with all available opt
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
         'rules' => [],
         'database' => [
-            'model' => App\User::class,
+            'model' => App\Models\User::class,
             'sync_passwords' => true,
             'sync_attributes' => [
                 'name' => 'cn',
@@ -250,7 +250,7 @@ For the example below, we will create a handler named `AttributeHandler.php` ins
 
 namespace App\Ldap;
 
-use App\User as DatabaseUser;
+use App\Models\User as DatabaseUser;
 use App\Ldap\User as LdapUser;
 
 class AttributeHandler
