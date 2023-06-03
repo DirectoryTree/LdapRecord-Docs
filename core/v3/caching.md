@@ -110,5 +110,6 @@ $results = $cache->get('users');
 $cache->delete('users');
 ```
 
-> It's imperitive to know that results stored in the cached from the query 
-> builder are the For example, model instances themselves, are not cached.
+> It's imperitive to know that results stored in the cache from the query builder
+> are the raw results returned from your LDAP server. Model instances themselves
+> (or references to them) for example, are not stored in the cache.
