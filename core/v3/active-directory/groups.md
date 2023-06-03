@@ -92,14 +92,14 @@ echo $office->getDn();
 
 #### Adding Multiple Members
 
-To add multiple members at once, provide an array of models to the `attachMany()` method:
+To add multiple members at once, provide an array of models to the `attach()` method:
 
 ```php
 $accounting = Group::find('cn=Accounting,dc=local,dc=com');
 
 $accountants = User::in('ou=Accountants,ou=Users,dc=local,dc=com')->get();
 
-$accounting->members()->attachMany($accountants);
+$accounting->members()->attach($accountants);
 ```
 
 ### Removing Members
@@ -118,7 +118,7 @@ $group->members()->detach($user);
 
 #### Removing Multiple Members
 
-To remove multiple members at once, provide an array of models to the `detachMany()` method:
+To remove multiple members at once, provide an array of models to the `detach()` method:
 
 ```php
 $group = Group::find('cn=Accounting,dc=local,dc=com');
@@ -127,7 +127,7 @@ $members = $group->members()
                  ->where('department', 'contains', 'Office')
                  ->get();
 
-$group->members()->detachMany($members);
+$group->members()->detach($members);
 ```
 
 #### Removing All Members
@@ -190,14 +190,14 @@ $accounting->groups()->attach($office);
 
 #### Adding Multiple Groups
 
-To add multiple groups at once, provide an array of models to the `attachMany()` method:
+To add multiple groups at once, provide an array of models to the `attach()` method:
 
 ```php
 $accounting = Group::find('cn=Accounting,dc=local,dc=com');
 
 $officeGroups = Group::in('ou=Office,ou=Groups,dc=local,dc=com')->get();
 
-$accounting->groups()->attachMany($officeGroups);
+$accounting->groups()->attach($officeGroups);
 ```
 
 ### Removing Groups
@@ -216,7 +216,7 @@ $accounting->groups()->detach($officeGroup);
 
 #### Removing Multiple Groups
 
-To remove multiple groups at once, provide an array of models to the `detachMany()` method:
+To remove multiple groups at once, provide an array of models to the `detach()` method:
 
 ```php
 $accounting = Group::find('cn=Accounting,dc=local,dc=com');
@@ -225,12 +225,12 @@ $officeGroups = $accounting->groups()
                            ->in('ou=Office,ou=Groups,dc=local,dc=com')
                            ->get();
 
-$accounting->groups()->detachMany($officeGroups);
+$accounting->groups()->detach($officeGroups);
 ```
 
 #### Removing All Groups
 
-To remove **all** immediate groups of a particular group, call the `detachAll()` method:
+To remove **all** immediate groups of a particular group, call the `detach()` method:
 
 > A collection of all removed groups will be returned.
 
