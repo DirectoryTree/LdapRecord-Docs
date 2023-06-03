@@ -992,7 +992,7 @@ $dispatcher->listen(Creating::class, function ($event) {
 });
 ```
 
-> You will want to setup any listeners prior to making changes to models,
+> You will want to set up any listeners prior to making changes to models,
 > otherwise your listener will not be executed due to them not existing yet.
 
 ## Serialization

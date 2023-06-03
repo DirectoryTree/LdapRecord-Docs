@@ -12,7 +12,7 @@ An LDAP object type is determined by its object classes.
 
 Models allow you to execute search operations on your LDAP server as well as create and modify objects.
 
-PHP applications that require LDAP integration are very tricky to setup. Creating these
+PHP applications that require LDAP integration are very tricky to set up. Creating these
 integrations yourself can take days or even weeks due to the amount of learning
 you must take on to understand how LDAP works.
 

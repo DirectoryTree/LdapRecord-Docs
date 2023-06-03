@@ -133,7 +133,7 @@ you are using is not a distinguished name.
 
 ### Has Many (Inverse)
 
-Now that we have setup a `User` model that can access of their groups,
+Now that we have set up a `User` model that can access of their groups,
 lets define a `Group` model to be able to access its members.
 
 Since an LDAP group can contain various types of objects (such as
@@ -369,9 +369,9 @@ $user->groups()->attach([
 ]);
 ```
 
-> **Important**: Passing in multiple entries into the `attach()` or `detach()` method will 
-> send an `ldap_mod_add` or `ldap_mod_delete` request for each entry. If you have a 
-> large set of entries, consider using `associate()` or `dissociate()` instead.
+> Passing in multiple entries into the `attach()` or `detach()` method will send an 
+> `ldap_mod_add` or `ldap_mod_delete` request for each entry. If you have a large 
+> set of entries, consider using `associate()` or `dissociate()` instead.
 
 ### Detach
 
@@ -454,10 +454,10 @@ $group->members()->associate([
 $group->save();
 ```
 
-> **Important**: It is imperitive to understand which model you must call `save()` upon on 
-> after an association. If you are calling a relationship that **has not been** set up 
-> as the [inverse of another](#has-many-inverse), then you will need to call `save()`
-> on the model you are passing into the `associate()` method. Here is an example:
+> It is imperitive to understand which model you must call `save()` upon on  after an 
+> association. If you are calling a relationship that **has not been** set up as the
+> [inverse of another](#has-many-inverse), then you will need to call `save()` on
+> the model you are passing into the `associate()` method. Here is an example:
 
 ```php
 $user = User::find('cn=John Doe,dc=local,dc=com');
