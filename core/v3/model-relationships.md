@@ -322,8 +322,8 @@ Circular group dependencies are rejected automatically to prevent infinite loopi
 
 ## Attaching & Detatching Relationships
 
-Using relationships you define, you can easily attach and detach related models from each other.
-For example, you may want to attach a `Group` to a `User`, or vice-versa.
+Using relationships you define, you can easily attach and detach related models from each 
+other. For example, you may want to attach a `Group` to a `User`, or vice-versa.
 
 ### Attaching
 
@@ -340,7 +340,7 @@ $user->groups()->attach($group);
 $group->members()->attach($user);
 ```
 
-You may also use the `attachMany()` method to attach many models at once.
+You may also use the `attach()` method to attach many models at once.
 
 For this example, let's say we have an organizational unit that contains groups all new users must be apart of:
 
@@ -351,10 +351,27 @@ $groups = Group::in($ou)->get();
 
 $user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
 
-$user->groups()->attachMany($groups);
+$user->groups()->attach($groups);
 ```
 
-As you can see above, we took a complex LDAP operation and completed it in just 4 lines of code.
+You may also pass in raw distinguished names:
+
+```php
+$user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
+
+$user->groups()->attach('cn=Accounting,dc=local,dc=com');
+
+// Multiple groups:
+
+$user->groups()->attach([
+    'cn=Office,dc=local,dc=com',
+    'cn=Accounting,dc=local,dc=com',
+]);
+```
+
+> **Important**: Passing in multiple entries into the `attach()` or `detach()` method will 
+> send an `ldap_mod_add` or `ldap_mod_delete` request for each entry. If you have a 
+> large set of entries, consider using `associate()` or `dissociate()` instead.
 
 ### Detach
 
@@ -369,10 +386,7 @@ $group = $user->groups()->get()->first();
 $user->groups()->detach($group);
 ```
 
-You may also want to detach a user from all groups, if for example they are
-leaving the company and you it is apart of your off-boarding process.
-
-You may accomplish this task by using the `detachAll()` method:
+You may also want to detach a user from all groups. You may accomplish this by using the `detachAll()` method:
 
 ```php
 $user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
@@ -380,12 +394,128 @@ $user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
 $user->groups()->detachAll();
 ```
 
+### Detach All Or Delete Parent
+
+In some LDAP distributions such as OpenLDAP, some group types (such as `groupOfNames` or
+`groupOfUniqueNames`) must have at least member inside to exist. In this circumstance,
+detaching the last member of the group will throw an exception.
+
+If you would like the group to be deleted in this scenario, you may call the method `detachOrDeleteParent()`:
+
+```php
+$group = Group::find('cn=Accounting,dc=local,dc=com');
+$user = User::find('cn=John Doe,dc=local,dc=com');
+
+// If the user is the last member of the group,
+// the group will be deleted, otherwise the
+// given user will be detached normally.
+$group->members()->detachOrDeleteParent($user);
+
+if (! $group->exists) {
+    // Group was deleted.
+}
+```
+
+## Associate
+
+While calling `attach()` and `detach()` methods update the relationship immediately, you
+may want to batch these updates instead if you're attaching or detaching many models at 
+once. In this circumstance, `associate()` or `dissociate()` can be used to push or 
+pull a model from a relationship, which you can later call `save()` upon.
+
+```php
+$group = Group::find('cn=Accounting,dc=local,dc=com');
+
+$users = User::in('ou=Office,dc=local,dc=com')->get();
+
+$group->members()->associate($users);
+
+$group->save();
+```
+
+You may also associate single models:
+
+```php
+$group->members()->associate(
+    User::find('cn=John Doe,dc=local,dc=com')
+);
+
+$group->save();
+```
+
+Or use distinguished names:
+
+```php
+$group->members()->associate([
+    'cn=John Doe,dc=local,dc=com',
+    'cn=Jane Doe,dc=local,dc=com',
+]);
+
+$group->save();
+```
+
+> **Important**: It is imperitive to understand which model you must call `save()` upon on 
+> after an association. If you are calling a relationship that **has not been** set up 
+> as the [inverse of another](#has-many-inverse), then you will need to call `save()`
+> on the model you are passing into the `associate()` method. Here is an example:
+
+```php
+$user = User::find('cn=John Doe,dc=local,dc=com');
+
+$group = Group::find('cn=Accounting,dc=local,dc=com');
+
+// Since the group contains the 'member' attribute that
+// this relationship is pushing into, we must call
+// 'save' on the group, instead of the user.
+$user->groups()->associate($group);
+
+$group->save();
+```
+
+## Dissociate / Dissasociate
+
+To dissociate a model from a relationship, you may use the `dissociate()` method:
+
+```php
+$group = Group::find('cn=Accounting,dc=local,dc=com');
+
+$users = $group->members()->whereEndsWith('mail', '@foo.com')->get();
+
+$group->members()->dissociate($users);
+
+$group->save();
+```
+
+> **Important**: As mentioned above, it is imperitive to understand which model 
+> you must call `save()` upon depending on the relationship you are calling.
+
+Similary to the above `associate()` method, you may also dissociate single models:
+
+```php
+$group->members()->associate(
+    User::find('cn=John Doe,dc=local,dc=com')
+);
+
+$group->save();
+```
+
+Or use distinguished names:
+
+```php
+$group->members()->dissociate([
+    'cn=John Doe,dc=local,dc=com',
+    'cn=Jane Doe,dc=local,dc=com',
+]);
+
+$group->save();
+```
+
 ## Checking Relationship Existence
 
-To check if a model exists inside of a relationship, use the `exists()` relationship method.
+To check if a model exists inside a relationship, use the `exists()` relationship method.
 
-> If you're using Active Directory and are simply looking to check if a user is
-> inside of a particular group, utilize the `Model::whereMemberOf` method
+> If you're using Active Directory and are simply looking to check if a user 
+> is inside a particular group, utilize the `Model::whereMemberOf` method
 > that is available on all Active Directory models to locate users
 > whom are members of that group.
 
