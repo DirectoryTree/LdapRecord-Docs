@@ -416,7 +416,7 @@ if (! $group->exists) {
 }
 ```
 
-## Associate
+### Associate
 
 While calling `attach()` and `detach()` methods update the relationship immediately, you
 may want to batch these updates instead if you're attaching or detaching many models at 
@@ -472,7 +472,7 @@ $user->groups()->associate($group);
 $group->save();
 ```
 
-## Dissociate / Dissasociate
+### Dissociate / Dissasociate
 
 To dissociate a model from a relationship, you may use the `dissociate()` method:
 
