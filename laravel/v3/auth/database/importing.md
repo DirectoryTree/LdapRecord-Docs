@@ -213,7 +213,7 @@ Would you like to display the user(s) to be imported / synchronized? (yes/no) [n
 
 > **Important**: This option is available as of v2.5.0.
 
-The `--chunk` (or `-c`) option allows you to import users by chunk.
+The `--chunk` option allows you to import users by chunk.
 
 The option takes a number that indicates how many users per-chunk you would like to import.
 
@@ -225,7 +225,7 @@ php artisan ldap:import users --chunk 500
 
 ### Filter
 
-The `--filter` (or `-f`) option allows you to apply a raw filter to further narrow down the users who are imported:
+The `--filter` option allows you to apply a raw filter to further narrow down the users who are imported:
 
 > **Important**: If your filter contains commas, or other types of "escape" level LDAP search filter characters,
 > you **must** escape the value with a backslash (`\`) before passing it into the search string. More on this below.
@@ -250,9 +250,9 @@ If this is not done, you will receive a `Bad search filter` exception during imp
 
 > **Important**: This feature is available as of v2.7.0.
 
-The `--scopes` (or `-s`) option allows you to specify model query scopes
-that will apply to the underlying LdapRecord query builder instance
-when searching for users to import with your configured model.
+The `--scopes` option allows you to specify model query scopes that will
+apply to the underlying LdapRecord query builder instance when
+searching for users to import with your configured model.
 
 This allows you to not have to extend the built-in models to apply global
 scopes, as well as having scopes that only apply during import.
@@ -274,7 +274,7 @@ php artisan ldap:import users --scopes "App\Ldap\Scopes\OnlyUsers,App\Ldap\Scope
 
 ### Attributes
 
-The `--attributes` (or `-a`) option allows you to specify the attributes that should be returned from your LDAP server.
+The `--attributes` option allows you to specify the attributes that should be returned from your LDAP server.
 
 This option is great for reducing memory usage for large imports, since all attributes will be returned from your LDAP server otherwise.
 
@@ -290,7 +290,7 @@ php artisan ldap:import users --attributes "cn,mail,sn,givenname,samaccountname"
 
 > This option is only available on Active Directory models.
 
-The `--delete` (or `-d`) option allows you to soft-delete deactivated LDAP users. No users
+The `--delete` option allows you to soft-delete deactivated LDAP users. No users
 will be deleted if your `User` Eloquent model does not have soft-deletes enabled.
 
 ```text
@@ -369,7 +369,7 @@ class UsersDeletedFromImport
 
 > This option is only available on Active Directory models.
 
-The `--restore` (or `-r`) option allows you to restore soft-deleted re-activated LDAP users.
+The `--restore` option allows you to restore soft-deleted re-activated LDAP users.
 
 ```text
 php artisan ldap:import users --restore
@@ -377,6 +377,17 @@ php artisan ldap:import users --restore
 
 > Typically, the `--restore` and `--delete` options would be used together to
 > allow full synchronization of user disablements and restoration.
+
+### Min Users
+
+The `--min-users` option allows you to specify a minimum number of users that should be returned
+from your LDAP server before performing an import. This is useful in circumstances where you're 
+using the `--delete-missing` flag, and you want to ensure that a possible query or replication 
+issue in your environment does not perform a drastic soft-deletion to users not returned.
+
+```text
+php artisan ldap:import users --min-users=1000 --delete-missing
+```
 
 ### No Logging
 
