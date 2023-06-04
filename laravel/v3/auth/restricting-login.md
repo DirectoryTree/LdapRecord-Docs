@@ -21,7 +21,7 @@ a single group to authenticate. This group will be called `Help Desk`.
 Let's create our new authentication rule by running the below command:
 
 ```bash
-php artisan make:ldap-rule OnlyHelpDeskUsers
+php artisan ldap:make:rule OnlyHelpDeskUsers
 ```
 
 > A new rule will be created inside `app/Ldap/Rules/OnlyHelpDeskUsers.php`
@@ -170,7 +170,7 @@ ou=Accounting,ou=Users,dc=local,dc=com
 Let's create a new model scope using the below command:
 
 ```bash
-php artisan make:ldap-scope OnlyAccountingUsers
+php artisan ldap:make:scope OnlyAccountingUsers
 ```
 
 Now inside the generated scope, we will limit the query to only

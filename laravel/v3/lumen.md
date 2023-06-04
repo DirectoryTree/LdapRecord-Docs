@@ -36,10 +36,10 @@ $app->register(\LdapRecord\Lumen\LdapServiceProvider::class);
 
 ## Configuration
 
-Publish the `ldap.php` configuration file via the `make:ldap-config` command:
+Publish the `ldap.php` configuration file via the `ldap:make:config` command:
 
 ```bash
-php artisan make:ldap-config
+php artisan ldap:make:config
 ```
 
 A new LDAP configuration file will be created in your `config` directory.

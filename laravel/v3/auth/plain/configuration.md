@@ -58,7 +58,7 @@ If you're using an LDAP directory that is not directly supported by
 LdapRecord, you may publish your own model using the below command:
 
 ```bash
-php artisan make:ldap-model User
+php artisan ldap:make:model User
 ```
 
 > The model will be created inside the `app/Ldap` directory.
@@ -117,10 +117,10 @@ Think of them as a final authorization gate before they are allowed in.
 
 Let's create an LDAP rule that only allows members of our domain `Administrators` group.
 
-To create an authentication rule, call the `make:ldap-rule` command:
+To create an authentication rule, call the `ldap:make:rule` command:
 
 ```bash
-php artisan make:ldap-rule OnlyAdministrators
+php artisan ldap:make:rule OnlyAdministrators
 ```
 
 A rule will then be created in your applications `app/Ldap/Rules` directory:

@@ -17,7 +17,7 @@ so that we can address the issue promptly.
 
 ### Updating Dependencies
 
-#### PHP 8.1.0 Required
+#### PHP >= 8.1.0 Required
 
 LdapRecord v3 now requires PHP 8.1.0 or greater.
 

@@ -17,10 +17,10 @@ you're ready to start running queries and operations on your LDAP server.
 If you're connecting to an Active Directory or OpenLDAP server, you may utilize the
 [built-in models](/docs/core/v3/models#predefined-models) to get up and running right away.
 
-If you would like to create your own models, you can generate one via the `make:ldap-model` command:
+If you would like to create your own models, you can generate one via the `ldap:make:model` command:
 
 ```bash
-php artisan make:ldap-model User
+php artisan ldap:make:model User
 ```
 
 This will create a new LdapRecord model inside your application in the `app/Ldap` folder.
@@ -123,7 +123,7 @@ and apply it to a model query.
 To create a new model scope, call the command:
 
 ```bash
-php artisan make:ldap-scope OnlyAccountants
+php artisan ldap:make:scope OnlyAccountants
 ```
 
 This will create a new model scope in your applications `app\Ldap\Scopes` directory.

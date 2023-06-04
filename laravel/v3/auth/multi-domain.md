@@ -46,11 +46,11 @@ Now we have our connections configured, you must create a `User` model for each 
 Let's go ahead and create them by running the below commands:
 
 ```bash
-php artisan make:ldap-model Alpha\User
+php artisan ldap:make:model Alpha\User
 ```
 
 ```bash
-php artisan make:ldap-model Bravo\User
+php artisan ldap:make:model Bravo\User
 ```
 
 > The `Alpha` and `Bravo` subdirectories will be created for you automatically.
