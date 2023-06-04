@@ -17,15 +17,20 @@ so that we can address the issue promptly.
 
 ### Updating Dependencies
 
-#### PHP 8.1.0 Required
+#### PHP >= 8.1.0 Required
 
 LdapRecord-Laravel v3 now requires PHP 8.1.0 or greater.
+
+#### Laravel >= 8.0 Required
+
+LdapRecord-Laravel now requires Laravel version 8.0 or greatere.
 
 #### LdapRecord v3
 
 The core [LdapRecord](/docs/core/v3) repository has been updated to version 3.
 
-Please visit the [upgrade guide](/docs/core/v3/upgrading/) to see any changes in the core that may have an impact on your application.
+Please visit the [upgrade guide](/docs/core/v3/upgrading) to see any
+changes in the core that may have an impact on your application.
 
 #### Composer Dependencies
 
@@ -37,18 +42,34 @@ You should update the following dependency in your application's `composer.json`
 
 ### Strict PHP Types Implemented
 
-LdapRecord-Laravel now has strict types implemented in all classes for all methods and properties.
+LdapRecord-Laravel (and the core LdapRecord repository) now has strict 
+types implemented in all classes for all methods and properties.
 
 If you've created your own [models](/docs/core/v3/models), [scopes](/docs/core/v3/model-scopes),
 or have extended any other LdapRecord class, you will need to adjust any overridden
 properties or methods with their respective types.
 
+### Configuration Updates
+
+The `logging` configuration options have been moved to an array:
+
+```diff
+- 'logging' => true,
+- 'logging_channel' => 'stack',
+
++ 'logging' => [
++     'enabled' => true,
++     'channel' => 'stack',
++ ],
+```
+
 ## Medium Impact Changes
 
 ### LdapRecord\Laravel\Auth\Rule changes
 
-The `LdapRecord\Laravel\Auth\Rule` abstract class has been moved to an interface,
-and the `isValid` method has also been renamed to `passes`, and now accepts the
+The `LdapRecord\Laravel\Auth\Rule` abstract class has been moved to an interface, and
+the `isValid` method has also been renamed to `passes`, and now accepts an LdapRecord
+`Model` as the first parameter, and an Eloquent `Model` as the second:
 
 ```diff
 namespace App\Ldap;
@@ -69,5 +90,45 @@ use LdapRecord\Laravel\Auth\Rule;
     {
         // ...
     }
+}
+```
+
+## Low Impact Changes
+
+### "Make" Command Changes
+
+The `make:ldap-*` methods have been renamed:
+
+```diff
+- php artisan make:ldap-rule
++ php artisan ldap:make:rule
+```
+
+```diff
+- php artisan make:ldap-model
++ php artisan ldap:make:model
+```
+
+```diff
+- php artisan make:ldap-scope
++ php artisan ldap:make:scope
+```
+
+### LdapRecord\Laravel\Auth\Validator
+
+The `Validator` class has had the `fails` method removed, and the `passes()` method now accepts an LdapRecord
+`Model` as the first parameter, and an Eloquent `Model` as the second:
+
+```diff
++ use Illuminate\Database\Eloquent\Model as Eloquent;
++ use LdapRecord\Models\Model as LdapRecord;
+
+class Validator
+{
+    // ...
+-    public function passes();
++    public function passes(LdapRecord $user, Eloquent $model = null): bool;
+    
+-    public function fails();
 }
 ```
