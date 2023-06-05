@@ -1,6 +1,6 @@
 ---
-title: Upgrade to v3
-description: Upgrading from LdapRecord v2
+title: Upgrade to LdapRecord-Laravel v3
+description: Upgrading from LdapRecord-Laravel v2
 ---
 
 # Upgrading to Version 3
@@ -46,21 +46,35 @@ LdapRecord-Laravel (and the core LdapRecord repository) now has strict
 types implemented in all classes for all methods and properties.
 
 If you've created your own [models](/docs/core/v3/models), [scopes](/docs/core/v3/model-scopes),
-or have extended any other LdapRecord class, you will need to adjust any overridden
-properties or methods with their respective types.
+or have extended any other class from either repository, you will need to adjust any 
+overridden properties or methods with their respective types.
 
 ### Configuration Updates
 
-The `logging` configuration options have been moved to an array:
+The `logging` configuration options have been moved to an array. You 
+may either republish your configuration file by deleting the
+existing one (`config/ldap.php`) and running:
+
+```bash
+php artisan vendor:publish --provider="LdapRecord\Laravel\LdapServiceProvider"
+```
+
+Or, by updating the option manually:
 
 ```diff
-- 'logging' => true,
-- 'logging_channel' => 'stack',
+// config/ldap.php
 
-+ 'logging' => [
-+     'enabled' => true,
-+     'channel' => 'stack',
-+ ],
+return [
+    // ...
+
+-   'logging' => true,
+-   'logging_channel' => 'stack',
+
++   'logging' => [
++       'enabled' => true,
++       'channel' => 'stack',
++   ],
+];
 ```
 
 ## Medium Impact Changes
