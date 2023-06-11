@@ -10,7 +10,7 @@ these changes occur in lesser-known areas of the library, only a
 fraction of them might have an impact on your application.
 
 If you encounter any changes not documented here that have affected you,
-please create a bug report on the [LdapRecord-Docs repository](https://github.com/DirectoryTree/LdapRecord-Docs)
+please create a bug report on the [LdapRecord-Docs repository](https://github.com/DirectoryTree/LdapRecord-Docs/issues/new)
 so that we can address the issue promptly.
 
 ## High Impact Changes
