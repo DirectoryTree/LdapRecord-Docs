@@ -23,7 +23,7 @@ LdapRecord-Laravel v3 now requires PHP 8.1.0 or greater.
 
 #### Laravel >= 8.0 Required
 
-LdapRecord-Laravel now requires Laravel version 8.0 or greatere.
+LdapRecord-Laravel now requires Laravel version 8.0 or greater.
 
 #### LdapRecord v3
 
@@ -81,9 +81,9 @@ return [
 
 ### LdapRecord\Laravel\Auth\Rule changes
 
-The `LdapRecord\Laravel\Auth\Rule` abstract class has been moved to an interface, and
-the `isValid` method has also been renamed to `passes`, and now accepts an LdapRecord
-`Model` as the first parameter, and an Eloquent `Model` as the second:
+The `LdapRecord\Laravel\Auth\Rule` abstract class has been moved to an interface and the
+`isValid` method has also been renamed to `passes`, which now accepts an LdapRecord
+`Model` as the first parameter and an Eloquent `Model` as the second:
 
 ```diff
 namespace App\Ldap;
@@ -134,8 +134,8 @@ The `Validator` class has had the `fails` method removed, and the `passes()` met
 `Model` as the first parameter, and an Eloquent `Model` as the second:
 
 ```diff
-+ use Illuminate\Database\Eloquent\Model as Eloquent;
 + use LdapRecord\Models\Model as LdapRecord;
++ use Illuminate\Database\Eloquent\Model as Eloquent;
 
 class Validator
 {

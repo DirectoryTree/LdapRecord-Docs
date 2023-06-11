@@ -172,8 +172,6 @@ public function boot()
 
 ### Swapping the Domain Extractor
 
-> **Important**: This feature is available as of v2.3.0.
-
 If you would like to override the default mechanism that extracts the domain
 from the user's account that is retrieved from the PHP request key, call the
 `WindowsAuthenticate::extractDomainUsing()` method and supply a callback.
@@ -207,8 +205,6 @@ WindowsAuthenticate::extractDomainUsing(function ($account) {
 ```
 
 ### Swapping the Domain Validator
-
-> **Important**: This feature is available as of v2.3.0.
 
 If you'd like to validate the user's domain in your own way,
 call the `WindowsAuthenticate::validateDomainUsing()`

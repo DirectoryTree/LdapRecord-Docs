@@ -211,8 +211,6 @@ Would you like to display the user(s) to be imported / synchronized? (yes/no) [n
 
 ### Chunk
 
-> **Important**: This option is available as of v2.5.0.
-
 The `--chunk` option allows you to import users by chunk.
 
 The option takes a number that indicates how many users per-chunk you would like to import.
@@ -247,8 +245,6 @@ php artisan ldap:import users --filter "(cn=Doe\, John)"
 If this is not done, you will receive a `Bad search filter` exception during import.
 
 ### Scopes
-
-> **Important**: This feature is available as of v2.7.0.
 
 The `--scopes` option allows you to specify model query scopes that will
 apply to the underlying LdapRecord query builder instance when
