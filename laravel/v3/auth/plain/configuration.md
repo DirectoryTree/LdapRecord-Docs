@@ -148,7 +148,7 @@ class OnlyAdministrators implements Rule
 
 In the authentication rule, a `$user` property will be made available to us.
 
-Now, we will update the `isValid` method to check the LDAP users `groups` relationship to see if they are a member:
+Now, we will update the `passes` method to check the LDAP users `groups` relationship to see if they are a member:
 
 ```php
 <?php
@@ -193,7 +193,7 @@ Once we have our rule defined, we will add it into our authentication provider i
 Now when you attempt to log in to your application with an LDAP user that successfully passes
 LDAP authentication, they will need to be a member of the `Administrators` group.
 
-If you are caching your configuration, make sure you re-run `config:cache` to re-cache your modifications.
+> If you are caching your configuration, make sure you re-run `config:cache` to re-cache your modifications.
 
 ## Scopes
 
@@ -201,4 +201,82 @@ The `scopes` option must be an array of [LdapRecord scope](/docs/core/v3/model-s
 
 ### Overview
 
-LdapRecord scopes inserted in this option allow you to apply query scopes to your configured model, only during authentication and importing.
+The `scopes` inserted in this option allow you to apply query scopes to your configured
+model, only during authentication. This is option is useful for when you don't want
+to add global scopes to your configured model, but would like to scope the query
+used to retrieve users during import and authentication into your application.
+
+### Creating Scopes
+
+Let's create an LDAP scope that scopes the authentication query to only return
+users that are located inside the `Accounting` Organizational Unit.
+
+To create a new LDAP scope, call the `ldap:make:scope` command:
+
+```bash
+php artisan ldap:make:scope Accounting
+```
+
+A scope will then be created in your applications `app/Ldap/Scopes` directory:
+
+```php
+<?php
+
+namespace App\Ldap\Scopes;
+
+use LdapRecord\Models\Model;
+use LdapRecord\Models\Scope;
+use LdapRecord\Query\Model\Builder;
+
+class Accounting implements Scope
+{
+    /**
+     * Apply the scope to the given query.
+     */
+    public function apply(Builder $query, Model $model): void
+    {
+        // ...
+    }
+}
+```
+
+Now let's update the `apply` method to only return users located inside the `Accounting` Organizational Unit:
+
+> We're using [automatic base DN subsitution](/docs/core/v3/searching#automatic-base-dn-substitution)
+> in query below by supplying `{base}` in the `$query->in()` method.
+
+```php
+class Accounting implements Scope
+{
+    /**
+     * Apply the scope to the given query.
+     */
+    public function apply(Builder $query, Model $model): void
+    {
+        $query->in('ou=Accounting,{base}');
+    }
+}
+```
+
+Once we have our scope defined, we will add it into our authentication provider in the `config/auth.php` file:
+
+```php
+'providers' => [
+    // ...
+
+    'users' => [
+        'driver' => 'ldap',
+        'model' => LdapRecord\Models\ActiveDirectory\User::class,
+        'rules' => [],
+        'scopes' => [
+            App\Ldap\Scopes\Accounting::class,
+        ],
+    ],
+],
+```
+
+Now when you attempt to log in to your application with an LDAP user, that LDAP 
+user must be located inside the `Accounting` Organizational Unit to be able 
+to authenticate into your application. 
+
+> If you are caching your configuration, make sure you re-run `config:cache` to re-cache your modifications.
