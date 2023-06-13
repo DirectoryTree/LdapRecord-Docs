@@ -93,9 +93,9 @@ class User extends Model implements Authenticatable
 {
     use CanAuthenticate;
 
-    public static $objectClasses = ['...'];
+    public static array $objectClasses = ['...'];
 
-    protected $guidKey = 'uuid';
+    protected string $guidKey = 'uuid';
 }
 ```
 
