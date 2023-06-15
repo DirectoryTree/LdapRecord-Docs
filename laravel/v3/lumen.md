@@ -14,9 +14,9 @@ LdapRecord-Lumen gives you the features of LdapRecord-Laravel using Lumen.
 LdapRecord-Lumen requires the following:
 
 | Requirements                                              |
-| --------------------------------------------------------- |
-| PHP >= 7.3                                                |
-| Lumen >= 5.6                                              |
+|-----------------------------------------------------------|
+| PHP >= 8.1                                                |
+| Lumen >= 8.0                                              |
 | PHP LDAP extension enabled                                |
 | An LDAP server (Active Directory, OpenLDAP, FreeIPA etc.) |
 

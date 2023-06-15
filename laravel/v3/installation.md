@@ -8,9 +8,9 @@ description: LdapRecord-Laravel Install Guide
 LdapRecord-Laravel requires the following:
 
 | Requirements                                              |
-| --------------------------------------------------------- |
-| PHP >= 7.3                                                |
-| Laravel >= 5.6                                            |
+|-----------------------------------------------------------|
+| PHP >= 8.1                                                |
+| Laravel >= 8.0                                            |
 | PHP LDAP extension enabled                                |
 | An LDAP server (Active Directory, OpenLDAP, FreeIPA etc.) |
 
