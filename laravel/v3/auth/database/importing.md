@@ -157,7 +157,7 @@ Artisan::call('ldap:import', [
 
 When executing the `ldap:import` command, LdapRecord-Laravel will fire various events that you may register listeners on:
 
-> **Important**: Each event listed below has the parent namespace of `LdapRecord\Laravel\Events\`.
+> **Important**: Each event listed below has the parent namespace of `LdapRecord\Laravel\Events\Import\`.
 
 | Event            | Fired                                                               | Occurrence                                                                                            |
 | ---------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
