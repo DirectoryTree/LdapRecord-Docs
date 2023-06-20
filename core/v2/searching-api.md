@@ -364,7 +364,7 @@ try {
 
 #### `forPage`
 
-> **Important**: Your LDAP server must support [Virtual List View](https://ldapwiki.com/wiki/Virtual%20List%20View%20Control).
+> **Important**: Your LDAP server must support [Virtual List View](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ldap/searching-with-the-ldap-vlv-control).
 
 The `forPage` supports the same arguments and executes the same underlying
 query as the [slice method](#slice), but it will  return query results
@@ -1133,7 +1133,7 @@ $query->setGrammar($myGrammarInstance);
 
 #### `slice`
 
-> **Important**: Your LDAP server must support [Virtual List View](https://ldapwiki.com/wiki/Virtual%20List%20View%20Control).
+> **Important**: Your LDAP server must support [Virtual List View](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ldap/searching-with-the-ldap-vlv-control).
 
 To get a "page" of an LDAP query to conserve memory and retrieve results quickly, you may use the `slice()` method.
 

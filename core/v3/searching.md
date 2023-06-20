@@ -482,7 +482,7 @@ $query->chunk(1000, function ($entries) {
 
 ## Slicing
 
-> **Important**: Your LDAP server must support [Virtual List View](https://ldapwiki.com/wiki/Virtual%20List%20View%20Control).
+> **Important**: Your LDAP server must support [Virtual List View](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/ldap/searching-with-the-ldap-vlv-control).
 
 Slicing your search results allows you to retrieve only a particular set
 of results based on an offset, similar to a database offset. This helps
