@@ -56,7 +56,22 @@ listeners. We will call it `LdapEventServiceProvider`. Execute the below command
 php artisan make:provider LdapEventServiceProvider
 ```
 
-In the generated class, we will update it to the following:
+Add the provider to your `config/app.php` configuration file:
+
+```php
+// config/app.php
+
+return [
+    // ...
+
+    'providers' => [
+        // ...
+        \App\Providers\LdapEventServiceProvider::class,
+    ],
+];
+```
+
+Then, in the generated provider we will update it to the following:
 
 ```php
 <?php
