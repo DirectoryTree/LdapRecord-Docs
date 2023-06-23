@@ -86,7 +86,7 @@ class LdapEventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $dispatcher = Container::getEventDispatcher();
+        $dispatcher = Container::getDispatcher();
 
         foreach ($this->listen as $event => $listeners) {
             foreach (array_unique($listeners) as $listener) {
