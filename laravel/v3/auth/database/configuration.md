@@ -425,7 +425,7 @@ being [imported](/docs/laravel/v3/auth/database/importing), you can create an at
 responsible for setting / synchronizing your database models attributes from their
 LDAP model.
 
-This class you define must have a `handle` method. This method must accept the LDAP model you
+This class you define must have either a `handle` or `__invoke` method. This method must accept the LDAP model you
 have configured as the first parameter and your Eloquent database model as the second.
 
 For the example below, we will create a handler named `AttributeHandler.php` inside your `app/Ldap` folder:
@@ -482,6 +482,24 @@ You may also add multiple if you'd prefer, or combine them with `key => value` p
         'email' => 'mail',
         \App\Ldap\MyFirstAttributeHandler::class,
         \App\Ldap\MySecondAttributeHandler::class,
+    ],
+],
+```
+
+You may also define a closure directly:
+
+```php
+use App\Models\User as DatabaseUser;
+use App\Ldap\User as LdapUser;
+
+// ...
+'database' => [
+    // ...
+    'sync_attributes' => [
+        'name' => 'cn',
+        function (LdapUser $ldap, DatabaseUser $database) {
+            $database->email = $ldap->getFirstAttribute('mail');
+        },
     ],
 ],
 ```
