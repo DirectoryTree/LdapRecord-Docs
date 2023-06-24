@@ -7,159 +7,246 @@ description: Testing with LdapRecord
 
 ## Introduction
 
-LdapRecord comes with a utility that allow you to test bind attempts
-against a fake server and return custom error codes & responses.
+LdapRecord comes with robust 'fake' utilities to help you test your interactions with your LDAP server.
 
-This allows you to test how your application responds to authentication failures and error messages.
+These test fakes allow you to add method expections and return mock results and responses,
+allowing you to effectively test how your application behaves in various scenarios.
 
-## Test Case Setup
+## Getting Started
 
-To begin, initialize the fake directory using the `DirectoryFake::setup` method. This method
-accepts the name of your LDAP connection that you initialize in your application.
-
-If you do not provide a name, your default LDAP connection name will be used.
-
-Upon calling the `setup` method, your LDAP connection will be swapped out of the
-connection `Container` and replaced with a `ConnectionFake`.
-
-Let's walk through an example of testing an application that uses LDAP authentication.
-
-Here's our example controller:
+When you begin using LdapRecord, you first add a connection to the container
+with its configuration to be able to interact with your LDAP server.
 
 ```php
-class AuthController
-{
-    public function __construct()
-    {
-        Container::addConnection([
-            'hosts' => ['10.0.0.1']
-        ]);
-    }
+// Adding an LDAP connection somewhere in your application...
 
-    public function login()
-    {
-        $connection = Container::getDefaultConnection();
-
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-
-        if ($connection->auth()->attempt($username, $password)) {
-            return "Your password is valid!";
-        }
-
-        return "Username or password is incorrect.";
-    }
-}
+\LdapRecord\Container::addConnection($connection);
 ```
 
-Now let's test it:
+Once a connection is added and is bootstrapped in your test environment, you may begin to test your interactions with the LDAP connection.
+
+To begin, we must swap this LDAP connection out with a fake, allowing us to add expectations to it, and mock responses.
+
+This swapping of the LDAP connection with a fake is done with the `DirectoryFake::setup` method:
 
 ```php
 use LdapRecord\Testing\DirectoryFake;
 
-class LoginTest extends TestCase
+class LdapTest extends TestCase
 {
-    public function test_login()
+    public function test()
     {
-        $user = 'cn=User,dc=local,dc=com';
-
-        DirectoryFake::setup()->actingAs($user);
-
-        // Execute HTTP post request somehow in your testing framework...
-
-        $this->post('/login', [
-            'username' => $user,
-            'password' => 'secret',
-        ])->assertSee("Your password is valid!");
-
-        $this->post('/login', [
-            'username' => 'invalid',
-            'password' => 'secret',
-        ])->assertSee("Username or password is incorrect.");
+        // Swap default connection with a fake...
+        $fake = DirectoryFake::setup();
+        
+        // Returns instanceof \LdapRecord\Testing\ConnectionFake
+        // \LdapRecord\Container::getDefaultConnection();
+        
+        // ...
     }
 }
 ```
 
-This is a small example of how you can test bind attempts to your LDAP server.
-
-## Responses and Error Codes
-
-When testing connectivity to your LDAP server, you may wish to test error codes and
-messages that may be returned when a bind attempt fails. To do this, you can
-use the `ConnectionFake` to retrieve a fake LDAP connection to return
-error codes when a bind attempt fails.
-
-Let's walk through an example of an authentication controller that will
-retrieve the last LDAP error and determine the cause of the bind
-failure.
-
-Let's walk through an example of testing an application that uses LDAP authentication.
-
-Here's our example controller:
+The `setup` method accepts a connection name, if you've added multiple connections, or have changed the name of the default LDAP connection:
 
 ```php
-class AuthController
-{
-    public function __construct()
-    {
-        Container::addConnection([
-            'hosts' => ['10.0.0.1']
-        ]);
-    }
+// Somewhere in your application...
 
-    public function login()
-    {
-        $connection = Container::getDefaultConnection();
-
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-
-        if ($connection->auth()->attempt($username, $password)) {
-            return "Your password is valid!";
-        }
-
-        $error = $connection->getLdapConnection()->getDiagnosticMessage();
-
-        if (strpos($error, '532') !== false) {
-            return "Your password has expired.";
-        } elseif (strpos($error, '533') !== false) {
-            return "Your account is disabled.";
-        } elseif (strpos($error, '701') !== false) {
-             return "Your account has expired.";
-        } elseif (strpos($error, '775') !== false) {
-             return "Your account is locked.";
-        }
-
-        return "Username or password is incorrect.";
-    }
-}
+\LdapRecord\Container::addConnection($connection, 'alpha');
 ```
-
-You can see above that we are pulling the diagnostic message of the last failed bind attempt.
-
-This diagnostic message contains an error code that you can use to tell the user why they failed logging in.
-
-Here is how we would test the above controller:
 
 ```php
 use LdapRecord\Testing\DirectoryFake;
 
-class LoginTest extends TestCase
+public function test()
 {
-    public function test_login()
-    {
-        $user = 'cn=User,dc=local,dc=com';
-
-        $fake = DirectoryFake::setup()->actingAs($user);
-
-        $fake->getLdapConnection()->shouldReturnDiagnosticMessage('Failed: 775');
-
-        // Execute HTTP post request somehow in your testing framework...
-
-        $this->post('/login', [
-            'username' => $user,
-            'password' => 'secret',
-        ])->assertSee("Your account is locked.");
-    }
+    $fake = DirectoryFake::setup('alpha');
+    
+    // Returns instanceof \LdapRecord\Testing\ConnectionFake
+    // \LdapRecord\Container::getConnection('alpha');
 }
+```
+
+## Test Bind
+
+The `DirectoryFake` provides a convenient mechanism for mocking bind attempts to your LDAP server.
+
+To permit a bind attempt to your server underneath a particular user, call the `actingAs` method:
+
+> The `actingAs` method permits any password to be used, as long as the distinguished name given matches.
+
+```php
+DirectoryFake::setup()->actingAs('cn=admin,dc=local,dc=com');
+```
+
+```php
+\LdapRecord\Container::addConnection(
+    $connection = new \LdapRecord\Connection(['...'])
+);
+
+// Successful.
+$connection->bind('cn=admin,dc=local,dc=com', 'secret');
+```
+
+### Test Bind Errors
+
+To test bind errors, we can utilize `LdapFake`, which provides a way for us
+to easily create an `LdapExpection` to deny the bind attempt and include
+mock errors and diagnostic information:
+
+```php
+use LdapRecord\Testing\LdapFake;
+use LdapRecord\Testing\DirectoryFake;
+
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect(LdapFake::operation('bind')->andReturnErrorResponse())
+    ->shouldReturnErrorNumber(12)
+    ->shouldReturnError('Some Error')
+    ->shouldReturnDiagnosticMessage('Some Diagnostic Message');
+```
+
+```php
+\LdapRecord\Container::addConnection(
+    $connection = new \LdapRecord\Connection(['...'])
+);
+
+try {
+    $connection->bind('cn=admin,dc=local,dc=com', 'secret');
+} catch (\LdapRecord\BindException $e) {
+    $error = $e->getDetailedError();
+    
+    $error->getErrorCode(); // 12
+    $error->getErrorMessage(); // "Some Error"
+    $error->getDiagnosticMessage(); // "Some Diagnostic Message"
+}
+```
+
+## Test Search
+
+To test searching, we can ret
+
+> When returing mock LDAP results, you **must** return all attributes in an array, regardless
+> if it's single valued, as this is how results are returned from your real LDAP server.
+
+```php
+use LdapRecord\Models\Entry;
+use LdapRecord\Testing\LdapFake;
+use LdapRecord\Testing\DirectoryFake;
+
+$results = [
+    ['mail' => ['john@local.com'], 'dn' => ['cn=John,dc=local,dc=com']],
+    ['mail' => ['jane@local.com'], 'dn' => ['cn=Jane,dc=local,dc=com']],
+];
+
+// Set up a connected fake:
+$fake = DirectoryFake::setup()->shouldBeConnected();
+
+// Expect a search and return a result:
+$fake->getLdapConnection()->expect(
+    LdapFake::operation('search')->andReturn($results)
+);
+
+// Execute a search and assert the expected results:
+foreach (Entry::get() as $index => $user) {
+    $this->assertEquals($results[$index]['mail'], $user->mail);
+    $this->assertEquals($results[$index]['dn'][0], $user->getDn());
+}
+```
+
+## Test List
+
+## Test Read
+
+```php
+$result = [
+    [
+        'mail' => ['john@local.com'],
+        'dn' => ['cn=John,dc=local,dc=com'],
+    ],
+];
+
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect(['read' => $result]);
+
+$user = Entry::find('cn=John,dc=local,dc=com');
+
+$this->assertEquals($result[0]['mail'], $user->mail);
+$this->assertEquals($result[0]['dn'][0], $user->getDn());
+```
+
+## Test Pagination
+
+## Test Create
+
+## Test Update
+
+## Test Attribute Add
+
+```php
+$model = new Entry();
+
+$model->setRawAttributes(['dn' => 'cn=John Doe,dc=acme,dc=org']);
+
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect(
+        LdapFake::operation('modAdd')
+            ->with($model->getDn(), ['mail' => ['jdoe@local.com']])
+            ->andReturnTrue()
+    );
+
+$model->addAttribute('mail', 'jdoe@local.com');
+
+$this->assertEquals('jdoe@local.com', $model->getFirstAttribute('mail'));
+```
+
+## Test Attribute Remove
+
+```php
+$model = new Entry();
+
+$model->setRawAttributes([
+    'dn' => ['cn=John Doe,dc=acme,dc=org'],
+    'mail' => ['jdoe@local.com'],
+]);
+
+$this->assertEquals('jdoe@local.com', $model->getFirstAttribute('mail'));
+
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect(
+        LdapFake::operation('modDelete')
+            ->with($model->getDn(), ['mail' => ['jdoe@local.com']])
+            ->andReturnTrue()
+    );
+
+$model->removeAttribute('mail', 'jdoe@local.com');
+
+$this->assertNull($model->getFirstAttribute('mail'));
+```
+
+## Test Rename
+
+```php
+use LdapRecord\Testing\LdapFake;
+use LdapRecord\Testing\DirectoryFake;
+
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect(
+        LdapFake::operation('rename')
+            ->with('cn=John Doe,dc=acme,dc=org', 'cn=Jane Doe')
+            ->andReturnTrue()
+    );
+
+$model = new Entry();
+
+$model->setRawAttributes(['dn' => 'cn=John Doe,dc=acme,dc=org']);
+
+$model->rename('Jane Doe');
+
+$this->assertTrue($model->wasRecentlyRenamed);
+$this->assertEquals('Jane Doe', $model->getName());
 ```
