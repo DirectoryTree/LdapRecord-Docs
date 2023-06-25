@@ -486,24 +486,6 @@ You may also add multiple if you'd prefer, or combine them with `key => value` p
 ],
 ```
 
-You may also define a closure directly:
-
-```php
-use App\Models\User as DatabaseUser;
-use App\Ldap\User as LdapUser;
-
-// ...
-'database' => [
-    // ...
-    'sync_attributes' => [
-        'name' => 'cn',
-        function (LdapUser $ldap, DatabaseUser $database) {
-            $database->email = $ldap->getFirstAttribute('mail');
-        },
-    ],
-],
-```
-
 > Attributes you specify are synchronized _in order_ (first to last), so you may
 > access the already synchronized attributes in subsequent attribute handlers.
 
