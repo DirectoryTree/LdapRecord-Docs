@@ -20,7 +20,9 @@ with its configuration to be able to interact with your LDAP server.
 ```php
 // Adding an LDAP connection somewhere in your application...
 
-\LdapRecord\Container::addConnection($connection);
+\LdapRecord\Container::addConnection(
+    new \LdapRecord\Connection(['...'])
+);
 ```
 
 Once a connection is added and is bootstrapped in your test environment, you may begin to test your interactions with the LDAP connection.
@@ -47,7 +49,7 @@ class LdapTest extends TestCase
 }
 ```
 
-The `setup` method accepts a connection name, if you've added multiple connections, or have changed the name of the default LDAP connection:
+The `setup` method accepts a connection name if you've added multiple connections, or have changed the name of the default LDAP connection:
 
 ```php
 // Somewhere in your application...
@@ -67,7 +69,7 @@ public function test()
 }
 ```
 
-## Test Bind
+## Test Authentication / Bind
 
 The `DirectoryFake` provides a convenient mechanism for mocking bind attempts to your LDAP server.
 
@@ -88,11 +90,11 @@ DirectoryFake::setup()->actingAs('cn=admin,dc=local,dc=com');
 $connection->bind('cn=admin,dc=local,dc=com', 'secret');
 ```
 
-### Test Bind Errors
+### Test Authentication / Bind Errors
 
-To test bind errors, we can utilize `LdapFake`, which provides a way for us
-to easily create an `LdapExpection` to deny the bind attempt and include
-mock errors and diagnostic information:
+To test bind errors, we can utilize `LdapFake`. This provides a way for us to
+easily create an `LdapExpection` using the static `operation` method to deny
+the bind attempt and include mock errors and diagnostic information:
 
 ```php
 use LdapRecord\Testing\LdapFake;
@@ -122,9 +124,64 @@ try {
 }
 ```
 
+## Test Operations
+
+To test various LDAP operations to your LDAP server, LdapRecord provides a test utility called
+`LdapFake`. This class extends the core `Ldap` class used for interacting with your server
+and running raw PHP `ldap_*` methods. The `LdapFake` class then overrides and intercepts 
+these methods with the ability to add method expectations, similar to Mockery.
+
+To retrieve the `LdapFake` instance, you may call the `getLdapConnection` method after setting up a `DirectoryFake`:
+
+```php
+use LdapRecord\Testing\DirectoryFake;
+
+DirectoryFake::setup()->getLdapConnection(); // \LdapRecord\Testing\LdapFake
+```
+
+### Adding Expectations
+
+To add expectations to the `LdapFake` instance, you may call the `expect` method, 
+and provide a new `LdapExpectation` instance. The `LdapExpectation` class 
+accepts the `Ldap` method name to mock:
+
+```php
+use LdapRecord\Testing\LdapFake;
+use LdapRecord\Testing\DirectoryFake;
+use LdapRecord\Testing\LdapExpectation;
+
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect((new LdapExpectation('read'))->andReturn('...'));
+```
+
+```php
+// Single expectations...
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect(LdapFake::operation('search')->andReturn($mockResults));
+
+// Multiple expectations...
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect([
+        LdapFake::operation('bind')->andReturn(new LdapResultResponse),
+        LdapFake::operation('search')->andReturn($mockResults),
+    ]);
+
+// Simple expectations using key-value pairs...
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect([
+        'bind' => new \LdapRecord\LdapResultResponse,
+        'search' => $mockResults
+    ]);
+```
+
 ## Test Search
 
-To test searching, we can ret
+To test searching (`ldap_search`), we can add an expectation to our fake
+LDAP connection on the `search` method, and return mock results:
 
 > When returing mock LDAP results, you **must** return all attributes in an array, regardless
 > if it's single valued, as this is how results are returned from your real LDAP server.
@@ -135,8 +192,14 @@ use LdapRecord\Testing\LdapFake;
 use LdapRecord\Testing\DirectoryFake;
 
 $results = [
-    ['mail' => ['john@local.com'], 'dn' => ['cn=John,dc=local,dc=com']],
-    ['mail' => ['jane@local.com'], 'dn' => ['cn=Jane,dc=local,dc=com']],
+    [
+        'mail' => ['john@local.com'], 
+        'dn' => ['cn=John,dc=local,dc=com']
+    ],
+    [
+        'mail' => ['jane@local.com'], 
+        'dn' => ['cn=Jane,dc=local,dc=com']
+    ],
 ];
 
 // Set up a connected fake:
@@ -156,24 +219,72 @@ foreach (Entry::get() as $index => $user) {
 
 ## Test List
 
-## Test Read
+To test listing (`ldap_list`), we can add an expectation to our fake
+LDAP connection on the `list` method, and return mock results.
+
+Since an `ldap_list` is the same as an `ldap_search` but without 
+nested hierarchy searching, an almost identical test can be used:
 
 ```php
-$result = [
+use LdapRecord\Models\Entry;
+use LdapRecord\Testing\LdapFake;
+use LdapRecord\Testing\DirectoryFake;
+
+$results = [
+    [
+        'mail' => ['john@local.com'], 
+        'dn' => ['cn=John,dc=local,dc=com']
+    ],
+    [
+        'mail' => ['jane@local.com'], 
+        'dn' => ['cn=Jane,dc=local,dc=com']
+    ],
+];
+
+// Set up a connected fake:
+$fake = DirectoryFake::setup()->shouldBeConnected();
+
+// Expect a search and return a result:
+$fake->getLdapConnection()->expect(
+    LdapFake::operation('list')->andReturn($results)
+);
+
+// Execute a search and assert the expected results:
+foreach (Entry::get() as $index => $user) {
+    $this->assertEquals($results[$index]['mail'], $user->mail);
+    $this->assertEquals($results[$index]['dn'][0], $user->getDn());
+}
+```
+
+## Test Read
+
+To test a read (`ldap_read`), we can add an expectation to our fake
+LDAP connection on the `list` method, and return mock results.
+
+> Similarly to the above list and search tests, the mock results here still 
+> need to be provided in a nested array, but only one result needs to be 
+> included, as this is what will be returned from your LDAP server.
+
+```php
+$results = [
     [
         'mail' => ['john@local.com'],
         'dn' => ['cn=John,dc=local,dc=com'],
     ],
 ];
 
-DirectoryFake::setup()
-    ->getLdapConnection()
-    ->expect(['read' => $result]);
+// Set up a connected fake:
+$fake = DirectoryFake::setup()->shouldBeConnected();
+
+// Expect a search and return a result:
+$fake->getLdapConnection()->expect(
+    LdapFake::operation('read')->andReturn($results)
+);
 
 $user = Entry::find('cn=John,dc=local,dc=com');
 
-$this->assertEquals($result[0]['mail'], $user->mail);
-$this->assertEquals($result[0]['dn'][0], $user->getDn());
+$this->assertEquals($results[0]['mail'], $user->mail);
+$this->assertEquals($results[0]['dn'][0], $user->getDn());
 ```
 
 ## Test Pagination
