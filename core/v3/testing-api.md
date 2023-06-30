@@ -110,6 +110,7 @@ DirectoryFake::setup()
 Add an LDAP method expectation. It can receive an `LdapExpectation` instance or an array of expectations:
 
 ```php
+use LdapRecord\LdapResultResponse;
 use LdapRecord\Testing\LdapFake;
 use LdapRecord\Testing\DirectoryFake;
 
@@ -124,7 +125,7 @@ DirectoryFake::setup()
 DirectoryFake::setup()
     ->getLdapConnection()
     ->expect([
-        LdapFake::operation('bind')->andReturn(new \LdapRecord\LdapResultResponse),
+        LdapFake::operation('bind')->andReturn(new LdapResultResponse),
         LdapFake::operation('search')->andReturn($mockResults),
     ]);
 
@@ -155,4 +156,111 @@ Allow a bind attempt from the given distinguished name to succeeed indefinitely:
 DirectoryFake::setup()
     ->getLdapConnection()
     ->shouldAllowBindWith('cn=john,dc=local,dc=com');
+```
+
+## `LdapExpectation` Method Listing
+
+### `with`
+
+Set the arguments to expect when the method is called:
+
+```php
+(new LdapExpectation('read'))->with('cn=john,dc=local,dc=com', '(objectclass=*)', ['objectclass', 'cn']);
+```
+
+### `andReturn`
+
+Set the value to return when the method is called:
+
+```php
+(new LdapExpectation('read'))->andReturn($results);
+```
+
+### `andReturnTrue`
+
+Set the return value to be `true` when the method is called:
+
+```php
+(new LdapExpectation('rename'))->andReturnTrue();
+```
+
+### `andReturnFalse`
+
+Set the return value to be `false` when the method is called:
+
+```php
+(new LdapExpectation('rename'))->andReturnFalse();
+```
+
+### `andReturnError`
+
+Set an error code, message, and diagnostic message, to be returned on the
+`errNo`, `getLastError` and `getDiagnosticMessage` methods on the `LdapFake` respectively:
+
+```php
+(new LdapExpectation('rename'))->andReturnError(
+    code: 1, 
+    errorMessage: 'Error Message', 
+    diagnosticMessage: 'Diagnostic Message'
+);
+```
+
+### `andReturnErrorResponse`
+
+Set an error code of `1` and a blank error message to be returned on the `LdapFake`:
+
+```php
+(new LdapExpectation('rename'))->andReturnErrorResponse();
+```
+
+You may also provide a different code and message in the first and second parameters:
+
+```php
+(new LdapExpectation('rename'))->andReturnErrorResponse(code: 1, errorMessage: 'Error Message');
+```
+
+### `andReturnResponse`
+
+Set the return value to be an `LdapResultResponse`:
+
+```php
+(new LdapExpectation('rename'))->andReturnResponse(
+    errorCode: 0,
+    matchedDn: null,
+    errorMessage: null,
+    referrals: [],
+    controls: []
+);
+```
+
+### `andThrow`
+
+Set an exception to be thrown when the expectation is called:
+
+```php
+(new LdapExpectation('rename'))->andThrow(new \LdapRecord\LdapRecordException);
+```
+
+### `once`
+
+Allow the expectation to only be called once:
+
+```php
+(new LdapExpectation('rename'))->once()->andReturn('...');
+```
+
+### `twice`
+
+Allow the expectation to only be called twice:
+
+```php
+(new LdapExpectation('rename'))->twice()->andReturn('...');
+```
+
+### `times`
+
+Allow the expectation to only be called given number of times:
+
+```php
+(new LdapExpectation('rename'))->times(3)->andReturn('...');
 ```
