@@ -50,12 +50,42 @@ The `driver` option must be `ldap` as this is what indicates to Laravel the prop
 
 ### Model
 
-The `model` option must be the class name of your [LdapRecord model](/docs/core/v3/models). This model will be used
-for fetching users from your directory.
+The `model` option must be the class name of your [LdapRecord model](/docs/core/v3/models). 
+This model will be used for fetching users from your directory:
+
+```php
+// config/auth.php
+
+'providers' => [
+    // ...
+
+    'ldap' => [
+        'driver' => 'ldap',
+        'model' => LdapRecord\Models\ActiveDirectory\User::class,
+        'rules' => [],
+    ],
+],
+```
 
 ### Rules
 
-The `rules` option must be an array of class names of [authentication rules](#rules).
+The `rules` option must be an array of class names of authentication rules:
+
+```php
+// config/auth.php
+
+'providers' => [
+    // ...
+
+    'ldap' => [
+        'driver' => 'ldap',
+        'model' => LdapRecord\Models\ActiveDirectory\User::class,
+        'rules' => [
+            App\Ldap\Rules\MyAuthenticationRule::class,
+        ],
+    ],
+],
+```
 
 ## Synchronized Database Authentication
 

@@ -26,6 +26,26 @@ php artisan ldap:make:rule OnlyHelpDeskUsers
 
 > A new rule will be created inside `app/Ldap/Rules/OnlyHelpDeskUsers.php`
 
+Then, add the rule to your authentication provider:
+
+```php
+// config/auth.php
+
+'providers' => [
+    // ...
+
+    'ldap' => [
+        'driver' => 'ldap',
+        'model' => LdapRecord\Models\ActiveDirectory\User::class,
+        'rules' => [
+            App\Ldap\Rules\OnlyHelpDeskUsers::class, // <-- Added here.
+        ],
+    ],
+],
+```
+
+> Make sure you run `php artisan config:clear` if you are caching your configuration files.
+
 In the newly generated rule, we can check for group membership in
 various ways, as well as check for nested group membership, and
 even for multiple group memberships.
