@@ -12,10 +12,13 @@ LdapRecord comes with robust 'fake' utilities to help you test your interactions
 These test fakes allow you to add method expections and return mock results and responses,
 allowing you to effectively test how your application behaves in various scenarios.
 
+If you've ever used [Mockery](https://github.com/mockery/mockery) in your 
+test suite before, you will see many similarities here.
+
 ## Getting Started
 
-When you begin using LdapRecord, you first add a connection to the container
-with its configuration to be able to interact with your LDAP server.
+When you start using LdapRecord, you begin by adding a connection to the container
+with its configuration to be able to interact with your LDAP server:
 
 ```php
 // Adding an LDAP connection somewhere in your application...
@@ -27,7 +30,7 @@ with its configuration to be able to interact with your LDAP server.
 
 Once a connection is added and is bootstrapped in your test environment, you may begin to test your interactions with the LDAP connection.
 
-To begin, we must swap this LDAP connection out with a fake, allowing us to add expectations to it, and mock responses.
+To begin, we can swap this LDAP connection out with the aforementioned 'fake', allowing us to add expectations to it, and mock responses.
 
 This swapping of the LDAP connection with a fake is done with the `DirectoryFake::setup` method:
 
@@ -102,7 +105,7 @@ use LdapRecord\Testing\DirectoryFake;
 
 DirectoryFake::setup()
     ->getLdapConnection()
-    ->expect(LdapFake::operation('bind')->andReturnErrorResponse())
+    ->expect(LdapFake::operation('bind')->once()->andReturnErrorResponse())
     ->shouldReturnErrorNumber(12)
     ->shouldReturnError('Some Error')
     ->shouldReturnDiagnosticMessage('Some Diagnostic Message');
@@ -128,8 +131,8 @@ try {
 
 To test various LDAP operations to your LDAP server, LdapRecord provides a test utility called
 `LdapFake`. This class extends the core `Ldap` class used for interacting with your server
-and running raw PHP `ldap_*` methods. The `LdapFake` class then overrides and intercepts 
-these methods with the ability to add method expectations, similar to Mockery.
+and running the PHP `ldap_*` methods. The `LdapFake` class then overrides and intercepts 
+these methods, providing the ability to add method expectations, similar to Mockery.
 
 To retrieve the `LdapFake` instance, you may call the `getLdapConnection` method after setting up a `DirectoryFake`:
 
@@ -152,21 +155,23 @@ use LdapRecord\Testing\LdapExpectation;
 
 DirectoryFake::setup()
     ->getLdapConnection()
-    ->expect((new LdapExpectation('read'))->andReturn('...'));
+    ->expect((new LdapExpectation('read'))->once()->andReturn('...'));
 ```
+
+You may also create an `LdapExpecation` using the static method `operation` on the `LdapFake` class:
 
 ```php
 // Single expectations...
 DirectoryFake::setup()
     ->getLdapConnection()
-    ->expect(LdapFake::operation('search')->andReturn($mockResults));
+    ->expect(LdapFake::operation('search')->once()->andReturn($mockResults));
 
 // Multiple expectations...
 DirectoryFake::setup()
     ->getLdapConnection()
     ->expect([
-        LdapFake::operation('bind')->andReturn(new LdapResultResponse),
-        LdapFake::operation('search')->andReturn($mockResults),
+        LdapFake::operation('bind')->once()->andReturn(new LdapResultResponse),
+        LdapFake::operation('search')->once()->andReturn($mockResults),
     ]);
 
 // Simple expectations using key-value pairs...
@@ -175,6 +180,86 @@ DirectoryFake::setup()
     ->expect([
         'bind' => new \LdapRecord\LdapResultResponse,
         'search' => $mockResults
+    ]);
+```
+
+### Expectation Arguments
+
+Expectations can be provided with expected arguments that should be passed to the LDAP operation using the `with` method:
+
+```php
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect(
+        // Allow bind attempt matching the exact distinguished name and password.  
+        LdapFake::operation('bind')->with('cn=john,dc=local,dc=com', 'secret')->andReturnResponse()
+    );
+```
+
+Arguments are only validated if one is provided in its position:
+
+```php
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect(
+        // Allow bind attempt with any password, but the distinguished name must match:
+        LdapFake::operation('bind')->with('cn=john,dc=local,dc=com')->andReturnResponse()
+    );
+```
+
+If no expected arguments are given to the expectation, then validation is not performed on them:
+
+```php
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect(
+        // Allow bind attempts with any arguments.
+        LdapFake::operation('bind')->andReturnResponse() 
+    );
+```
+
+You may also provide a closure in each argument position to validate arguments. Each
+closure should return a boolean to indicate whether the argument's value is valid:
+
+```php
+LdapFake::operation('bind')->with(
+    fn ($dn) => $dn === 'cn=john,dc=local,dc=com'
+    fn ($password) => $password === 'secret'
+)->andReturnResponse()
+```
+
+### Expectation Order
+
+Expectations that are added to the `LdapFake` are called in order (first to last). However, if 
+an expectation is not given a number of times that it should be called, that means **it will 
+be used indefinitely** for any calls to the method and return the same response each time:
+
+```php
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect([
+        LdapFake::operation('bind')->with('cn=john,dc=local,dc=com')->andReturnResponse(),
+        
+        // ❌ Will never be reached
+        LdapFake::operation('bind')->with('cn=jane,dc=local,dc=com')->andReturnResponse(), 
+    ]);
+```
+
+With the above example, the second `bind` expectation is never reached, because 
+we have not provided a number of times that it should be executed.
+
+Here is a fixed example, where we add a `once` to the expectation, meaning the 
+expectation will be discarded the first time it is reached. The subsequent
+`bind` call will be performed on the second expectation:
+
+```php
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect([
+        LdapFake::operation('bind')->once()->with('cn=john,dc=local,dc=com')->andReturnResponse(),
+        
+         // ✅ Will be reached on subsequent bind attempt
+        LdapFake::operation('bind')->once()->with('cn=jane,dc=local,dc=com')->andReturnResponse(),
     ]);
 ```
 
@@ -287,9 +372,106 @@ $this->assertEquals($results[0]['mail'], $user->mail);
 $this->assertEquals($results[0]['dn'][0], $user->getDn());
 ```
 
-## Test Pagination
+## Test Paginate
+
+
+
+
+## Test Chunk
+
+To test a chunked query that returns more than one page of results, we need to add a
+more complicated set of expectations on the `parseResult`method. This method is 
+used to retrieve details about the pagintation request (per page), and also 
+used to parse the result of a page:
+
+```php
+// Define the pages of mock results.
+$pages = [
+    [['count' => 1, 'objectclass' => ['foo']]],
+    [['count' => 1, 'objectclass' => ['bar']]],
+];
+
+DirectoryFake::setup()
+    ->shouldBeConnected()
+    ->getLdapConnection()
+    ->expect([
+        LdapFake::operation('search')->once()->andReturn($pages[0]),
+    
+        LdapFake::operation('parseResult')->once()->andReturnResponse(controls: [
+            LDAP_CONTROL_PAGEDRESULTS => [
+                'value' => [
+                    'size' => 1,
+                    
+                    // Indicate more pages to load by returning a non-empty string as a cookie.
+                    'cookie' => '1234',
+                ],
+            ],
+        ]),
+    
+        LdapFake::operation('parseResult')->once()->with(fn ($results) => (
+            $results === $pages[0]
+        ))->andReturnResponse(), // First page search result being parsed.
+    
+        LdapFake::operation('search')->once()->andReturn($pages[1]), // Next page begins.
+    
+        LdapFake::operation('parseResult')->once()->andReturnResponse(controls: [
+            LDAP_CONTROL_PAGEDRESULTS => [
+                'value' => [
+                    'size' => 1,
+                    
+                    // Indicate that there are no more pages by using
+                    'cookie' => null, 
+                ],
+            ],
+        ]),
+    
+        LdapFake::operation('parseResult')->once()->with(fn ($results) => (
+            $results === $pages[1]
+        ))->andReturnResponse(), // Second page search result being parsed.
+    ]);
+
+User::chunk(1, function ($results, $page) use ($pages) {
+    // $page starts at 1:
+    $this->assertEquals($pages[--$page], $results);
+});
+```
 
 ## Test Create
+
+To test an object creation (`ldap_add`), we can add an expectation to our fake
+LDAP connection on the `add` method, validate the properties using the `with` 
+method, and return true -- indicating creation was successful:
+
+```php
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect(
+        LdapFake::operation('add')->with('cn=John Doe,dc=local,dc=com', function (array $attributes) {
+            return $attributes['cn'][0] === 'John Doe'
+                && $attributes['mail'][0] === 'jdoe@local.com'
+                && $attributes['objectclass'] === [
+                    'top',
+                    'person',
+                    'organizationalperson',
+                    'user',
+                ];
+        })->andReturnTrue()
+    );
+
+$model = new User();
+
+$model->cn = 'John Doe';
+$model->mail = 'jdoe@local.com';
+
+$model->save();
+
+$this->assertTrue($model->exists);
+
+// You may also validate the model's properties after
+// creation to ensure they have been set properly:
+$this->assertEquals('cn=John Doe,dc=local,dc=com', $model->getDn());
+$this->assertEquals('jdoe@local.com', $model->getFirstAttribute('mail'));
+```
 
 ## Test Update
 
