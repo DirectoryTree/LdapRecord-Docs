@@ -72,6 +72,21 @@ public function test()
 }
 ```
 
+## Tearing Down
+
+Inside your test suite's tear down method (`tearDown` in PHPUnit's case), you should call the
+`DirectoryFake::tearDown` method. This will revert the swapped LDAP connections 
+with their real equivalents, and perform additional test assertions:
+
+```php
+ protected function tearDown(): void
+{
+    DirectoryFake::tearDown();
+
+    parent::tearDown();
+}
+```
+
 ## Test Authentication / Bind
 
 The `DirectoryFake` provides a convenient mechanism for mocking bind attempts to your LDAP server.
@@ -380,7 +395,7 @@ $this->assertEquals($results[0]['dn'][0], $user->getDn());
 ## Test Chunk
 
 To test a chunked query that returns more than one page of results, we need to add a
-more complicated set of expectations on the `parseResult`method. This method is 
+more complicated set of expectations on the `parseResult` method. This method is 
 used to retrieve details about the pagintation request (per page), and also 
 used to parse the result of a page:
 
@@ -395,8 +410,10 @@ DirectoryFake::setup()
     ->shouldBeConnected()
     ->getLdapConnection()
     ->expect([
+        // Return the first page of results.
         LdapFake::operation('search')->once()->andReturn($pages[0]),
     
+        // Return the pagination response, indicating more pages to load.
         LdapFake::operation('parseResult')->once()->andReturnResponse(controls: [
             LDAP_CONTROL_PAGEDRESULTS => [
                 'value' => [
@@ -408,30 +425,36 @@ DirectoryFake::setup()
             ],
         ]),
     
+        // Return the parsed results from the first page of the pagination request.
         LdapFake::operation('parseResult')->once()->with(fn ($results) => (
             $results === $pages[0]
-        ))->andReturnResponse(), // First page search result being parsed.
+        ))->andReturnResponse(),
     
-        LdapFake::operation('search')->once()->andReturn($pages[1]), // Next page begins.
-    
+        // Return the next page of results.
+        LdapFake::operation('search')->once()->andReturn($pages[1]),
+        
+        // Return the next pagination response, indicating *no more* pages to load.
         LdapFake::operation('parseResult')->once()->andReturnResponse(controls: [
             LDAP_CONTROL_PAGEDRESULTS => [
                 'value' => [
                     'size' => 1,
                     
-                    // Indicate that there are no more pages by using
+                    // Indicate that there are no more pages to load.
                     'cookie' => null, 
                 ],
             ],
         ]),
     
+        // Return the parsed results from the second page of the pagination request.
         LdapFake::operation('parseResult')->once()->with(fn ($results) => (
             $results === $pages[1]
-        ))->andReturnResponse(), // Second page search result being parsed.
+        ))->andReturnResponse(), 
     ]);
 
 User::chunk(1, function ($results, $page) use ($pages) {
-    // $page starts at 1:
+    // $page in the chunk callback starts at 1. We
+    // will decrement it by one to retrieve the
+    // correct mock results for the page. 
     $this->assertEquals($pages[--$page], $results);
 });
 ```
@@ -444,6 +467,7 @@ method, and return true -- indicating creation was successful:
 
 ```php
 DirectoryFake::setup()
+    ->shouldBeConnected()
     ->getLdapConnection()
     ->expect(
         LdapFake::operation('add')->with('cn=John Doe,dc=local,dc=com', function (array $attributes) {
@@ -474,6 +498,34 @@ $this->assertEquals('jdoe@local.com', $model->getFirstAttribute('mail'));
 ```
 
 ## Test Update
+
+To test an object creation (`ldap_modify_batch`), we can add an expectation to our fake
+LDAP connection on the `modifyBatch` method, validate the properties using the `with`
+method, and return true -- indicating that the update was successful:
+
+```php
+DirectoryFake::setup()
+    ->shouldBeConnected()
+    ->getLdapConnection()
+    ->expect([
+        LdapFake::operation('modifyBatch')->once()->with('cn=john,dc=local,dc=com', function ($mods) {
+            return count($mods) === 1
+                && $mods[0]['attrib'] === 'mail'
+                && $mods[0]['modtype'] === LDAP_MODIFY_BATCH_ADD
+                && $mods[0]['values'] === ['john.doe@local.com'];
+        })->andReturnTrue(),
+    ]);
+
+$user = new User();
+
+$user->setRawAttributes([
+    'dn' => ['cn=john,dc=local,dc=com'],
+]);
+
+$user->mail = 'john.doe@local.com';
+
+$user->save();
+```
 
 ## Test Attribute Add
 
