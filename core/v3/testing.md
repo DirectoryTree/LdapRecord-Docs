@@ -15,7 +15,7 @@ allowing you to effectively test how your application behaves in various scenari
 If you've ever used [Mockery](https://github.com/mockery/mockery) in your 
 test suite before, you will see many similarities here.
 
-## Getting Started
+## Setting Up
 
 When you start using LdapRecord, you begin by adding a connection to the container
 with its configuration to be able to interact with your LDAP server:
@@ -146,7 +146,7 @@ try {
 }
 ```
 
-## Test Operations
+## Operation Expectations
 
 To test various LDAP operations to your LDAP server, LdapRecord provides a test utility called
 `LdapFake`. This class extends the core `Ldap` class used for interacting with your server
@@ -300,7 +300,9 @@ DirectoryFake::setup()
     ]);
 ```
 
-## Test Search
+## Testing Operations
+
+### Search
 
 To test searching (`ldap_search`), we can add an expectation to our fake
 LDAP connection on the `search` method, and return mock results:
@@ -339,7 +341,7 @@ foreach (Entry::get() as $index => $user) {
 }
 ```
 
-## Test List
+### List
 
 To test listing (`ldap_list`), we can add an expectation to our fake
 LDAP connection on the `list` method, and return mock results.
@@ -378,7 +380,7 @@ foreach (Entry::get() as $index => $user) {
 }
 ```
 
-## Test Read
+### Read
 
 To test a read (`ldap_read`), we can add an expectation to our fake
 LDAP connection on the `list` method, and return mock results.
@@ -409,8 +411,7 @@ $this->assertEquals($results[0]['mail'], $user->mail);
 $this->assertEquals($results[0]['dn'][0], $user->getDn());
 ```
 
-## Test Paginate
-
+### Paginate
 
 To test a pagianted query that returns more than one page of results, we need to add a
 more complicated set of expectations on the `parseResult` method. This method is
@@ -474,7 +475,7 @@ $this->assertTrue($users->contains('cn=John,dc=local,dc=com'));
 $this->assertTrue($users->contains('cn=Jane,dc=local,dc=com'));
 ```
 
-## Test Chunk
+### Chunk
 
 Similarly to the above pagination test, we can scaffold our chunk 
 test nearly identically, but perform assertions differently, 
@@ -540,7 +541,7 @@ User::chunk(1, function ($results, $page) use ($pages) {
 });
 ```
 
-## Test Create
+### Create
 
 To test an object creation (`ldap_add`), we can add an expectation to our fake
 LDAP connection on the `add` method, validate the properties using the `with` 
@@ -578,7 +579,7 @@ $this->assertEquals('cn=John Doe,dc=local,dc=com', $model->getDn());
 $this->assertEquals('jdoe@local.com', $model->getFirstAttribute('mail'));
 ```
 
-## Test Update
+### Update
 
 To test an object creation (`ldap_modify_batch`), we can add an expectation to our fake
 LDAP connection on the `modifyBatch` method, validate the properties using the `with`
@@ -608,7 +609,7 @@ $user->mail = 'john.doe@local.com';
 $user->save();
 ```
 
-## Test Attribute Add
+### Attribute Add
 
 To test adding an attribute to an LDAP object (`ldap_mod_add`), we can add an expectation to our fake
 LDAP connection on the `modAdd` method, validate the properties using the `with`
@@ -632,7 +633,7 @@ $model->addAttribute('mail', 'jdoe@local.com');
 $this->assertEquals('jdoe@local.com', $model->getFirstAttribute('mail'));
 ```
 
-## Test Attribute Remove
+### Attribute Remove
 
 Similarly to the above test, to test removing an attribute to an LDAP object (`ldap_mod_del`), we can 
 add an expectation to our fake LDAP connection on the `modDelete` method, validate the properties
@@ -661,7 +662,7 @@ $model->removeAttribute('mail', 'jdoe@local.com');
 $this->assertNull($model->getFirstAttribute('mail'));
 ```
 
-## Test Rename
+### Rename
 
 To test renaming an LDAP object, we can add an expectation to 
 the "rename" method that the current full distinguished 
@@ -691,7 +692,7 @@ $this->assertTrue($model->wasRecentlyRenamed);
 $this->assertEquals('Jane Doe', $model->getName());
 ```
 
-## Test Move
+### Move
 
 Similarly to the above test, moving an object performs 
 a "rename"under the hood, but instead keeps the same
