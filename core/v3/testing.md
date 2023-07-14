@@ -75,8 +75,8 @@ public function test()
 ## Tearing Down
 
 Inside your test suite's tear down method (`tearDown` in PHPUnit's case), you should call the
-`DirectoryFake::tearDown` method. This will revert the swapped LDAP connections 
-with their real equivalents, and perform additional test assertions:
+`DirectoryFake::tearDown` method. This will put back all the replaced LDAP connections 
+with their real equivalents, and perform additional method expectation assertions:
 
 ```php
  protected function tearDown(): void
@@ -127,13 +127,17 @@ DirectoryFake::setup()
 ```
 
 ```php
-\LdapRecord\Container::addConnection(
-    $connection = new \LdapRecord\Connection(['...'])
+use LdapRecord\Container;
+use LdapRecord\Connection;
+use LdapRecord\BindException;
+
+Container::addConnection(
+    $connection = new Connection(['...'])
 );
 
 try {
     $connection->bind('cn=admin,dc=local,dc=com', 'secret');
-} catch (\LdapRecord\BindException $e) {
+} catch (BindException $e) {
     $error = $e->getDetailedError();
     
     $error->getErrorCode(); // 12
@@ -159,9 +163,9 @@ DirectoryFake::setup()->getLdapConnection(); // \LdapRecord\Testing\LdapFake
 
 ### Adding Expectations
 
-To add expectations to the `LdapFake` instance, you may call the `expect` method, 
-and provide a new `LdapExpectation` instance. The `LdapExpectation` class 
-accepts the `Ldap` method name to mock:
+To add expectations to the `LdapFake` connection instance, you may call 
+the `expect` method, and provide a new `LdapExpectation` instance. The 
+`LdapExpectation` class accepts the `LdapRecord\Ldap` method name to mock:
 
 ```php
 use LdapRecord\Testing\LdapFake;
@@ -196,11 +200,23 @@ DirectoryFake::setup()
         'bind' => new \LdapRecord\LdapResultResponse,
         'search' => $mockResults
     ]);
+
+// Simple expectations using closures...
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect([
+        'bind' => function (LdapExpectation $bind) {
+            $bind->with('cn=john,dc=local,dc=com', 'secret')->andReturnResponse();
+        }),
+    ]);
 ```
+
+Use whichever method you find most suitable for your test.
 
 ### Expectation Arguments
 
-Expectations can be provided with expected arguments that should be passed to the LDAP operation using the `with` method:
+Expectations can be provided with expected arguments that should
+be passed to the LDAP operation using the `with` method:
 
 ```php
 DirectoryFake::setup()
@@ -243,6 +259,12 @@ LdapFake::operation('bind')->with(
 )->andReturnResponse()
 ```
 
+When an expectation fails, an `LdapRecord\Testing\LdapExpectationException` exception will be thrown:
+
+```text
+LdapRecord\Testing\LdapExpectationException : Method [bind] should be called 1 times but was called 0 times.
+```
+
 ### Expectation Order
 
 Expectations that are added to the `LdapFake` are called in order (first to last). However, if 
@@ -255,7 +277,7 @@ DirectoryFake::setup()
     ->expect([
         LdapFake::operation('bind')->with('cn=john,dc=local,dc=com')->andReturnResponse(),
         
-        // ❌ Will never be reached
+        // ❌ Will never be reached due to above expectation.
         LdapFake::operation('bind')->with('cn=jane,dc=local,dc=com')->andReturnResponse(), 
     ]);
 ```
@@ -390,14 +412,73 @@ $this->assertEquals($results[0]['dn'][0], $user->getDn());
 ## Test Paginate
 
 
+To test a pagianted query that returns more than one page of results, we need to add a
+more complicated set of expectations on the `parseResult` method. This method is
+used to retrieve details about the pagintation request (per page), and also
+used to parse the result of a page:
 
+```php
+// Define the pages of mock results.
+$pages = [
+    [['count' => 1, 'objectclass' => ['foo'], 'dn' => ['cn=John,dc=local,dc=com']]],
+    [['count' => 1, 'objectclass' => ['bar'], 'dn' => ['cn=Jane,dc=local,dc=com']]],
+];
+
+DirectoryFake::setup()
+    ->shouldBeConnected()
+    ->getLdapConnection()
+    ->expect([
+        // Return the first page of results.
+        LdapFake::operation('search')->once()->andReturn($pages[0]),
+    
+        // Return the pagination response, indicating more pages to load.
+        LdapFake::operation('parseResult')->once()->andReturnResponse(controls: [
+            LDAP_CONTROL_PAGEDRESULTS => [
+                'value' => [
+                    'size' => 1,
+                    
+                    // Indicate more pages to load by returning a non-empty string as a cookie.
+                    'cookie' => '1234',
+                ],
+            ],
+        ]),
+    
+        // Return the parsed results from the first page of the pagination request.
+        LdapFake::operation('parseResult')->once()->with(fn ($results) => (
+            $results === $pages[0]
+        ))->andReturnResponse(),
+    
+        // Return the next page of results.
+        LdapFake::operation('search')->once()->andReturn($pages[1]),
+        
+        // Return the next pagination response, indicating *no more* pages to load.
+        LdapFake::operation('parseResult')->once()->andReturnResponse(controls: [
+            LDAP_CONTROL_PAGEDRESULTS => [
+                'value' => [
+                    'size' => 1,
+                    
+                    // Indicate that there are no more pages to load.
+                    'cookie' => null, 
+                ],
+            ],
+        ]),
+    
+        // Return the parsed results from the second page of the pagination request.
+        LdapFake::operation('parseResult')->once()->with(fn ($results) => (
+            $results === $pages[1]
+        ))->andReturnResponse(), 
+    ]);
+
+$this->assertCount($users = User::paginate());
+$this->assertTrue($users->contains('cn=John,dc=local,dc=com'));
+$this->assertTrue($users->contains('cn=Jane,dc=local,dc=com'));
+```
 
 ## Test Chunk
 
-To test a chunked query that returns more than one page of results, we need to add a
-more complicated set of expectations on the `parseResult` method. This method is 
-used to retrieve details about the pagintation request (per page), and also 
-used to parse the result of a page:
+Similarly to the above pagination test, we can scaffold our chunk 
+test nearly identically, but perform assertions differently, 
+since the chunk method does not return results:
 
 ```php
 // Define the pages of mock results.
@@ -529,6 +610,10 @@ $user->save();
 
 ## Test Attribute Add
 
+To test adding an attribute to an LDAP object (`ldap_mod_add`), we can add an expectation to our fake
+LDAP connection on the `modAdd` method, validate the properties using the `with`
+method, and return true -- indicating that the update was successful:
+
 ```php
 $model = new Entry();
 
@@ -548,6 +633,10 @@ $this->assertEquals('jdoe@local.com', $model->getFirstAttribute('mail'));
 ```
 
 ## Test Attribute Remove
+
+Similarly to the above test, to test removing an attribute to an LDAP object (`ldap_mod_del`), we can 
+add an expectation to our fake LDAP connection on the `modDelete` method, validate the properties
+using the `with` method, and return true -- indicating that the update was successful:
 
 ```php
 $model = new Entry();
@@ -574,6 +663,10 @@ $this->assertNull($model->getFirstAttribute('mail'));
 
 ## Test Rename
 
+To test renaming an LDAP object, we can add an expectation to 
+the "rename" method that the current full distinguished 
+name of the object, and the new RDN of the object: 
+
 ```php
 use LdapRecord\Testing\LdapFake;
 use LdapRecord\Testing\DirectoryFake;
@@ -588,10 +681,39 @@ DirectoryFake::setup()
 
 $model = new Entry();
 
-$model->setRawAttributes(['dn' => 'cn=John Doe,dc=acme,dc=org']);
+$model->setRawAttributes([
+    'dn' => 'cn=John Doe,dc=acme,dc=org'
+]);
 
 $model->rename('Jane Doe');
 
 $this->assertTrue($model->wasRecentlyRenamed);
 $this->assertEquals('Jane Doe', $model->getName());
+```
+
+## Test Move
+
+Similarly to the above test, moving an object performs 
+a "rename"under the hood, but instead keeps the same
+RDN, and is provided with a new base DN:
+
+```php
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect(
+        LdapFake::operation('rename')
+            ->with('cn=John Doe,dc=acme,dc=org', 'cn=John Doe', 'ou=Users,dc=acme,dc=org')
+            ->andReturnTrue()
+    );
+
+$model = new Entry();
+
+$model->setRawAttributes([
+    'dn' => 'cn=John Doe,dc=acme,dc=org'
+]);
+
+$model->move('ou=Users,dc=acme,dc=org');
+
+$this->assertTrue($model->wasRecentlyRenamed);
+$this->assertEquals('cn=John Doe,ou=Users,dc=acme,dc=org', $model->getDn());
 ```
