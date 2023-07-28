@@ -20,10 +20,10 @@ For this example, we will be importing LDAP groups into our applications databas
 Our groups table simply contains a `name` column, however to import LDAP objects into it,
 we must add two extra database columns:
 
-|  Column  | Reason                                                                                                                              |
-| :------: | ----------------------------------------------------------------------------------------------------------------------------------- |
-|  `guid`  | This is for storing your LDAP objects `objectguid`. It is needed for locating and synchronizing your LDAP object to the database.   |
-| `domain` | This is for storing your LDAP objects connection name. It is needed for storing your configured LDAP connection name of the object. |
+|  Column  | Reason                                                                                                                             |
+| :------: |------------------------------------------------------------------------------------------------------------------------------------|
+|  `guid`  | This is for storing your LDAP object's `objectguid`. It is needed for locating and synchronizing your LDAP object to the database. |
+| `domain` | This is for storing your LDAP object's connection name. It is needed for storing your configured LDAP connection for the object.   |
 
 > For brevity, we will not be showing the creation of the `groups` database table migration.
 
