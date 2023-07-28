@@ -133,12 +133,14 @@ use App\Group as EloquentGroup;
 use LdapRecord\Laravel\Import\Synchronizer;
 use LdapRecord\Models\ActiveDirectory\Group as LdapGroup;
 
-// Create the synchronizer.
-$synchronizer = new Synchronizer(EloquentGroup::class, $config = [
+$config = [
     'sync_attributes' => [
         'name' => 'cn'
     ],
-]);
+];
+
+// Create the synchronizer.
+$synchronizer = new Synchronizer(EloquentGroup::class, $config);
 
 // Import each group from the directory.
 foreach (LdapGroup::get() as $group) {
