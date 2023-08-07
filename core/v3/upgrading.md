@@ -49,7 +49,7 @@ properties or methods with their respective types.
 
 ### LdapRecord\Container `manager` Method Renamed
 
-An `LdapRecord\Conatiner::manager()` method has been renamed to `getConnectionManager()`.
+An `LdapRecord\Container::manager()` method has been renamed to `getConnectionManager()`.
 
 ### LdapRecord\ConnectionManager Proxy Methods Removed
 
@@ -61,7 +61,7 @@ You may replace these methods with their listed equivalent:
 |------------------------|---------------------|
 | `reset()`              | `flush()`           |
 | `allConnections()`     | `getConnnections()` |
-| `getEventDispatcher()` | `getDisptacher()`   |
+| `getEventDispatcher()` | `getDispatcher()`   |
 | `setEventDispatcher()` | `setDispatcher()`   |
 
 ### LdapRecord\ConnectionManager Methods Renamed
