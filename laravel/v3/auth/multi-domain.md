@@ -62,7 +62,7 @@ Then, we must edit their connections to reflect the connection name in the `conf
 
 class User extends Model
 {
-    protected $connection = 'alpha';
+    protected ?string $connection = 'alpha';
 
     // ...
 }
@@ -73,7 +73,7 @@ class User extends Model
 
 class User extends Model
 {
-    protected $connection = 'bravo';
+    protected ?string $connection = 'bravo';
 
     // ...
 }
