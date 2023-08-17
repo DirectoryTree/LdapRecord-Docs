@@ -331,7 +331,7 @@ use LdapRecord\Models\Attributes\AccountControl;
 
 $user = User::find('...');
 
-if ($user->accountControl()->has(AccountControl::LOCKOUT)) {
+if ($user->accountControl()->hasFlag(AccountControl::LOCKOUT)) {
     // The user account is locked...
 }
 ```
@@ -411,7 +411,7 @@ $uac = new AccountControl(
     $user->getFirstAttribute('userAccountControl')
 );
 
-if ($uac->has(AccountControl::LOCKOUT)) {
+if ($uac->hasFlag(AccountControl::LOCKOUT)) {
     // This account is locked out.
 }
 
@@ -510,7 +510,7 @@ $uac = new AccountControl();
 $uac->apply(514);
 ```
 
-#### `has`
+#### `hasFlag`
 
 Determine if the account control contains a specific flag:
 
@@ -518,10 +518,10 @@ Determine if the account control contains a specific flag:
 $uac = new AccountControl(512);
 
 // true
-$uac->has(AccountControl::NORMAL_ACCOUNT);
+$uac->hasFlag(AccountControl::NORMAL_ACCOUNT);
 
 // false
-$uac->has(AccountControl::ACCOUNTDISABLE);
+$uac->hasFlag(AccountControl::ACCOUNTDISABLE);
 ```
 
 #### `doesntHave`
