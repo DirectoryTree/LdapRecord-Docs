@@ -415,7 +415,7 @@ if ($uac->hasFlag(AccountControl::LOCKOUT)) {
     // This account is locked out.
 }
 
-if ($uac->doesntHave(AccountControl::LOCKOUT)) {
+if ($uac->doesntHaveFlag(AccountControl::LOCKOUT)) {
     // The account is not locked out.
 }
 ```
@@ -532,10 +532,10 @@ Determine if the account control does not contain a specific flag:
 $uac = new AccountControl(512);
 
 // false
-$uac->doesntHave(AccountControl::NORMAL_ACCOUNT);
+$uac->doesntHaveFlag(AccountControl::NORMAL_ACCOUNT);
 
 // true
-$uac->doesntHave(AccountControl::ACCOUNTDISABLE);
+$uac->doesntHaveFlag(AccountControl::ACCOUNTDISABLE);
 ```
 
 #### `filter`
