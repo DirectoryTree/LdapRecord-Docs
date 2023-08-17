@@ -163,21 +163,21 @@ $query->where([
 Here is a list of all supported operators:
 
 ```php
-$query->where('field', '=', 'value');
+$query->where('field', '=', 'value'); // "Equals" clause
 
-$query->where('field', '!', 'value');
+$query->where('field', '!', 'value'); // "Not equals" clause
 // Alias for above.
 $query->where('field', '!=', 'value');
 
-$query->where('field', '*');
+$query->where('field', '*'); // "Has" clause
 
-$query->where('field', '!*', 'value');
+$query->where('field', '!*'); // "Does not have" clause
 
-$query->where('field', '>=', 'value');
+$query->where('field', '>=', 'value'); // "Greater than or equal to" clause
 
-$query->where('field', '<=', 'value');
+$query->where('field', '<=', 'value'); // "Less than or equal to" clause
 
-$query->where('field', '~=', 'value');
+$query->where('field', '~=', 'value'); // "Approximately equal to" clause
 
 $query->where('field', 'starts_with', 'value');
 
@@ -191,6 +191,9 @@ $query->where('field', 'contains', 'value');
 
 $query->where('field', 'not_contains', 'value');
 ```
+
+> **Important**: The operators "greater than (>)" or "less than (<)" are not supported in LDAP. 
+> You must use the "greater than or equal to (>=)" or "less than or equal to (<=)" operators.
 
 #### Where Starts With
 
