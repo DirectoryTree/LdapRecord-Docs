@@ -261,6 +261,31 @@ $users = User::whereStartsWith('cn', 'John')
 > [query builder](/docs/core/v2/searching) methods so you can utilize
 > them to their full potential.
 
+### Organizational Units
+
+Models can be queried for inside organizational units by calling the `in` method.
+
+You may pass a distinguished name, or a model instance:
+
+> We're using [base DN substitution](/docs/core/v3/searching/#automatic-base-dn-substitution) 
+> in the below example, to automatically swap the `{base}` placeholder with the 
+> configured `base_dn` in the connection's configuration. 
+
+```php
+use LdapRecord\Models\ActiveDirectory\Group;
+
+// Using a full distinguished name...
+$groups = Group::in('ou=Accounting,dc=local,dc=com')->get();
+
+// Using a distinguished name with base DN substitution...
+$groups = Group::in('ou=Accounting,{base}')->get();
+
+// Using a model instance...
+$groups = Group::in(
+    OrganizationalUnit::where('ou', '=', 'Accounting')->firstOrFail()
+)->get();
+```
+
 ### Model Constraints
 
 Models come with some built in constraint methods that you may find useful.
