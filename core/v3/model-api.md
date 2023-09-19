@@ -893,7 +893,7 @@ Immediately replaces the entire attribute value on the model.
 Performs an `ldap_mod_replace` under the hood.
 
 ```php
-$model->updateAttribute('proxyaddresses', ['foo', 'bar']);
+$model->replaceAttribute('proxyaddresses', ['foo', 'bar']);
 ```
 
 #### `save`

@@ -1203,9 +1203,9 @@ $modifs = [
 $query->update($dn, $modifs);
 ```
 
-#### `updateAttributes`
+#### `replace`
 
-Update / replace an entry's attribute with the given values. Performs an `ldap_mod_replace` under the hood:
+Replace / update an entry's attribute(s) with the given value(s). Performs an `ldap_mod_replace` under the hood:
 
 ```php
 $query = $connection->query();
@@ -1213,10 +1213,10 @@ $query = $connection->query();
 $dn = 'cn=John Doe,dc=local,dc=com';
 
 // Remove the users telephone number:
-$query->updateAttributes($dn, ['telephoneNumber' => []]);
+$query->replace($dn, ['telephoneNumber' => []]);
 
-// Update / replace the users telephone number:
-$query->updateAttributes($dn, ['telephoneNumber' => ['+1 555 555 1717']]);
+// Replace the users telephone number:
+$query->replace($dn, ['telephoneNumber' => ['+1 555 555 1717']]);
 ```
 
 #### `where`
