@@ -29,7 +29,7 @@ more robust and maintainable code.
 The "Tightenco/Collect" package has been replaced with the "Illuminate/Collections"
 package. This change provides a more modern, maintained package for handling 
 collections, as "Tightenco/Collect" has discontinued support in favor of 
-the core "Illuminate/Collections" pakage.
+the core "Illuminate/Collections" package.
 
 ### SASL Binding Support
 
