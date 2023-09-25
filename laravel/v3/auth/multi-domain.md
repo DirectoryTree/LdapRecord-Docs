@@ -41,7 +41,14 @@ need to set up these domain connections in our `ldap.php` configuration file:
 > Remember to test your connections using `php artisan ldap:test` to ensure
 > you are able to connect to each of your LDAP servers.
 
-Now we have our connections configured, you must create a `User` model for each one.
+## Creating the LdapRecord Models
+
+Now we have our connections configured, we must create an **LdapRecord** `User` model for each one.
+
+Inside each model we create, we will set the `$connection` property to equal the name of the connection it belongs to.
+This is necessary so LdapRecord knows which connection to query from when retrieving results.
+
+> Be sure that you create LdapRecord models -- not Laravel Eloquent models.
 
 Let's go ahead and create them by running the below commands:
 
@@ -60,6 +67,10 @@ Then, we must edit their connections to reflect the connection name in the `conf
 ```php
 // app/Ldap/Alpha/User.php
 
+namespace App\Ldap\Alpha;
+
+use LdapRecord\Models\Model;
+
 class User extends Model
 {
     protected ?string $connection = 'alpha';
@@ -70,6 +81,10 @@ class User extends Model
 
 ```php
 // app/Ldap/Bravo/User.php
+
+namespace App\Ldap\Bravo;
+
+use LdapRecord\Models\Model;
 
 class User extends Model
 {
