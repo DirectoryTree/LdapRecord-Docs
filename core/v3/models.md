@@ -1001,7 +1001,7 @@ updating and deletion. Here is a list of all the events you can listen for:
 | `LdapRecord\Models\Events\Deleting` |
 | `LdapRecord\Models\Events\Deleted`  |
 
-To listen for these events, call the `getEventDispatcher()` on the `LdapRecord\Container`
+To listen for these events, call the `getDispatcher()` on the `LdapRecord\Container`
 to retrieve the dispatcher, then call `listen()` on the returned dispatcher:
 
 ```php
