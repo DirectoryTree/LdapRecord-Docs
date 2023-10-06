@@ -7,11 +7,20 @@ description: Listening for LDAP events in LdapRecord-Laravel
 
 ## Introduction
 
-LdapRecord includes a robust event dispatcher that allows you to listen for various
-events that occur, such as authentication and object creation / modification.
+The core LdapRecord framework includes a robust event dispatcher that 
+allows you to listen for various events that occur, such as 
+authentication and object creation or modification.
 
 For example, you may wish to send a notification when an LDAP object is modified.
 You can listen for the model `Saved` event and then send an email regarding the change.
+
+> LdapRecord core events (those that reside in the core LdapRecord framework) 
+> cannot be listened for in Larvel's event dispatcher. They must be listened
+> for using the core LdapRecord event dispatcher.
+> 
+> For LdapRecord-Laravel events (those that reside in the `LdapRecord\Laravel`
+> namespace), they can only be listened for in Laravel's event dispatcher,
+> and cannot be listened for in the LdapRecord core dispatcher.
 
 ## Creating the Listener
 
@@ -33,14 +42,7 @@ class ObjectModified
 {
     public function handle(Saved $event)
     {
-        $objectName = $event->getModel()->getName();
-
-        // Send an email when the object has been modified.
-        Mail::raw("Object [$objectName] has been modified.", function ($message) {
-            $message->from('notifier@company.com', 'LDAP Notifier');
-            $message->to('it-support@company.com');
-            $message->subject('LDAP Object Modified');
-        });
+        // ...
     }
 }
 ```
