@@ -371,7 +371,7 @@ $user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
 $user->userAccountControl = 512; // Normal, enabled account.
 
 // Or, using the UAC builder:
-$user->userAccountControl = (new AccountControl)->accountIsNormal();
+$user->userAccountControl = (new AccountControl)->setAccountIsNormal();
 
 $user->save();
 ```
@@ -389,9 +389,9 @@ $user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
 
 $uac = new AccountControl();
 
-$uac->accountIsNormal();
-$uac->passwordDoesNotExpire();
-$uac->passwordCannotBeChanged();
+$uac->setAccountIsNormal();
+$uac->setPasswordDoesNotExpire();
+$uac->setPasswordCannotBeChanged();
 
 $user->userAccountControl = $uac;
 
