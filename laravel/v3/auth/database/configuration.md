@@ -135,7 +135,7 @@ class OnlyAdministrators implements Rule
     {
         $administrators = Group::find('cn=Administrators,dc=local,dc=com');
 
-        return $this->user->groups()->recursive()->exists($administrators);
+        return $user->groups()->recursive()->exists($administrators);
     }
 }
 ```
