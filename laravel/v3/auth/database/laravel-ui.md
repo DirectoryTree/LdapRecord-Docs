@@ -97,7 +97,7 @@ which is common in Active Directory environments:
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         // ...
 
         'database' => [

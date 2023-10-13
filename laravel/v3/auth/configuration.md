@@ -14,7 +14,7 @@ Let's walk through configuring both LDAP authentication mechanisms.
 ## Plain Authentication
 
 To create a plain LDAP authentication provider, navigate to the `providers`
-array, and paste the following `ldap` provider:
+array, and paste the following `users` provider:
 
 ```php
 // config/auth.php
@@ -22,7 +22,7 @@ array, and paste the following `ldap` provider:
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
         'rules' => [],
@@ -59,7 +59,7 @@ This model will be used for fetching users from your directory:
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
         'rules' => [],
@@ -77,7 +77,7 @@ The `rules` option must be an array of class names of authentication rules:
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
         'rules' => [
@@ -90,7 +90,7 @@ The `rules` option must be an array of class names of authentication rules:
 ## Synchronized Database Authentication
 
 To create a synchronized database LDAP authentication provider, navigate to the `providers` array,
-and paste the following `ldap` provider:
+and paste the following `users` provider:
 
 > If your application requires two or more LDAP connections, you must create a new provider for each connection.
 
@@ -100,7 +100,7 @@ and paste the following `ldap` provider:
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
         'rules' => [],
@@ -134,7 +134,7 @@ it using the `password_column` key inside your provider's configuration:
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         // ...
         'database' => [
             // ...
@@ -150,7 +150,7 @@ You can also set the value to `false` if your database table does not have any p
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         // ...
         'database' => [
             // ...
@@ -214,7 +214,7 @@ To solve this issue, we will insert the following `sync_existing` array:
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         // ...
         'database' => [
             // ...
@@ -240,7 +240,7 @@ Here is a synchronized database provider fully configured with all available opt
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
         'rules' => [],
@@ -303,7 +303,7 @@ Then inside your `config/auth.php` file for your provider, set the attribute han
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         // ...
         'database' => [
             // ...

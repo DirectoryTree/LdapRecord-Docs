@@ -48,13 +48,13 @@ importing and synchronizing users. However, there are some caveats you must be a
 To run the command you must insert the `provider` name that you have set up for LDAP database synchronization
 inside your `config/auth.php` file. Let's walk through an example.
 
-In our application we have a configured authentication provider named `ldap`:
+In our application we have a configured authentication provider named `users`:
 
 ```php
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         // ...
         'database' => [
             // ...

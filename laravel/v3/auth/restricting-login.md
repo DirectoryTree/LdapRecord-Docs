@@ -34,7 +34,7 @@ Then, add the rule to your authentication provider:
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
         'rules' => [
@@ -299,7 +299,7 @@ provider configuration inside the `config/auth.php` file:
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         'driver' => 'ldap',
         'model' => LdapRecord\Models\ActiveDirectory\User::class,
         'rules' => [

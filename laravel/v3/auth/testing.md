@@ -325,7 +325,7 @@ This rule has also been added into our providers configuration inside our `confi
 'providers' => [
     // ...
 
-    'ldap' => [
+    'users' => [
         // ...
         'rules' => [
             \App\Ldap\Rules\HelpDeskEmployee::class,
