@@ -70,12 +70,12 @@ class User extends Authenticatable implements LdapAuthenticatable
 {
     // ...
 
-    public function getLdapDomainColumn(): String
+    public function getLdapDomainColumn(): string
     {
         return 'my_domain_column';
     }
 
-    public function getLdapGuidColumn(): String
+    public function getLdapGuidColumn(): string
     {
         return 'my_guid_column';
     }
