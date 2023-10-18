@@ -237,7 +237,7 @@ public function authenticate()
         RateLimiter::hit($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => __('auth.failed'),
+            'username' => __('auth.failed'),
         ]);
     }
 
