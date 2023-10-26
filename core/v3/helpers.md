@@ -722,7 +722,7 @@ Get the hexadecimal representation of the GUID string:
 $guid = '270db4d0-249d-46a7-9cc5-eb695d9af9ac';
 
 // "d0b40d279d24a7469cc5eb695d9af9ac"
-(new Guid($guid))->getEncodedHex();
+(new Guid($guid))->getHex();
 ```
 
 ### `getEncodedHex`
