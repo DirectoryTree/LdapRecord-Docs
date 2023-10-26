@@ -60,7 +60,7 @@ You may replace these methods with their listed equivalent:
 | Proxy Method Removed   | Replacement         |
 |------------------------|---------------------|
 | `reset()`              | `flush()`           |
-| `allConnections()`     | `getConnnections()` |
+| `allConnections()`     | `getConnections()` |
 | `getEventDispatcher()` | `getDispatcher()`   |
 | `setEventDispatcher()` | `setDispatcher()`   |
 
