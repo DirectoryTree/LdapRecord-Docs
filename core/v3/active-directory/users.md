@@ -730,9 +730,7 @@ $group = Group::findOrFail('cn=Accounting,ou=Groups,dc=local,dc=com');
 
 $user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
 
-if ($user->groups()->attach($group)) {
-    // Successfully added the group to the user.
-}
+$user->groups()->attach($group);
 ```
 
 ### Removing Groups
@@ -749,9 +747,7 @@ $group = Group::findOrFail('cn=Accounting,ou=Groups,dc=local,dc=com');
 
 $user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
 
-if ($user->groups()->detach($group)) {
-    // Successfully removed the group from the user.
-}
+$user->groups()->detach($group);
 ```
 
 > The `detach()` method will return `true` if the user is already not apart
@@ -768,7 +764,7 @@ $user = User::find('cn=John Doe,ou=Users,dc=local,dc=com');
 
 $group = $user->groups()->first();
 
-if ($group && $user->groups()->detach($group)) {
-    // Successfully removed the first group from the user.
+if ($group) {
+    $user->groups()->detach($group);
 }
 ```
