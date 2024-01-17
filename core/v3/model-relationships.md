@@ -259,7 +259,7 @@ class Group extends Model
 
 ## Querying Relationships
 
-LdapRecord relationships also serve as [query builders](/docs/core/v2/searching).
+LdapRecord relationships also serve as [query builders](/docs/core/v3/searching).
 This means you can chain query builder methods onto relationship methods to add
 constraints to the relationship query prior to retrieving the results from
 your directory.

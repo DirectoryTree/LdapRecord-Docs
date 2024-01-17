@@ -31,7 +31,7 @@ $results = $connection->query()->where('cn', '=', 'John Doe')->get();
 ```
 
 > **Important**: Querying your LDAP connection manually will return raw LDAP results
-> in a `Collection`. You must query using [models](/docs/core/v2/models#retrieving-models)
+> in a `Collection`. You must query using [models](/docs/core/v3/models#retrieving-models)
 > themselves if you would like them to be returned instead.
 
 ## Selects
@@ -632,4 +632,4 @@ $query = $query->where('cn', '=', 'John Doe')->getUnescapedQuery();
 echo $query; // Returns '(cn=John Doe)'
 ```
 
-Now that you know how to search your directory, lets move onto [creating / modifying LDAP objects](/docs/core/v2/models).
+Now that you know how to search your directory, lets move onto [creating / modifying LDAP objects](/docs/core/v3/models).

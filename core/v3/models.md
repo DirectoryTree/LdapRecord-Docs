@@ -7,12 +7,12 @@ description: Creating and using models in LdapRecord
 
 ## Introduction
 
+> Before getting started, ensure you've added at least one connection to the [container](/docs/core/v3/connections#container).
+
 The LdapRecord ORM provides a beautiful and simple ActiveRecord implementation for working with your LDAP server.
 Each "Model" represents a type of LDAP object that resides in your directory.
 
 Models allow you query your directory as well as create, update, and delete objects.
-
-Before getting started, ensure you've added at least one connection to the [container](/docs/core/v2/connections#container).
 
 By default, there are models included with LdapRecord for popular LDAP directories 
 so you can get up and running as fast as possible. More on this [below](#predefined-models).
@@ -96,7 +96,7 @@ Each below model references a type of object in Active Directory.
 ### Connections
 
 By default, all models you create will try to use your `default` LDAP connection that resides in the connection
-[container](/docs/core/v2/connections#container). To set your model to use an alternate connection,
+[container](/docs/core/v3/connections#container). To set your model to use an alternate connection,
 define a `$connection` property equal to the name of your other connection.
 
 ```php
@@ -258,7 +258,7 @@ $users = User::whereStartsWith('cn', 'John')
 ```
 
 > Since models are query builders, it's a good idea to review the
-> [query builder](/docs/core/v2/searching) methods so you can utilize
+> [query builder](/docs/core/v3/searching) methods so you can utilize
 > them to their full potential.
 
 ### Organizational Units
@@ -987,7 +987,7 @@ if ($userAccountsOu->isParentOf($officeOu)) {
 
 ## Events
 
-LdapRecord models fire several different [events](/docs/core/v2/events) during the creation,
+LdapRecord models fire several different [events](/docs/core/v3/events) during the creation,
 updating and deletion. Here is a list of all the events you can listen for:
 
 | Event                               |

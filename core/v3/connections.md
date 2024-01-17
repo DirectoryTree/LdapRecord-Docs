@@ -7,7 +7,7 @@ description: Connecting to LDAP servers using LdapRecord
 
 ## Introduction
 
-Once you've defined your [configuration](/docs/core/v2/configuration), you
+Once you've defined your [configuration](/docs/core/v3/configuration), you
 must then create a connection and insert your configuration into it:
 
 ```php

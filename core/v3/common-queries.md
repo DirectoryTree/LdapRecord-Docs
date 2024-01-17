@@ -11,7 +11,7 @@ Most applications will require retrieving certain set / type of objects from a d
 
 Utilizing LdapRecord's built in models allow you to easily query specific types of objects in your directory.
 
-> The examples below assume you have created a `Connection` and have added them into the [Container](/docs/core/v2/connections#container).
+> The examples below assume you have created a `Connection` and have added them into the [Container](/docs/core/v3/connections#container).
 
 ### Active Directory
 

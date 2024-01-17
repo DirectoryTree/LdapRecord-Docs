@@ -7,7 +7,7 @@ description: Logging events in LdapRecord
 
 LdapRecord includes an implementation of PSR's widely supported [Logger](https://github.com/php-fig/log) interface.
 
-By default, all of LdapRecord's [events](/docs/core/v2/events) will call the logger you have set to utilize.
+By default, all of LdapRecord's [events](/docs/core/v3/events) will call the logger you have set to utilize.
 
 > LdapRecord does not include a file / text logger. You must implement your own.
 

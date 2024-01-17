@@ -114,7 +114,7 @@ try {
 ```
 
 > However, please be aware of the differences of the above methods as
-> described in the [connection binding documentation](/docs/core/v2/connections/#binding):
+> described in the [connection binding documentation](/docs/core/v3/connections/#binding):
 >
 > - `auth()->attempt()` will automatically rebind the user you have in your configuration,
 >   unless you have specified `true` in the third parameter to stay bound. </br></br>

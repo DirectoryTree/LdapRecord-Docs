@@ -267,7 +267,7 @@ Get the value of the specified attribute.
 This will return an `array` if the attribute exists and `null` if non-existent:
 
 > **Important**: If a mutator exists for the attribute (such as a date,
-> or custom attribute [mutator method](//docs/core/v2/model-mutators/#defining-a-mutator)),
+> or custom attribute [mutator method](//docs/core/v3/model-mutators/#defining-a-mutator)),
 > it's value will be returned instead.
 
 ```php

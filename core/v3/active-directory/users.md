@@ -58,7 +58,7 @@ try {
 ### Setting Passwords
 
 Using the included `LdapRecord\Models\ActiveDirectory\User` model, an attribute
-[mutator](/docs/core/v2/model-mutators) has been added that assists in the setting
+[mutator](/docs/core/v3/model-mutators) has been added that assists in the setting
 and changing of passwords on user objects. Feel free to take a peek into the
 [source code](https://github.com/DirectoryTree/LdapRecord/blob/master/src/Models/Concerns/HasPassword.php)
 to see how it all works.
@@ -580,9 +580,9 @@ $uac->getAppliedFlags();
 
 ## User Account Expiry
 
-A users `accountExpires` attribute stores a date (in [Windows Integer Time](/docs/core/v2/model-mutators/#windows-integer-type)) indicating when the account will no longer valid.
+A users `accountExpires` attribute stores a date (in [Windows Integer Time](/docs/core/v3/model-mutators/#windows-integer-type)) indicating when the account will no longer valid.
 
-This attribute is already added as a [`windows-int` date cast](/docs/core/v2/model-mutators#date-mutators) inside of the included `ActiveDirectory\User` model.
+This attribute is already added as a [`windows-int` date cast](/docs/core/v3/model-mutators#date-mutators) inside of the included `ActiveDirectory\User` model.
 
 To determine a user's account expiry, you will have to handle various cases depending on its value returned from the Active Directory server:
 
@@ -628,7 +628,7 @@ foreach ($groups as $group) {
 ```
 
 You may also want to retrieve groups that are _members_ of groups that the user is apart of.
-This is called a [recursive relationship query](/docs/core/v2/model-relationships/#recursive-queries).
+This is called a [recursive relationship query](/docs/core/v3/model-relationships/#recursive-queries).
 
 To retrieve groups of groups, call the `recursive()` method following the `groups()` relation call:
 
