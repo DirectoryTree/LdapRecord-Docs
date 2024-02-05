@@ -56,11 +56,9 @@ You may extend these built-in models and add your own methods & functionality, a
 
 #### Entry Model
 
-Use the `LdapRecord\Models\Entry` model for retrieving all objects from your directory - regardless of type.
+Use the `LdapRecord\Models\Entry` model for retrieving all objects from your directory, regardless of type.
 
 #### Active Directory Models
-
-Each below model references a type of object in Active Directory.
 
 | Model                                                        |
 | ------------------------------------------------------------ |
