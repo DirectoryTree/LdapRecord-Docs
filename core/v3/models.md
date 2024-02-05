@@ -91,6 +91,14 @@ Each below model references a type of object in Active Directory.
 | `LdapRecord\Models\FreeIPA\User`  |
 | `LdapRecord\Models\FreeIPA\Group` |
 
+#### Directory Server
+
+| Model                                     |
+| ----------------------------------------- |
+| `LdapRecord\Models\DirectoryServer\Entry` |
+| `LdapRecord\Models\DirectoryServer\User`  |
+| `LdapRecord\Models\DirectoryServer\Group` |
+
 > Don't see a model for the LDAP server you're using? [Create a pull request!](https://github.com/DirectoryTree/LdapRecord/pulls)
 
 ### Connections
