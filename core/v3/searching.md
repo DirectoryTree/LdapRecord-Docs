@@ -579,9 +579,9 @@ $rootDse = Entry::getRootDse();
 
 ## Search Options
 
-#### Recursive
+#### List
 
-By default, all searches performed are recursive.
+By default, all searches performed are recursive. This means that all nested entries of the base DN will be searched.
 
 If you'd like to disable recursive search and perform a single level search, use the `list()` method:
 
@@ -589,19 +589,35 @@ If you'd like to disable recursive search and perform a single level search, use
 $result = $query->list()->get();
 ```
 
-This would perform an `ldap_list()` instead of an `ldap_search()`.
+This would perform an `ldap_list()` operation.
 
 #### Read
 
 If you'd like to perform a read instead of a list or a recursive search, use the `read()` method:
 
+> Performing a `read()` will always return _one_ record in your result.
+
 ```php
 $result = $query->read()->where('objectClass', '*')->get();
 ```
 
-This would perform an `ldap_read()` instead of an `ldap_list()` or an `ldap_search()`.
+This would perform an `ldap_read()` operation.
 
-> Performing a `read()` will always return _one_ record in your result.
+#### Search / Recursive
+
+If you'd like to perform a recursive search, use the `search()` (or `recursive()`) method:
+
+> This is only useful if you've switched a query builder to a `list()` or `read()`, as by default all queries are recursive.
+
+```php
+$result = $query->search()->get();
+
+// Or:
+
+$result = $query->recursive()->get();
+```
+
+This would perform an `ldap_search()` operation.
 
 #### Custom Controls
 
