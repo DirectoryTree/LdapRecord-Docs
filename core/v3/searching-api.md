@@ -495,7 +495,7 @@ var_dump($query->getSelects());
 
 #### `getType`
 
-Get the type of LDAP query to be executed, either `search`, `listing` or `read`:
+Get the type of LDAP query to be executed, either `search`, `list` or `read`:
 
 ```php
 $query = $connection->query();
@@ -503,8 +503,8 @@ $query = $connection->query();
 // Returns 'search':
 $query->getType();
 
-// Returns 'listing':
-$query->listing()->getType();
+// Returns 'list':
+$query->list()->getType();
 
 // Returns 'read':
 $query->read()->getType();
@@ -644,15 +644,15 @@ $query = $connection->query();
 $results = $query->whereHas('cn')->limit(200)->get();
 ```
 
-#### `listing`
+#### `list`
 
-Perform an LDAP `listing` operation, requesting only immediate children / leaf nodes of the query base:
+Perform an LDAP `list` operation, requesting only immediate children / leaf nodes of the query base:
 
 ```php
 $query = $connection->query();
 
 // Only retrieve the immediate children / leaf nodes of the 'Groups' OU:
-$groups = $query->in('ou=Groups,dc=local,dc=com')->listing()->get();
+$groups = $query->in('ou=Groups,dc=local,dc=com')->list()->get();
 ```
 
 #### `model`

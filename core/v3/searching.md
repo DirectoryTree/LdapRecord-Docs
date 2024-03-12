@@ -583,23 +583,23 @@ $rootDse = Entry::getRootDse();
 
 By default, all searches performed are recursive.
 
-If you'd like to disable recursive search and perform a single level search, use the `listing()` method:
+If you'd like to disable recursive search and perform a single level search, use the `list()` method:
 
 ```php
-$result = $query->listing()->get();
+$result = $query->list()->get();
 ```
 
-This would perform an `ldap_listing()` instead of an `ldap_search()`.
+This would perform an `ldap_list()` instead of an `ldap_search()`.
 
 #### Read
 
-If you'd like to perform a read instead of a listing or a recursive search, use the `read()` method:
+If you'd like to perform a read instead of a list or a recursive search, use the `read()` method:
 
 ```php
 $result = $query->read()->where('objectClass', '*')->get();
 ```
 
-This would perform an `ldap_read()` instead of an `ldap_listing()` or an `ldap_search()`.
+This would perform an `ldap_read()` instead of an `ldap_list()` or an `ldap_search()`.
 
 > Performing a `read()` will always return _one_ record in your result.
 

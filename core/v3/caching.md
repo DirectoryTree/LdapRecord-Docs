@@ -62,7 +62,7 @@ until they expire using the initial expiry date that was given.
 > - Base DN of the query
 > - Selected query attributes
 > - LDAP Host Name / IP address
-> - LDAP Search Type (Search/Listing/Read)
+> - LDAP Search Type (Search/List/Read)
 > - Whether the query should return paginated results.
 
 ### Manual Flushing

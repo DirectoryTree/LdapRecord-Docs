@@ -343,7 +343,7 @@ foreach (Entry::get() as $index => $user) {
 
 ### List
 
-To test listing (`ldap_list`), we can add an expectation to our fake
+To test list (`ldap_list`), we can add an expectation to our fake
 LDAP connection on the `list` method, and return mock results.
 
 Since an `ldap_list` is the same as an `ldap_search` but without 

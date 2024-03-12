@@ -314,7 +314,7 @@ $ou = OrganizationalUnit::find('ou=Accountants,ou=Users,dc=local,dc=com');
 $ancestors = $ou->ancestors()->get();
 ```
 
-The above example will execute a `listing` on your LDAP directory in
+The above example will execute a `list` on your LDAP directory in
 the distinguished name `dc=local,dc=com`. This effectively pulls
 the ancestors of the model.
 
@@ -328,7 +328,7 @@ $ou = OrganizationalUnit::find('ou=Accountants,ou=Users,dc=local,dc=com');
 $siblings = $ou->siblings()->get();
 ```
 
-The above example will execute a `listing` on your LDAP directory in
+The above example will execute a `list` on your LDAP directory in
 the distinguished name `ou=Users,dc=local,dc=com`. This effectively
 pulls the siblings of the model. The current model will also be
 included in the resulting collection.
@@ -343,7 +343,7 @@ $ou = OrganizationalUnit::find('ou=Accountants,ou=Users,dc=local,dc=com');
 $descendants = $ou->descendants()->get();
 ```
 
-The above example will execute a `listing` on your LDAP directory in
+The above example will execute a `list` on your LDAP directory in
 the distinguished name `ou=Accountants,ou=Users,dc=local,dc=com`. This effectively
 pulls the descendants of the model.
 
