@@ -145,7 +145,11 @@ limitations. It currently does not support the following features:
 
 - `raw` filters
 - `anr` (Ambiguous Name Resolution) filters
-- Virtual attributes (such as `memberof`, `entryUUID` and more)
+- Some virtual attributes (such as `entryUUID`, etc.)
+
+> The virtual attribute `memberof` will be handled automatically. However, support for additional virtual
+> attributes can be added to LdapRecord-Laravel if necessary. Please [create an issue](https://github.com/DirectoryTree/LdapRecord-Laravel/issues/new/choose) or submit a
+> pull request if you would like support for additional virtual attributes.
 
 Using the emulator, you can create a diverse LDAP object tree in your unit tests
 and ensure your application is querying the proper objects.
