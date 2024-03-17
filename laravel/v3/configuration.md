@@ -28,6 +28,7 @@ Inside the configuration file, set up your LDAP connections, or paste the follow
 > Review the [LDAP configuration documentation](/docs/core/v3/configuration) to see what each option is used for.
 
 ```dotenv
+LDAP_CACHE=false
 LDAP_LOGGING=true
 LDAP_CONNECTION=default
 LDAP_HOST=127.0.0.1
@@ -51,6 +52,7 @@ LDAP connections may be configured directly in your `.env` without having to pub
 If your application has a single connection, you can paste the below env to get started right away:
 
 ```dotenv
+LDAP_CACHE=false
 LDAP_LOGGING=true
 LDAP_CONNECTION=default
 LDAP_CONNECTIONS=default
@@ -81,6 +83,7 @@ LDAP_CONNECTION=alpha
 Then, to configure options for each connection you have specified, you must suffix them by `LDAP_{CONNECTION}_`:
 
 ```dotenv
+LDAP_CACHE=false
 LDAP_LOGGING=true
 LDAP_CONNECTION=alpha
 LDAP_CONNECTIONS=alpha,bravo
@@ -113,6 +116,37 @@ For example, you may configure the option `LDAP_OPT_X_TLS_CERTFILE` for a connec
 
 ```dotenv
 LDAP_ALPHA_OPT_X_TLS_CERTFILE=/usr/bin/etc/path
+```
+
+## Caching
+
+To enable caching for your LDAP connections, you may use the `LDAP_CACHE` environment variable:
+
+```dotenv
+LDAP_CACHE=true
+```
+
+After enabling caching, you may set the cache duration for your queries on your models the `cache()` method:
+
+```php
+use App\Ldap\User;
+
+$until = new \DateTime('tomorrow');
+   
+$results = User::cache($until)->get();
+```
+
+When caching queries, a signature is built from the model, its connection,
+and the query parameters to ensure that other queries executed do not 
+call upon the same cache results. For example:
+
+```php
+$until = new \DateTime('tomorrow');
+
+$results = User::cache($until)->get();
+
+// Different cache key due to where clause.
+$results = User::where('cn', 'John Doe')->cache($until)->get();
 ```
 
 ## Testing your connection
