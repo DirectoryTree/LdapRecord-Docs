@@ -30,7 +30,10 @@ If you are required to determine which events are fired from alternate connectio
 To register a listener on an event, retrieve the event dispatcher and call the `listen()` method:
 
 ```php
-$dispatcher = \LdapRecord\Container::getDispatcher();
+use LdapRecord\Container;
+use LdapRecord\Auth\Events\Binding;
+
+$dispatcher = Container::getDispatcher();
 
 $dispatcher->listen(Binding::class, function (Binding $event) {
     $event->connection; // LdapRecord\Connections\Ldap instance
@@ -47,7 +50,10 @@ second is either a closure or class name that should handle the event.
 > When using just a class name, the class must contain a public `handle()` method that will handle the event.
 
 ```php
-$dispatcher = \LdapRecord\Container::getDispatcher();
+use LdapRecord\Container;
+use LdapRecord\Auth\Events\Binding;
+
+$dispatcher = Container::getDispatcher();
 
 $dispatcher->listen(Binding::class, MyApp\BindingEventHandler::class);
 ```
