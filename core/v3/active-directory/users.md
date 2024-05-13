@@ -595,7 +595,7 @@ if ($user->accountExpires === false) {
     // The user account has no account expiry.
 } else if (in_array($user->accountExpires, [0, Timestamp::WINDOWS_INT_MAX], $strict = true)) {
     // The user account never expires.
-} else if ($user->accountExpires->isPast())) {
+} else if ($user->accountExpires->isPast()) {
     // The user account is expired.
 } else {
     // The user account is not expired.
