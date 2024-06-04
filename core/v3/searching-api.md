@@ -732,6 +732,30 @@ $query->notFilter(function ($query) {
 })->getUnescapedQuery();
 ```
 
+#### `orderBy`
+
+Order the results of the query by a given attribute:
+
+```php
+$query = $connection->query();
+
+// Order by 'cn' in ascending order:
+$query->orderBy('cn');
+
+// Order by 'cn' in descending order:
+$query->orderBy('cn', 'desc');
+```
+
+#### `orderByDesc`
+
+Order the results of the query by a given attribute in descending order:
+
+```php
+$query = $connection->query();
+
+$query->orderByDesc('cn');
+```
+
 #### `orFilter`
 
 Add a nested 'or' filter to the current query:

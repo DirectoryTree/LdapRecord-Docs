@@ -521,6 +521,22 @@ $slice->isEmpty(): bool;
 $slice->isNotEmpty(): bool;
 ```
 
+## Sorting/Ordering
+
+To add an `LDAP_CONTROL_SORTREQUEST` control to the LDAP query to indicate to the
+LDAP server to sort the search results, you may use the `orderBy()` method:
+
+```php
+// Sort by the common name in ascending order:
+$results = $query->orderBy('cn')->get();
+
+// Sort by the common name in descending order:
+$results = $query->orderBy('cn', 'desc')->get();
+
+// Sort by the common name in descending order (alias):
+$results = $query->orderByDesc('cn')->get();
+```
+
 ## Base DN
 
 To set the base DN of your search you can use one of two methods:
