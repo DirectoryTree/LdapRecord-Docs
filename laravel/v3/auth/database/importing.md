@@ -112,11 +112,11 @@ Place the following in your `routes/console.php`:
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::command('ldap:import users', [
-        '--no-interaction',
-        '--restore',
-        '--delete',
-        '--filter' => '(objectclass=user)',
-    ])->daily();
+    '--no-interaction',
+    '--restore',
+    '--delete',
+    '--filter' => '(objectclass=user)',
+])->daily();
 ```
 
 ### Laravel <= 10
