@@ -102,7 +102,26 @@ Successfully imported / synchronized 2 user(s).
 
 ## Scheduling the command
 
-To run the import as a scheduled job, place the following in your `app/Console/Kernel.php` in the command scheduler:
+To run the import as a scheduled job, refer to the different Laravel versions below:
+
+### Laravel >= 11
+
+Place the following in your `routes/console.php`:
+
+```php
+use Illuminate\Support\Facades\Schedule;
+
+Schedule::command('ldap:import users', [
+    '--no-interaction',
+    '--restore',
+    '--delete',
+    '--filter' => '(objectclass=user)',
+])->daily();
+```
+
+### Laravel <= 10
+
+Place the following in your `app/Console/Kernel.php` in the command scheduler:
 
 ```php
 protected function schedule(Schedule $schedule)
