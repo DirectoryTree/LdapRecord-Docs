@@ -117,7 +117,7 @@ Sometimes you may need to utilize several of the same query filters around your 
 Model scopes are a perfect for this, as you can extract these filters into its own class
 and apply it to a model query.
 
-> Be sure to take a peek at the [query scopes](/docs/core/v3/models#query-scopes)
+> Be sure to take a peek at the [model scopes](/docs/core/v3/model-scopes/)
 > documentation for a more in-depth look.
 
 To create a new model scope, call the command:
