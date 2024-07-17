@@ -35,7 +35,7 @@ Let's whip up a test by running the following command:
 php artisan make:test LdapAuthenticationTest
 ```
 
-inside our generated test, we'll make use of the following traits:
+Inside our generated test, we'll make use of the following traits:
 
 **DatabaseMigrations**
 
