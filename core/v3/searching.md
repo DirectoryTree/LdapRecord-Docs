@@ -575,7 +575,7 @@ This helps reduce the possibility for error and also allows you to use a single 
 
 ## Root DSE
 
-To fetch the [Root DSE](https://ldapwiki.com/wiki/RootDSE) object in your directory, execute the below query:
+To fetch the [Root DSE](https://ldapwiki.com/wiki/Wiki.jsp?page=RootDSE) object in your directory, execute the below query:
 
 ```php
 $rootDse = $query->query()
