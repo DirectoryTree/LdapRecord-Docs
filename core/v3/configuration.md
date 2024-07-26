@@ -22,6 +22,7 @@ $connection = new Connection([
 
     // Optional Configuration Options
     'port'             => 389,
+    'protocol'         => 'ldap://',
     'use_ssl'          => false,
     'use_tls'          => false,
     'use_sasl'         => false,
