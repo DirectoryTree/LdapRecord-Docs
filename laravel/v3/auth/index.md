@@ -26,7 +26,7 @@ Read each use case below and select one that best suits your needs.
 
 ## Configure Without Credentials
 
-To configure LdapRecord-Laravel authentication without credentails your LDAP server much have anonymous binding enabled. When binding anonymously, your permissions must be open enough so that users who need to sign in to your Laravel application can be read from your ActiveDirectory server, along with the attribute you are using for authentication.
+To configure LdapRecord-Laravel authentication without credentials your LDAP server must have anonymous binding enabled. When binding anonymously, your permissions must be open enough so that users who need to sign in to your Laravel application can be read from your ActiveDirectory server, along with the attribute you are using for authentication.
 
 To bind anonymously to your LDAP server, set your `username` and `password` to `null` inside your configuration.
 
