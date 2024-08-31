@@ -26,7 +26,10 @@ Read each use case below and select one that best suits your needs.
 
 ## Configure Without Credentials
 
-To configure LdapRecord-Laravel authentication without credentials your LDAP server must have anonymous binding enabled. When binding anonymously, your permissions must be open enough so that users who need to sign in to your Laravel application can be read from your ActiveDirectory server, along with the attribute you are using for authentication.
+To configure LdapRecord-Laravel authentication without credentials your LDAP server must 
+have anonymous binding enabled. When binding anonymously, your permissions must be open 
+enough so that users who need to sign in to your Laravel application can be read from 
+your LDAP server, along with the attribute you are using for authentication.
 
 To bind anonymously to your LDAP server, set your `username` and `password` to `null` inside your configuration.
 
@@ -36,4 +39,9 @@ If anonymous binding is disabled, you must configure a `username` and `password`
 
 ### Why Does LdapRecord Require Credentials?
 
-Think of it like a database connection to your application. LdapRecord needs credentials to search your directory for the user who is attempting to sign in to your Laravel application by the attribute of your choosing. Without this access, it cannot search. You would have to have users enter in their full distinguished name to be able to sign in. Once signed in, LDAP access would be lost as soon as the PHP request ends, leaving most of the features in LdapRecord-Laravel in a non-working state.
+Think of it like a database connection to your application. LdapRecord needs credentials to search 
+your directory for the user who is attempting to sign in to your Laravel application by the 
+attribute of your choosing. Without this access, it cannot search. You would have to have 
+users enter in their full distinguished name to be able to sign in. Once signed in, LDAP
+access would be lost as soon as the PHP request ends, leaving most of the features in
+LdapRecord-Laravel in a non-working state.
