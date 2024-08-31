@@ -8,7 +8,7 @@ description: Logging in with LdapRecord-Laravel plain authentication
 > **Important**: Before we begin, it's paramount to understand that LdapRecord does not support credentialess
 > authentication (unless your server supports anonymous binding). If you attempt to configure an LDAP
 > connection without credentials, your user will be logged out after the request ends. Please
-> see the [configuration guide](/docs/laravel/v3/configuration.md) for more information.
+> see the [configuration guide](/docs/laravel/v3/configuration) for more information.
 
 Once you have [configured a new authentication provider](/docs/laravel/v3/auth/plain/configuration),
 you're ready to start logging users into your application.
