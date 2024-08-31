@@ -127,8 +127,28 @@ used for creating and retrieving LDAP users from your applications database.
 
 ### Password Column
 
-If your application uses a different password column than `password`, then you can configure
-it using the `password_column` key inside your provider's configuration:
+If your application uses a different password column than `password`, then you 
+may configure it using the below methods depending on your Laravel version.
+
+#### Laravel >= 11
+
+In your `User` Eloquent model, define a `getAuthPasswordName` method that returns the name of your password column:
+
+```php
+// app/Models/User.php
+
+class User extends Authenticatable
+{
+    public function getAuthPasswordName(): string
+    {
+        return 'my_password_column';
+    }
+}
+```
+
+#### Laravel < 11
+
+In your `config/auth.php` file, set the `password_column` key to the name of your password column:
 
 ```php
 'providers' => [
@@ -144,7 +164,10 @@ it using the `password_column` key inside your provider's configuration:
 ],
 ```
 
-You can also set the value to `false` if your database table does not have any password column at all:
+#### Remove Password Column
+
+If your `users` table does not have a password column, you must use the `config/auth.php` 
+file method regardless of Laravel version and set the `password_column` to `false`:
 
 ```php
 'providers' => [
