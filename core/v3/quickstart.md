@@ -30,20 +30,20 @@ $connection = new Connection([
 // Add the connection into the container:
 Container::addConnection($connection);
 
-// Get all objects:
-$objects = Entry::get();
+// Get all entries:
+$entries = Entry::get();
 
-// Get a single object:
-$object = Entry::find('cn=John Doe,dc=local,dc=com');
+// Get a single entry:
+$entry = Entry::find('cn=John Doe,dc=local,dc=com');
 
 // Getting attributes:
-foreach ($object->memberof as $group) {
+foreach ($entry->memberof as $group) {
     echo $group;
 }
 
 // Modifying attributes:
-$object->company = 'My Company';
+$entry->company = 'My Company';
 
 // Saving changes:
-$object->save();
+$entry->save();
 ```
