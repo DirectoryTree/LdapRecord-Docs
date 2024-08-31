@@ -12,8 +12,8 @@ from logging into your application. Let's walk through some approaches.
 
 ## Using a Group Membership
 
-To use a group membership for authorizing signing in to your application, we
-will use an [authentication rule](/docs/laravel/v3/auth/configuration#rules).
+To use a group membership for authorizing signing in to your application, 
+we will use an authentication rule.
 
 In our example application, we want to only allow users who are members of
 a single group to authenticate. This group will be called `Help Desk`.
@@ -282,7 +282,7 @@ contained inside the `Accounting` OU will be allowed to authenticate.
 ## Using Only Manually Imported Users
 
 To enforce only [manually imported LDAP users](/docs/laravel/v3/importing) who exist inside your
-database to sign in to your application, you must use an [authentication rule](/docs/laravel/v3/auth/configuration#rules).
+database to sign in to your application, you must use an authentication rule.
 
 LdapRecord-Laravel includes this authentication rule out-of-the-box:
 

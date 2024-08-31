@@ -295,7 +295,7 @@ This option is great for reducing memory usage for large imports, since all attr
 
 > **Important**: To use this option, you **must** comma separate each attribute in the
 > command and include the attributes you have configured in your
-> [authentication provider](/docs/laravel/v3/auth/configuration/#database-sync-attributes).
+> [authentication provider](/docs/laravel/v3/auth/database/configuration#sync-attributes).
 
 ```text
 php artisan ldap:import users --attributes "cn,mail,sn,givenname,samaccountname"

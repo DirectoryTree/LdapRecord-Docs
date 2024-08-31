@@ -99,7 +99,7 @@ class User extends Model
 
 ### Configuring the Authentication Guards
 
-For each of our LDAP connections, we will set up new [authentication providers](/docs/laravel/v3/auth/configuration),
+For each of our LDAP connections, we will set up new [authentication providers](/docs/laravel/v3/auth),
 as well as their own guard inside our `config/auth.php` file:
 
 ```php
