@@ -18,7 +18,7 @@ This is due to the `$table->dropColumns(['guid', 'domain'])` call inside the add
 LdapRecord auth migration and that we are using SQLite in our test environment.
 
 This package is required for modifying columns - as described in the
-[Laravel documentation](https://laravel.com/docs/laravel/v3/migrations#modifying-columns).
+[Laravel documentation](https://laravel.com/docs/migrations#modifying-columns).
 
 To do so, run the following command:
 
