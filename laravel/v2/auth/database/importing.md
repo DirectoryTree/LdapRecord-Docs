@@ -66,7 +66,7 @@ In our application we have a configured authentication provider named `ldap`:
 We will then insert the providers name into our import command and execute it:
 
 ```bash
-php artisan ldap:import users
+php artisan ldap:import ldap
 ```
 
 You will then be asked after a successful search in your directory:
