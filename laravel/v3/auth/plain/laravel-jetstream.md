@@ -21,23 +21,21 @@ with their email address using the LDAP attribute `mail`.
 
 For LdapRecord to properly locate the user in your directory during sign in, we will
 override Fortify's authentication callback using the `Fortify::authenticateUsing()`
-method in our `AuthServiceProvider.php` file:
+method in our `AppServiceProvider.php` file:
 
 ```php
-// app/Providers/AuthServiceProvider.php
+// app/Providers/AppServiceProvider.php
 
 // ...
 use Laravel\Fortify\Fortify;
 use Illuminate\Support\Facades\Auth;
 
-class AuthServiceProvider extends ServiceProvider
+class AppServiceProvider extends ServiceProvider
 {
     // ...
 
-    public function boot()
+    public function boot(): void
     {
-        $this->registerPolicies();
-
         Fortify::authenticateUsing(function ($request) {
             $validated = Auth::validate([
                 'mail' => $request->email,
@@ -138,24 +136,22 @@ In the following example, we will authenticate users by their `sAMAccountName`.
 
 #### Authentication Callback
 
-With our Fortiy configuration updated, we will jump into our `AuthServiceProvider.php` file
+With our Fortiy configuration updated, we will jump into our `AppServiceProvider.php` file
 and set up our authentication callback using the `Fortify::authenticateUsing()` method:
 
 ```php
-// app/Providers/AuthServiceProvider.php
+// app/Providers/AppServiceProvider.php
 
 // ...
 use Laravel\Fortify\Fortify;
 use Illuminate\Support\Facades\Auth;
 
-class AuthServiceProvider extends ServiceProvider
+class AppServiceProvider extends ServiceProvider
 {
     // ...
 
-    public function boot()
+    public function boot(): void
     {
-        $this->registerPolicies();
-
         Fortify::authenticateUsing(function ($request) {
             $validated = Auth::validate([
                 'samaccountname' => $request->username,
@@ -229,22 +225,20 @@ on the `LoginController`.
 
 Since this functionality is now automatically registered, if you would like to modify how
 an error is handled, call the `setErrorHandler` method on the `BindFailureListener`
-class inside your `AuthServiceProvider.php` file:
+class inside your `AppServiceProvider.php` file:
 
 ```php
-// app/Providers/AuthServiceProvider.php
+// app/Providers/AppServiceProvider.php
 
 // ...
 use LdapRecord\Laravel\Auth\BindFailureListener;
 
-class AuthServiceProvider extends ServiceProvider
+class AppServiceProvider extends ServiceProvider
 {
     // ...
 
-    public function boot()
+    public function boot(): void
     {
-        $this->registerPolicies();
-
         BindFailureListener::setErrorHandler(function ($message, $code = null) {
             if ($code == '773') {
                 // The users password has expired. Redirect them.

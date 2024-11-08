@@ -41,17 +41,15 @@ utilize your LDAP authentication guards that you have configured in your `config
 by calling the `guards` method:
 
 ```php
-// app/Providers/AuthServiceProvider.php
+// app/Providers/AppServiceProvider.php
 
 /**
  * Register any authentication / authorization services.
  *
  * @return void
  */
-public function boot()
+public function boot(): void
 {
-    $this->registerPolicies();
-
     WindowsAuthenticate::guards(['alpha', 'bravo']);
 }
 ```
@@ -144,7 +142,7 @@ their distinguished name domain components (`dc=acme`). Comparison against
 each domain component will be performed in a **case-insensitive** manor.
 
 If you would like to disable this check, you must call the static method `bypassDomainVerification`
-on the `WindowsAuthenticate` middleware inside your `AuthServiceProvider`:
+on the `WindowsAuthenticate` middleware inside your `AppServiceProvider`:
 
 > **Important**: This is a security issue if you use multi-domain authentication,
 > since users who have the same `sAMAccountName` could sign in as each other.
@@ -153,7 +151,7 @@ on the `WindowsAuthenticate` middleware inside your `AuthServiceProvider`:
 > disable this check as shown below.
 
 ```php
-// app/Providers/AuthServiceProvider.php
+// app/Providers/AppServiceProvider.php
 
 use LdapRecord\Laravel\Middleware\WindowsAuthenticate;
 
@@ -162,10 +160,8 @@ use LdapRecord\Laravel\Middleware\WindowsAuthenticate;
  *
  * @return void
  */
-public function boot()
+public function boot(): void
 {
-    $this->registerPolicies();
-
     WindowsAuthenticate::bypassDomainVerification();
 }
 ```
@@ -264,10 +260,10 @@ WindowsAuthenticate::validateDomainUsing(DomainValidator::class);
 
 By default, the `WindowsAuthenticate` middleware uses the `AUTH_USER` key inside PHP's `$_SERVER`
 array (`$_SERVER['AUTH_USER']`). If you would like to change this, call the `serverKey` method on
-the `WindowsAuthenticate` middleware inside your `AuthServiceProvider`:
+the `WindowsAuthenticate` middleware inside your `AppServiceProvider`:
 
 ```php
-// app/Providers/AuthServiceProvider.php
+// app/Providers/AppServiceProvider.php
 
 use LdapRecord\Laravel\Middleware\WindowsAuthenticate;
 
@@ -276,10 +272,8 @@ use LdapRecord\Laravel\Middleware\WindowsAuthenticate;
  *
  * @return void
  */
-public function boot()
+public function boot(): void
 {
-    $this->registerPolicies();
-
     WindowsAuthenticate::serverKey('PHP_AUTH_USER');
 }
 ```
@@ -291,10 +285,10 @@ As of LdapRecord-Laravel version `v1.9.0`, users signed in to your application v
 
 This shouldn't have any effect on your application, but if you need to re-enable
 this feature, you must call the `rememberAuthenticatedUsers` method on the
-`WindowsAuthenticate` middleware inside your `AuthServiceProvider`:
+`WindowsAuthenticate` middleware inside your `AppServiceProvider`:
 
 ```php
-// app/Providers/AuthServiceProvider.php
+// app/Providers/AppServiceProvider.php
 
 use LdapRecord\Laravel\Middleware\WindowsAuthenticate;
 
@@ -303,10 +297,8 @@ use LdapRecord\Laravel\Middleware\WindowsAuthenticate;
  *
  * @return void
  */
-public function boot()
+public function boot(): void
 {
-    $this->registerPolicies();
-
     WindowsAuthenticate::rememberAuthenticatedUsers();
 }
 ```
@@ -325,10 +317,10 @@ If you're using the Apache `httpd` server with plugins enabling the sharing of a
 username via the `REMOTE_USER` server variable, you must update the `WindowsAuthenticate` middleware
 to use this variable, instead of the default `AUTH_USER`.
 
-To do this, call the `WindowsAuthenticate::serverKey()` method in your `AuthServiceProvider::boot()` method:
+To do this, call the `WindowsAuthenticate::serverKey()` method in your `AppServiceProvider::boot()` method:
 
 ```php
-// app/Providers/AuthServiceProvider.php
+// app/Providers/AppServiceProvider.php
 
 use LdapRecord\Laravel\Middleware\WindowsAuthenticate;
 
@@ -337,10 +329,8 @@ use LdapRecord\Laravel\Middleware\WindowsAuthenticate;
  *
  * @return void
  */
-public function boot()
+public function boot(): void
 {
-    $this->registerPolicies();
-
     WindowsAuthenticate::serverKey('REMOTE_USER');
 }
 ```
@@ -383,14 +373,14 @@ to your application for the duration of your Laravel application's session.
 If you would like all users in your application to be signed out automatically
 if SSO credentials are not available from your web server, call the
 `logoutUnauthenticatedUsers` method on the `WindowsAuthenticate`
-middleware in your `AuthServiceProvider::boot()` method:
+middleware in your `AppServiceProvider::boot()` method:
 
 > **Important**: Only enable this feature if Single-Sign-On is the only way
 > you authenticate users. If a non-Single-Sign-On user has a session open,
 > it will be ended automatically on their next request.
 
 ```php
-// app/Providers/AuthServiceProvider.php
+// app/Providers/AppServiceProvider.php
 
 use LdapRecord\Laravel\Middleware\WindowsAuthenticate;
 
@@ -399,10 +389,8 @@ use LdapRecord\Laravel\Middleware\WindowsAuthenticate;
  *
  * @return void
  */
-public function boot()
+public function boot(): void
 {
-    $this->registerPolicies();
-
     WindowsAuthenticate::logoutUnauthenticatedUsers();
 }
 ```

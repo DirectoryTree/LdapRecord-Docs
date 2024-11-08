@@ -228,10 +228,10 @@ class OnlyAccountingUsers implements Scope
 After modifying the scope, we can now add the scope to our LDAP user model.
 
 If you are using one of the [built-in predefined models](/docs/core/v3/models#predefined-models), you
-can add the global scope to the model inside your `AuthServiceProvider::boot()` method:
+can add the global scope to the model inside your `AppServiceProvider::boot()` method:
 
 ```php
-// app/Providers/AuthServiceProvider.php
+// app/Providers/AppServiceProvider.php
 
 use App\Ldap\Scopes\OnlyAccountingUsers;
 
@@ -240,10 +240,8 @@ use App\Ldap\Scopes\OnlyAccountingUsers;
  *
  * @return void
  */
-public function boot()
+public function boot(): void
 {
-    $this->registerPolicies();
-
     \LdapRecord\Models\ActiveDirectory\User::addGlobalScope(
         new OnlyAccountingUsers
     );

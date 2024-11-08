@@ -101,7 +101,7 @@ class LdapEventServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $dispatcher = Container::getDispatcher();
 
