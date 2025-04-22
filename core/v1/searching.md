@@ -98,7 +98,7 @@ To get the results from a search, simply call the `get()` method:
 $results = $query->select(['cn', 'samaccountname'])->get();
 ```
 
-Results will be returned inside of an `LdapRecord\Query\Collection` instance.
+Results will be returned in an `array`.
 
 #### Retrieving the first record
 
