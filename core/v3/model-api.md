@@ -858,15 +858,15 @@ Performs an `ldap_mod_del` under the hood.
 
 ```php
 // Removing one value from an attribute:
-$model->removeAttribute(["memberuid" => "jdoe"]);
+$model->removeAttributes(["memberuid" => "jdoe"]);
 
 // Removing multiple values from an attribute:
-$model->removeAttribute([
+$model->removeAttributes([
     "memberuid" => ["jdoe", "jsmith"]
 ]);
 
 // Removing all values from an attribute:
-$model->removeAttribute(["memberuid" => []]);
+$model->removeAttributes(["memberuid" => []]);
 ```
 
 #### `rename`
