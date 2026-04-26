@@ -1,0 +1,95 @@
+export const metadata = {
+    title: 'Release Notes',
+    description: 'LdapRecord v4 Release Notes',
+}
+
+# LdapRecord v4.0.0 Release Notes
+
+We're excited to announce the release of LdapRecord v4.0.0! This major version introduces
+significant improvements to the query filter system, clearer SSL/TLS configuration naming,
+and better separation of concerns between the query and model builders.
+
+## Key Features and Changes
+
+### Clearer SSL/TLS Configuration
+
+The SSL and TLS configuration options have been renamed to more accurately reflect their purpose:
+
+- `use_ssl` is now `use_tls` - Uses the `ldaps://` protocol (port 636)
+- `use_tls` is now `use_starttls` - Uses the `ldap://` protocol with STARTTLS upgrade (port 389)
+
+The previous naming was confusing because `use_ssl` actually enabled TLS via the `ldaps://` protocol,
+while `use_tls` enabled STARTTLS. The new names make this distinction clear.
+
+### New Filter Object System
+
+The query filter system has been completely rewritten to use dedicated filter objects instead of
+arrays and a grammar class. This provides a more intuitive and type-safe way to work with LDAP filters.
+
+**New Filter Classes:**
+
+| Class                 | Description           | Example                  |
+|-----------------------|-----------------------|--------------------------|
+| `Equals`              | Exact match           | `(cn=John)`              |
+| `Contains`            | Substring match       | `(cn=*John*)`            |
+| `StartsWith`          | Prefix match          | `(cn=John*)`             |
+| `EndsWith`            | Suffix match          | `(cn=*Doe)`              |
+| `Has`                 | Attribute presence    | `(cn=*)`                 |
+| `GreaterThanOrEquals` | Greater than or equal | `(age>=18)`              |
+| `LessThanOrEquals`    | Less than or equal    | `(age<=65)`              |
+| `ApproximatelyEquals` | Approximate match     | `(cn~=John)`             |
+| `AndGroup`            | AND group             | `(&(cn=John)(sn=Doe))`   |
+| `OrGroup`             | OR group              | `(\|(cn=John)(cn=Jane))` |
+| `Not`                 | Negation              | `(!(cn=John))`           |
+| `Raw`                 | Raw filter string     | Any valid filter         |
+
+All condition filters implement the `ConditionFilter` interface, and all group filters implement
+the `GroupFilter` interface, making it easy to work with parsed filters programmatically.
+
+### Closure Support in Where Clauses
+
+The `where` and `orWhere` methods now accept closures as the first argument for nested queries,
+providing a more intuitive way to build complex filters:
+
+```php
+User::query()->where(function ($query) {
+    $query->where('cn', '=', 'John')
+          ->orWhere('cn', '=', 'Jane');
+})->get();
+```
+
+### Model Builder and Query Builder Separation
+
+The `Model\Builder` class no longer extends `Query\Builder`. Instead, it uses composition,
+delegating query operations to an underlying `Query\Builder` instance. This provides:
+
+- Better separation of concerns
+- Clearer APIs for each builder type
+- More predictable behavior when extending builders
+
+You can access the underlying query builder using `getQuery()` or `toBase()` methods.
+
+### Standardized Parameter Names
+
+Parameter names have been standardized throughout the codebase to better align with LDAP terminology:
+
+- `$fields` is now `$attributes`
+- `$columns` is now `$selects`
+
+### Improved Filter Parser
+
+The filter parser now returns typed filter objects instead of generic node classes:
+
+```php
+use LdapRecord\Query\Filter\Parser;
+
+$filters = Parser::parse('(&(cn=Steve)(sn=Bauman))');
+
+$group = $filters[0]; // AndGroup instance
+$group->getOperator(); // "&"
+$group->getFilters(); // [Equals, Equals]
+```
+
+## Upgrading
+
+For detailed upgrade instructions, please see the [upgrade guide](/docs/core/v4/upgrading).

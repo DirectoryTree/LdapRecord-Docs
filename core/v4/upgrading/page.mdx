@@ -1,0 +1,251 @@
+export const metadata = {
+    title: 'Upgrade to LdapRecord v4',
+    description: 'Upgrading from LdapRecord v3',
+}
+
+# Upgrading to Version 4
+
+We strive to record all potential breaking changes. However, as some of
+these changes occur in lesser-known areas of the library, only a
+fraction of them might have an impact on your application.
+
+If you encounter any changes not documented here that have affected you,
+please create a bug report on the [LdapRecord-Docs repository](https://github.com/DirectoryTree/LdapRecord-Docs/issues/new)
+so that we can address the issue promptly.
+
+## High Impact Changes
+
+### Updating Dependencies
+
+#### Composer Dependencies
+
+You should update the following dependency in your application's `composer.json` file:
+
+```json
+"directorytree/ldaprecord": "^4.0"
+```
+
+### SSL/TLS Configuration Options Renamed
+
+The SSL and TLS configuration options have been renamed to more accurately reflect their purpose:
+
+| Old Configuration Option | New Configuration Option |
+|--------------------------|--------------------------|
+| `use_ssl`                | `use_tls`                |
+| `use_tls`                | `use_starttls`           |
+
+The previous naming was confusing because `use_ssl` actually enabled the `ldaps://` protocol (TLS),
+while `use_tls` enabled STARTTLS (upgrading an `ldap://` connection). The new names clarify this:
+
+- `use_tls` - Uses the `ldaps://` protocol (port 636 by default)
+- `use_starttls` - Uses the `ldap://` protocol with STARTTLS upgrade (port 389 by default)
+
+### LdapInterface Method Names Updated
+
+Several methods in the `LdapRecord\LdapInterface` have been renamed to align with the configuration changes:
+
+| Old Method              | New Method                |
+|-------------------------|---------------------------|
+| `ssl()`                 | `setTLS()`                |
+| `tls()`                 | `setStartTLS()`           |
+| `isUsingSSL()`          | `isUsingTLS()`            |
+| `isUsingTLS()`          | `isUsingStartTLS()`       |
+
+### LdapInterface Protocol and Port Constants Renamed
+
+Several constants have been renamed on `LdapInterface` for consistency with the SSL/TLS configuration option changes:
+
+| Old Constant                  | New Constant                  |
+|-------------------------------|-------------------------------|
+| `LdapInterface::PROTOCOL_SSL` | `LdapInterface::PROTOCOL_TLS` |
+| `LdapInterface::PORT_SSL`     | `LdapInterface::PORT_TLS`     |
+
+### Parameter Names Standardized
+
+Throughout the LdapRecord codebase, parameter names have been adjusted to better align with LDAP terminology:
+
+| Old Parameter Name | New Parameter Name |
+|--------------------|--------------------|
+| `$fields`          | `$attributes`      |
+| `$columns`         | `$selects`         |
+
+If you have extended any LdapRecord classes or implemented interfaces that use these parameters, you will need to update your method signatures accordingly.
+
+## Medium Impact Changes
+
+### Model Builder and Query Builder Separation
+
+The `LdapRecord\Query\Model\Builder` class no longer extends `LdapRecord\Query\Builder`. These are now completely separate classes, providing better separation of concerns and clearer APIs.
+
+The `Model\Builder` now uses composition instead of inheritance, proxying method calls to an underlying `Query\Builder` instance.
+
+If you have extended either of these classes or relied on their inheritance relationship, you may need to adjust your code accordingly.
+
+**Most applications should not be affected by this change**, as the public APIs of both classes remain largely unchanged.
+
+#### Key Changes
+
+The `Model\Builder` constructor signature has changed:
+
+```php
+// Before (v3)
+public function __construct(Connection $connection)
+
+// After (v4)
+public function __construct(Model $model, QueryBuilder $query)
+```
+
+If you have extended `Model\Builder` and overrode the constructor, you will need to update your constructor accordingly.
+
+#### Accessing the Base Query Builder
+
+You can access the underlying `Query\Builder` instance using the `getQuery()` or `toBase()` methods:
+
+```php
+$user = User::query();
+
+// Get the underlying Query\Builder (without applying scopes)
+$queryBuilder = $user->getQuery();
+
+// Get the underlying Query\Builder (with scopes applied)
+$queryBuilder = $user->toBase();
+```
+
+### Query Grammar Removed
+
+The `LdapRecord\Query\Grammar` class has been removed. Query filter compilation is now handled
+by a new filter object system located in the `LdapRecord\Query\Filter` namespace.
+
+If you were extending or using the `Grammar` class directly, you will need to update your code
+to use the new filter classes instead.
+
+The query builder now stores filters as `Filter` objects rather than arrays:
+
+```php
+// Before (v3)
+$builder->filters; // ['and' => [...], 'or' => [...], 'raw' => [...]]
+
+// After (v4)
+$builder->filter; // Filter object or null
+```
+
+### Query Builder `$columns` Property Renamed
+
+The `$columns` property on `LdapRecord\Query\Builder` has been renamed to `$selects`:
+
+```php
+// Before (v3)
+$builder->columns;
+
+// After (v4)
+$builder->selects;
+```
+
+### EscapedValue Class Moved
+
+The `LdapRecord\Models\Attributes\EscapedValue` class has been moved to `LdapRecord\Query\EscapedValue`.
+
+### Query Builder Return Types Changed
+
+The base `Query\Builder` methods for retrieving results now have a single return type of arrays instead of `Collection|array`:
+
+| Method       | Old Return Type                  | New Return Type |
+|--------------|----------------------------------|-----------------|
+| `get()`      | `Collection\|array`              | `array`         |
+| `paginate()` | `Collection\|array`              | `array`         |
+| `find()`     | `Collection\|Model\|array\|null` | `?array`        |
+| `findMany()` | `Collection\|array`              | `array`         |
+| `forPage()`  | `Collection\|array`              | `array`         |
+
+This was done previously for compatibility with the model query builder.
+
+Conversely, the `Model\Builder` now has strict return types of `Collection` or `Model` instances for model queries.
+
+### `where` and `orWhere` Accept Closures
+
+The `where` and `orWhere` methods now accept `Closure` as the first argument for nested queries:
+
+```php
+// Now supported (equivalent to andFilter/orFilter)
+User::query()->where(function ($query) {
+    $query->where('cn', '=', 'John')
+          ->orWhere('cn', '=', 'Jane');
+})->get();
+```
+
+## Low Impact Changes
+
+### Helper Class Renamed
+
+The `LdapRecord\Support\Helpers` class has been renamed to `LdapRecord\Support\Value`, and its method has been renamed:
+
+```php
+// Before (v3)
+use LdapRecord\Support\Helpers;
+Helpers::value($value);
+
+// After (v4)
+use LdapRecord\Support\Value;
+Value::get($value);
+```
+
+### Diagnostic Code Method Renamed
+
+The `extractDiagnosticCode` method on `LdapRecord\Ldap` class has been renamed to `getDiagnosticCode`:
+
+```php
+// Before (v3)
+$ldap->extractDiagnosticCode($message);
+
+// After (v4)
+$ldap->getDiagnosticCode($message);
+```
+
+### OpenLDAP and FreeIPA Entry UUID Scope Removed
+
+The `AddEntryUuidToSelects` global scope has been removed from OpenLDAP and FreeIPA models.
+The GUID key is now automatically selected by the `Model\Builder` for all models, making
+this scope unnecessary.
+
+### Model `newQueryBuilder` Signature Changed
+
+The `newQueryBuilder` method on models now returns a `Model\Builder` instead of a `Query\Builder`:
+
+```php
+// Before (v3)
+public function newQueryBuilder(Connection $connection): QueryBuilder
+
+// After (v4)
+public function newQueryBuilder(Connection $connection): ModelBuilder
+```
+
+### Model Scope Registration Methods Renamed
+
+The `applyObjectClassScopes` method has been renamed to `registerObjectClassScopes`:
+
+```php
+// Before (v3)
+$model->applyObjectClassScopes($builder);
+
+// After (v4)
+$model->registerObjectClassScopes($query);
+```
+
+## Testing Your Upgrade
+
+After upgrading to LdapRecord v4, we recommend:
+
+1. **Update your configuration** - Ensure all SSL/TLS configuration options use the new names (`use_tls` and `use_starttls`)
+2. **Review custom extensions** - If you have extended LdapRecord classes, verify method signatures and parameter names
+3. **Test connections** - Verify that your LDAP connections work correctly with the new SSL/TLS configuration
+4. **Run your test suite** - Ensure all existing functionality continues to work as expected
+
+## Getting Help
+
+If you encounter issues during the upgrade process or need assistance with any of these changes, please:
+
+1. Check the [LdapRecord documentation](/docs/core/v4) for updated examples
+2. Search existing [GitHub issues](https://github.com/DirectoryTree/LdapRecord/issues)
+3. Create a new issue if you discover problems not covered in this guide
+
+We're committed to making the upgrade process as smooth as possible and appreciate your feedback on any challenges you encounter.
