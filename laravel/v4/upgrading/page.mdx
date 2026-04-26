@@ -1,9 +1,9 @@
 export const metadata = {
-    title: 'Upgrade to LdapRecord-Laravel v3',
-    description: 'Upgrading from LdapRecord-Laravel v2',
+    title: 'Upgrade to LdapRecord-Laravel v4',
+    description: 'Upgrading from LdapRecord-Laravel v3',
 }
 
-# Upgrading to Version 3
+# Upgrading to Version 4
 
 We strive to record all potential breaking changes. However, as some of
 these changes occur in lesser-known areas of the library, only a
@@ -17,132 +17,115 @@ so that we can address the issue promptly.
 
 ### Updating Dependencies
 
-#### PHP >= 8.1.0 Required
+#### LdapRecord v4
 
-LdapRecord-Laravel v3 now requires PHP 8.1.0 or greater.
+The core [LdapRecord](/docs/core/v4) repository has been updated to version 4.
 
-#### Laravel >= 8.0 Required
-
-LdapRecord-Laravel now requires Laravel version 8.0 or greater.
-
-#### LdapRecord v3
-
-The core [LdapRecord](/docs/core/v3) repository has been updated to version 3.
-
-Please visit the [upgrade guide](/docs/core/v3/upgrading) to see any
-changes in the core that may have an impact on your application.
+Please visit the [core upgrade guide](/docs/core/v4/upgrading) to review the
+changes that may have an impact on your application, especially the SSL/TLS
+configuration rename and query builder changes.
 
 #### Composer Dependencies
 
 You should update the following dependency in your application's `composer.json` file:
 
 ```json
-"directorytree/ldaprecord-laravel": "^3.0"
+"directorytree/ldaprecord-laravel": "^4.0"
 ```
 
-### Strict PHP Types Implemented
-
-LdapRecord-Laravel (and the core LdapRecord repository) now has strict 
-types implemented in all classes for all methods and properties.
-
-If you've created your own [models](/docs/core/v3/models), [scopes](/docs/core/v3/model-scopes),
-or have extended any other class from either repository, you will need to adjust any 
-overridden properties or methods with their respective types.
-
-### Configuration Updates
-
-The `logging` configuration options have been moved to an array. You 
-may either republish your configuration file by deleting the
-existing one (`config/ldap.php`) and running:
+Then run:
 
 ```bash
-php artisan vendor:publish --provider="LdapRecord\Laravel\LdapServiceProvider"
+composer update directorytree/ldaprecord-laravel directorytree/ldaprecord
 ```
 
-Or, by updating the option manually:
+### SSL/TLS Configuration Options Renamed
+
+LdapRecord-Laravel v4 uses the new SSL/TLS configuration option names from
+LdapRecord v4. These names clarify the difference between LDAPS and STARTTLS.
+
+| v3 Usage | v3 Option / Env | v4 Option / Env |
+|----------|-----------------|-----------------|
+| LDAPS / TLS connection | `use_ssl` / `LDAP_SSL` | `use_tls` / `LDAP_TLS` |
+| STARTTLS upgrade | `use_tls` / `LDAP_TLS` | `use_starttls` / `LDAP_STARTTLS` |
+
+If you have published `config/ldap.php`, update each connection:
 
 ```diff
-// config/ldap.php
-
-return [
-    // ...
-
--   'logging' => true,
--   'logging_channel' => 'stack',
-
-+   'logging' => [
-+       'enabled' => true,
-+       'channel' => 'stack',
-+   ],
-];
+'connections' => [
+    'default' => [
+        // ...
+-       'use_ssl' => env('LDAP_SSL', false),
+        'use_tls' => env('LDAP_TLS', false),
++       'use_starttls' => env('LDAP_STARTTLS', false),
+    ],
+],
 ```
+
+If you configure LDAP connections only through your `.env` file, update the
+environment variable names instead:
+
+```diff
+- LDAP_DEFAULT_SSL=true
++ LDAP_DEFAULT_TLS=true
+```
+
+```diff
+- LDAP_DEFAULT_TLS=true
++ LDAP_DEFAULT_STARTTLS=true
+```
+
+The same rename applies to all named connections. For example,
+`LDAP_ALPHA_SSL` becomes `LDAP_ALPHA_TLS`, and `LDAP_ALPHA_TLS` becomes
+`LDAP_ALPHA_STARTTLS`.
 
 ## Medium Impact Changes
 
-### LdapRecord\Laravel\Auth\Rule changes
+### Directory Emulator Query Internals Updated
 
-The `LdapRecord\Laravel\Auth\Rule` abstract class has been moved to an interface and the
-`isValid` method has also been renamed to `passes`, which now accepts an LdapRecord
-`Model` as the first parameter and an Eloquent `Model` as the second:
+The Directory Emulator has been updated for the LdapRecord v4 query builder.
+It now works with the new `LdapRecord\Query\Filter` objects and the renamed
+query builder `$selects` state.
 
-```diff
-namespace App\Ldap;
+Most applications that use `DirectoryEmulator::setup()` in tests should not
+need to make any changes. However, if you extend or call the emulator builder
+classes directly, review any overrides for these changes:
 
-use LdapRecord\Models\Model as LdapRecord;
-use Illuminate\Database\Eloquent\Model as Eloquent;
+- `findOrFail` now accepts `$selects` instead of `$columns`.
+- Base emulated query results now return arrays for raw query builder methods.
+- `paginate` returns an array.
+- The emulator no longer relies on the removed core query grammar or array-based
+  filter state.
 
-use LdapRecord\Laravel\Auth\Rule;
+### Custom Emulated Model Builders
 
-- class MyRule extends Rule
-+ class MyRule implements Rule
-{
-    /**
-     * Determine if the rule passes validation.
-     */
--    public function isValid();
-+    public function passes(LdapRecord $user, Eloquent $model = null): bool
-    {
-        // ...
-    }
-}
-```
+If you extend the emulated model query builders under
+`LdapRecord\Laravel\Testing\Emulated`, update your custom builders for the
+LdapRecord v4 model builder constructor changes.
+
+The emulator now creates new model builder instances from the model and a fresh
+base query instance, instead of creating a builder from only the connection and
+then setting the model afterward.
 
 ## Low Impact Changes
 
-### "Make" Command Changes
+### EscapedValue Namespace Changed
 
-The `make:ldap-*` methods have been renamed:
+The testing `UnescapedValue` helper now extends `LdapRecord\Query\EscapedValue`
+instead of `LdapRecord\Models\Attributes\EscapedValue`.
 
-```diff
-- php artisan make:ldap-rule
-+ php artisan ldap:make:rule
-```
+If your tests import or extend the old class directly, update the namespace:
 
 ```diff
-- php artisan make:ldap-model
-+ php artisan ldap:make:model
+- use LdapRecord\Models\Attributes\EscapedValue;
++ use LdapRecord\Query\EscapedValue;
 ```
 
-```diff
-- php artisan make:ldap-scope
-+ php artisan ldap:make:scope
-```
+### Directory Emulator Write Operations
 
-### LdapRecord\Laravel\Auth\Validator
+The Directory Emulator now implements the LdapRecord v4 LDAP write operation
+methods for adding, updating, replacing, and removing attribute values.
 
-The `Validator` class has had the `fails` method removed, and the `passes()` method now accepts an LdapRecord
-`Model` as the first parameter, and an Eloquent `Model` as the second:
-
-```diff
-+ use LdapRecord\Models\Model as LdapRecord;
-+ use Illuminate\Database\Eloquent\Model as Eloquent;
-
-class Validator
-{
-    // ...
--    public function passes();
-+    public function passes(LdapRecord $user, Eloquent $model = null): bool;
-    
--    public function fails();
-}
-```
+This should be backward compatible for normal emulator usage, but custom test
+doubles that implement the same low-level LDAP methods may need their method
+signatures reviewed against LdapRecord v4.
