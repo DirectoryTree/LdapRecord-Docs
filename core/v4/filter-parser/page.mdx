@@ -1,0 +1,210 @@
+export const metadata = {
+    title: 'Filter Parser',
+    description: 'Parsing LDAP Query Filters',
+}
+
+# Filter Parser
+
+## Introduction
+
+LdapRecord comes with a built-in LDAP filter parser, giving you the
+ability to read the filters within to extract all of their attributes.
+
+Let's start with a small example by parsing the filter `(cn=Steve)`:
+
+```php
+use LdapRecord\Query\Filter\Parser;
+
+// array: [
+//  0 => LdapRecord\Query\Filter\Equals
+// ]
+$filters = Parser::parse('(cn=Steve)');
+
+$condition = $filters[0];
+
+$condition->getAttribute(); // "cn"
+$condition->getOperator(); // "="
+$condition->getValue(); // "Steve"
+```
+
+When group filters have been detected, you will receive a group filter instead (`AndGroup`, `OrGroup`, or `Not`).
+
+With a group filter, you can retrieve all nested filters via the `getFilters()` method:
+
+```php
+// array: [
+//  0 => LdapRecord\Query\Filter\AndGroup
+// ]
+$filters = Parser::parse('(&(cn=Steve)(sn=Bauman))');
+
+$group = $filters[0];
+
+$group->getOperator(); // "&"
+
+// array: [
+//  0 => LdapRecord\Query\Filter\Equals
+//  1 => LdapRecord\Query\Filter\Equals
+// ]
+$group->getFilters();
+```
+
+<Important>
+The parser will always return an array of `Filter` instances.
+</Important>
+
+## Parsing From User Input
+
+If you're accepting user input input to parse, make sure you use a try/catch
+block to catch any potential `ParserException` that may be thrown:
+
+```php
+$input = '(&(cn=Steve)(sn=Bauman))(mail=sbauman@local.com';
+
+try {
+    $filters = Parser::parse($input);
+} catch (\LdapRecord\Query\Filter\ParserException $e) {
+    $e->getMessage(); // "Unclosed filter group. Missing ")" parenthesis"
+}
+```
+
+## Parsing Bad Filters
+
+The filter parser should not be considered as a filter validator. Filters
+that would otherwise fail to execute on an LDAP server can still be parsed.
+
+For example, this filter that would otherwise fail due to not being enclosed
+by a surrounding and/or (`&` / `|`) statement, can still be parsed by the filter parser:
+
+```php
+// array: [
+//  0 => LdapRecord\Query\Filter\Equals
+//  1 => LdapRecord\Query\Filter\Equals
+// ]
+$result = Parser::parse('(cn=Steve)(sn=Bauman)');
+```
+
+As you can see, an array of filters is returned, allowing you to parse each nested filter individually.
+
+## Assembling Filters
+
+The filter parser can also re-assemble filters into their string based format. This
+can help when you want to process a filter to remove any unneeded spacing:
+
+```php
+$filters = Parser::parse('(&  (cn=Steve   ) ( sn= Bauman) )  ');
+
+// Returns: "(&(cn=Steve)(sn= Bauman))"
+$filter = Parser::assemble($filters);
+```
+
+<Important>
+As you can see above, the parser will not trim spaces
+inside of condition values, in order to preserve the true value.
+</Important>
+
+## Display Filter Tree
+
+If you're looking to display a tree of parsed LDAP filters, here's a recursive function to get you started:
+
+```php
+use LdapRecord\Query\Filter\Parser;
+use LdapRecord\Query\Filter\GroupFilter;
+use LdapRecord\Query\Filter\ConditionFilter;
+
+function tree($filter)
+{
+	if ($filter instanceof GroupFilter) {
+        return "<ul>
+            <li>
+                {$filter->getOperator()}
+
+                <ul>" . tree($filter->getFilters()) . "</ul>
+            </li>
+        </ul>";
+    }
+
+  	if ($filter instanceof ConditionFilter) {
+        return "<li>{$filter->getAttribute()} {$filter->getOperator()} {$filter->getValue()}</li>";
+    }
+
+    if (is_array($filter)) {
+        return array_reduce($filter, function ($carry, $filter) {
+            return $carry .= tree($filter);
+        });
+    }
+};
+
+$input = '(|(&(cn=Steve)(sn=Bauman))(mail=sbauman@local.com))';
+
+$filters = Parser::parse($input);
+
+echo tree($filters);
+
+// Result:
+// <ul>
+//   <li>
+//       |
+//       <ul>
+//         <ul>
+//             <li>
+//               &
+//               <ul>
+//                   <li>cn = Steve</li>
+//                   <li>sn = Bauman</li>
+//               </ul>
+//             </li>
+//         </ul>
+//       </ul>
+//   </li>
+// </ul>
+```
+
+## Available Methods
+
+### `LdapRecord\Query\Filter\Parser`
+
+```php
+Parser::parse($filter); // Filter[]
+
+Parser::assemble($filters); // string
+```
+
+### `LdapRecord\Query\Filter\ConditionFilter`
+
+All condition filters (`Equals`, `Contains`, `StartsWith`, `EndsWith`, `Has`, `GreaterThanOrEquals`, `LessThanOrEquals`, `ApproximatelyEquals`) implement the `ConditionFilter` interface:
+
+```php
+$condition->getAttribute(); // string
+$condition->getOperator(); // string
+$condition->getValue(); // ?string
+$condition->getRaw(); // string
+(string) $condition; // string - the full filter with parentheses
+```
+
+### `LdapRecord\Query\Filter\GroupFilter`
+
+All group filters (`AndGroup`, `OrGroup`, `Not`) implement the `GroupFilter` interface:
+
+```php
+$group->getOperator(); // string ("&", "|", "!")
+$group->getFilters(); // Filter[]
+$group->getRaw(); // string
+(string) $group; // string - the full filter with parentheses
+```
+
+### Available Filter Classes
+
+| Class | Description | Example |
+|-------|-------------|---------|
+| `Equals` | Exact match | `(cn=John)` |
+| `Contains` | Substring match | `(cn=*John*)` |
+| `StartsWith` | Prefix match | `(cn=John*)` |
+| `EndsWith` | Suffix match | `(cn=*Doe)` |
+| `Has` | Attribute presence | `(cn=*)` |
+| `GreaterThanOrEquals` | Greater than or equal | `(age>=18)` |
+| `LessThanOrEquals` | Less than or equal | `(age<=65)` |
+| `ApproximatelyEquals` | Approximate match | `(cn~=John)` |
+| `AndGroup` | AND group | `(&(cn=John)(sn=Doe))` |
+| `OrGroup` | OR group | `(\|(cn=John)(cn=Jane))` |
+| `Not` | Negation | `(!(cn=John))` |
+| `Raw` | Raw filter string | Any valid filter |

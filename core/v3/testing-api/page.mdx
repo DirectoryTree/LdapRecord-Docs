@@ -1,0 +1,266 @@
+export const metadata = {
+    title: 'Testing API',
+    description: 'The LdapRecord Testing API',
+}
+
+# Available Test Utilties (API)
+
+## `DirectoryFake`
+
+### `setup`
+
+Swap a `LdapRecord\Connection` in the `LdapRecord\Container` with an `LdapRecord\Testing\ConnectionFake`:
+
+```php
+use LdapRecord\Testing\DirectoryFake;
+
+DirectoryFake::setup(); // LdapRecord\Testing\ConnectionFake
+```
+
+### `tearDown`
+
+Revert the swapped connections in the `LdapRecord\Container` to their original `LdapRecord\Connection` connection instances.
+
+This should typically be called in the `tearDown` of your test suite:
+
+```php
+use LdapRecord\Testing\DirectoryFake;
+
+class TestCase extends PHPUnitTestCase
+{
+    public function tearDown(): void
+    {
+        DirectoryFake::tearDown();
+        
+        parent::tearDown();
+    }
+}
+```
+
+## `ConnectionFake` Method Listing
+
+### `make`
+
+Create a new `ConnectionFake` instance:
+
+```php
+use LdapRecord\Testing\ConnectionFake;
+
+$config = ['...'];
+
+$fake = ConnectionFake::make($config);
+```
+
+### `actingAs`
+
+Set the user that is allowed to bind/authenticate to the `LdapFake`:
+
+```php
+ConnectionFake::make($config)->actingAs('cn=john,dc=local,dc=com');
+```
+
+You may also provide an `LdapRecord\Models\Model` instance:
+
+```php
+$user = User::make(['dn' => 'cn=john,dc=local,dc=com']);
+
+ConnectionFake::make($config)->actingAs($user);
+```
+
+### `shouldBeConnected`
+
+Set the connection fake to bypass bind attempts to the `LdapFake` as the user from the configuration:
+
+```php
+$fake = ConnectionFake::make($config)->shouldBeConnected();
+
+$fake->isConnected(); // true
+```
+
+### `shouldNotBeConnected`
+
+```php
+$fake = ConnectionFake::make($config)->shouldNotBeConnected();
+
+$fake->isConnected(); // false
+```
+
+## `LdapFake` Method Listing
+
+### `operation`
+
+Create a new `LdapExpectation` instance:
+
+```php
+use LdapRecord\Testing\LdapFake;
+
+LdapFake::operation('read'); // LdapRecord\Testing\LdapExpectation
+```
+
+These expectations are typically added directly to an `LdapFake` instance using the `expect` method:
+
+```php
+DirectoryFake::setup()
+    ->getLdapConnection() // LdapRecord\Testing\LdapFake
+    ->expect(LdapFake::operation('...'))
+```
+
+### `expect`
+
+Add an LDAP method expectation. It can receive an `LdapExpectation` instance or an array of expectations:
+
+```php
+use LdapRecord\LdapResultResponse;
+use LdapRecord\Testing\LdapFake;
+use LdapRecord\Testing\DirectoryFake;
+
+$mockResults = ['...'];
+
+// Single expectations...
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect(LdapFake::operation('search')->andReturn($mockResults));
+
+// Multiple expectations...
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect([
+        LdapFake::operation('bind')->andReturn(new LdapResultResponse),
+        LdapFake::operation('search')->andReturn($mockResults),
+    ]);
+
+// Simple expectations using key-value pairs...
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->expect([
+        'bind' => new \LdapRecord\LdapResultResponse,
+        'search' => $mockResults
+    ]);
+```
+
+### `shouldAllowAnyBind`
+
+Allow any bind attempt executed on the fake to succeed indefinitely:
+
+```php
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->shouldAllowAnyBind();
+```
+
+### `shouldAllowBindWith`
+
+Allow a bind attempt from the given distinguished name to succeeed indefinitely:
+
+```php
+DirectoryFake::setup()
+    ->getLdapConnection()
+    ->shouldAllowBindWith('cn=john,dc=local,dc=com');
+```
+
+## `LdapExpectation` Method Listing
+
+### `with`
+
+Set the arguments to expect when the method is called:
+
+```php
+(new LdapExpectation('read'))->with('cn=john,dc=local,dc=com', '(objectclass=*)', ['objectclass', 'cn']);
+```
+
+### `andReturn`
+
+Set the value to return when the method is called:
+
+```php
+(new LdapExpectation('read'))->andReturn($results);
+```
+
+### `andReturnTrue`
+
+Set the return value to be `true` when the method is called:
+
+```php
+(new LdapExpectation('rename'))->andReturnTrue();
+```
+
+### `andReturnFalse`
+
+Set the return value to be `false` when the method is called:
+
+```php
+(new LdapExpectation('rename'))->andReturnFalse();
+```
+
+### `andReturnError`
+
+Set an error code, message, and diagnostic message, to be returned on the
+`errNo`, `getLastError` and `getDiagnosticMessage` methods on the `LdapFake` respectively:
+
+```php
+(new LdapExpectation('rename'))->andReturnError(
+    code: 1, 
+    errorMessage: 'Error Message', 
+    diagnosticMessage: 'Diagnostic Message'
+);
+```
+
+### `andReturnErrorResponse`
+
+Set an error code of `1` and a blank error message to be returned on the `LdapFake`:
+
+```php
+(new LdapExpectation('rename'))->andReturnErrorResponse();
+```
+
+You may also provide a different code and message in the first and second parameters:
+
+```php
+(new LdapExpectation('rename'))->andReturnErrorResponse(code: 1, errorMessage: 'Error Message');
+```
+
+### `andReturnResponse`
+
+Set the return value to be an `LdapResultResponse`:
+
+```php
+(new LdapExpectation('rename'))->andReturnResponse(
+    errorCode: 0,
+    matchedDn: null,
+    errorMessage: null,
+    referrals: [],
+    controls: []
+);
+```
+
+### `andThrow`
+
+Set an exception to be thrown when the expectation is called:
+
+```php
+(new LdapExpectation('rename'))->andThrow(new \LdapRecord\LdapRecordException);
+```
+
+### `once`
+
+Allow the expectation to only be called once:
+
+```php
+(new LdapExpectation('rename'))->once()->andReturn('...');
+```
+
+### `twice`
+
+Allow the expectation to only be called twice:
+
+```php
+(new LdapExpectation('rename'))->twice()->andReturn('...');
+```
+
+### `times`
+
+Allow the expectation to only be called given number of times:
+
+```php
+(new LdapExpectation('rename'))->times(3)->andReturn('...');
+```
