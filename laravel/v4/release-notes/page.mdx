@@ -1,44 +1,80 @@
 export const metadata = {
     title: 'Release Notes',
-    description: 'LdapRecord-Laravel v3 Release Notes',
+    description: 'LdapRecord-Laravel v4 Release Notes',
 }
 
-# LdapRecord-Laravel v3.0.0 Release Notes
+# LdapRecord-Laravel v4.0.0 Release Notes
 
-We're excited to announce the release of LdapRecord-Laravel v3.0.0! This major version
-introduces changes and improvements, focusing on stricter typing, utilizing new PHP
-features and methods, updated dependencies, and a new import and authentication 
-configuration option. Please review the following release notes to understand
-the new features and changes.
+We're excited to announce the release of LdapRecord-Laravel v4.0.0! This major version
+brings compatibility with [LdapRecord v4](/docs/core/v4), featuring improved SSL/TLS
+configuration naming, enhanced query builder internals, and updated testing tools.
+Please review the following release notes to understand the new features and changes.
 
 ## Key Features and Changes
 
-### PHP >= 8.1 Requirement
+### LdapRecord v4 Dependency
 
-LdapRecord-Laravel v3 now requires PHP version 8.1 or higher to take advantage of the latest
-language features, optimizations, and security improvements. The whole codebase has
-been reviewed and refreshed with usage of new language features where applicable.
+LdapRecord-Laravel v4 now requires [LdapRecord v4](/docs/core/v4) to take advantage of:
 
-### Laravel >= 8.0 Requirement
+- Clearer SSL/TLS configuration naming
+- New filter object system
+- Improved query builder architecture
+- Standardized parameter names
+- Better type safety and error handling
 
-LdapRecord-Laravel v3 now requires Laravel version 8.0 or higher to 
-take advantage of the latest framework features, optimizations, 
-and security improvements.
+Be sure to review the [LdapRecord Core v4 upgrade guide](/docs/core/v4/upgrading) for
+details on breaking changes that may affect your application.
 
-### Strict Types Implementation
+### Clearer SSL/TLS Configuration
 
-We've implemented strict types across all classes and methods to enforce 
-better type safety and catch potential errors during development. This 
-will lead to more robust and maintainable code.
+The SSL/TLS configuration options have been renamed to better reflect their actual functionality:
 
-### New Import and Authentication Options
+| Old Name (v3) | New Name (v4) | Purpose |
+|---------------|---------------|---------|
+| `use_ssl` / `LDAP_SSL` | `use_tls` / `LDAP_TLS` | LDAPS connection (port 636) |
+| `use_tls` / `LDAP_TLS` | `use_starttls` / `LDAP_STARTTLS` | STARTTLS upgrade (port 389) |
 
-- A new [`min-users` command option](/docs/laravel/v4/auth/database/importing#min-users)
-has been added to the `ldap:import` command, allowing to you set a minumum number 
-of users to be returned by your LDAP server before importing users and 
-performing soft-deletes.
+This change eliminates confusion between LDAPS (SSL/TLS) and STARTTLS, making your
+configuration more explicit and easier to understand.
 
-- A new [`scopes` configuration option](/docs/laravel/v4/auth/database/configuration#scopes) 
-has been made available to be added to your authentication provider in your 
-`config/auth.php` file. This allows you to add [model query scopes]() to 
-refine/restrict the users who may authenticate into your application.
+**Example configuration update:**
+
+```php
+// config/ldap.php
+'connections' => [
+    'default' => [
+        'use_tls' => env('LDAP_TLS', false),        // For LDAPS
+        'use_starttls' => env('LDAP_STARTTLS', false), // For STARTTLS
+    ],
+],
+```
+
+### Enhanced Directory Emulator
+
+The Directory Emulator has been updated to work seamlessly with LdapRecord v4's new architecture:
+
+- **Updated query internals**: Now works with the new `LdapRecord\Query\Filter` objects
+- **Parameter rename**: `findOrFail()` now accepts `$selects` instead of `$columns`
+- **Model builder updates**: Constructor now accepts the model and query instance together
+- **Array returns**: Base query results now return arrays for consistency with v4
+
+Most applications using `DirectoryEmulator::setup()` should not require changes, as
+the public API remains compatible.
+
+### EscapedValue Namespace Update
+
+The `EscapedValue` class has moved from `LdapRecord\Models\Attributes\EscapedValue`
+to `LdapRecord\Query\EscapedValue`, reflecting its role in query building rather
+than model attributes.
+
+The testing `UnescapedValue` helper has been updated accordingly and will continue
+to work without changes in most cases.
+
+## Upgrading
+
+For detailed upgrade instructions, please see the [upgrade guide](/docs/laravel/v4/upgrading).
+
+Most applications will only need to:
+1. Update their `composer.json` to require `^4.0`
+2. Update SSL/TLS configuration option names
+3. Review any custom Directory Emulator extensions
