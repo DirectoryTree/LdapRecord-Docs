@@ -33,12 +33,12 @@ will lead to more robust and maintainable code.
 
 ### New Import and Authentication Options
 
-- A new [`min-users` command option](/docs/laravel/v3/auth/database/importing#min-users)
+- A new [`min-users` command option](/docs/laravel/v4/auth/database/importing#min-users)
 has been added to the `ldap:import` command, allowing to you set a minumum number 
 of users to be returned by your LDAP server before importing users and 
 performing soft-deletes.
 
-- A new [`scopes` configuration option](/docs/laravel/v3/auth/database/configuration#scopes) 
+- A new [`scopes` configuration option](/docs/laravel/v4/auth/database/configuration#scopes) 
 has been made available to be added to your authentication provider in your 
 `config/auth.php` file. This allows you to add [model query scopes]() to 
 refine/restrict the users who may authenticate into your application.

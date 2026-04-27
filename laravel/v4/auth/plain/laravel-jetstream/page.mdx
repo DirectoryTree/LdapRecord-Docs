@@ -8,7 +8,7 @@ export const metadata = {
 ## Introduction
 
 <Important>
-Before getting started, please complete the [configuration guide](/docs/laravel/v3/auth/plain/configuration).
+Before getting started, please complete the [configuration guide](/docs/laravel/v4/auth/plain/configuration).
 </Important>
 
 Laravel Jetstream utilizes [Laravel Fortify](https://github.com/laravel/fortify) for authentication under the hood.
@@ -224,7 +224,7 @@ to `username` so we can retrieve it properly in our `Fortify::authenticateUsing(
 
 When using Laravel Jetstream, LDAP error messages will now be displayed automatically
 to users. You do not need to configure or include the `ListensForLdapBindFailure`
-trait as you would using [Laravel UI](/docs/laravel/v3/auth/plain/laravel-ui#displaying-ldap-error-messages)
+trait as you would using [Laravel UI](/docs/laravel/v4/auth/plain/laravel-ui#displaying-ldap-error-messages)
 on the `LoginController`.
 
 ### Altering the Response
@@ -256,7 +256,7 @@ class AppServiceProvider extends ServiceProvider
 ```
 
 <Note>
-Refer to the [Password Policy Errors](/docs/core/v3/active-directory/users#password-policy-errors)
+Refer to the [Password Policy Errors](/docs/core/v4/active-directory/users#password-policy-errors)
 documentation to see what each code means.
 </Note>
 

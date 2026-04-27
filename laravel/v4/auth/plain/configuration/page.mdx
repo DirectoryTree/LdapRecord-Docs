@@ -34,7 +34,7 @@ If your application requires more than one LDAP connection, you
 must create a new provider for each connection.
 
 This new provider must have its own unique `model` class which must use your
-[alternate configured connection](/docs/core/v3/models#connections) name
+[alternate configured connection](/docs/core/v4/models#connections) name
 using the `$connection` property.
 </Important>
 
@@ -53,7 +53,7 @@ The `driver` option must be `ldap` as this is what indicates to Laravel the prop
 
 ## Model
 
-The `model` option must be the class name of your [LdapRecord model](/docs/core/v3/models). This model will be used
+The `model` option must be the class name of your [LdapRecord model](/docs/core/v4/models). This model will be used
 for fetching users from your directory.
 
 ### Using your own model
@@ -211,7 +211,7 @@ If you are caching your configuration, make sure you re-run `config:cache` to re
 
 ## Scopes
 
-The `scopes` option must be an array of [LdapRecord scope](/docs/core/v3/model-scopes.md) class names.
+The `scopes` option must be an array of [LdapRecord scope](/docs/core/v4/model-scopes.md) class names.
 
 ### Overview
 
@@ -257,7 +257,7 @@ class Accounting implements Scope
 Now let's update the `apply` method to only return users located inside the `Accounting` Organizational Unit:
 
 <Note>
-We're using [automatic base DN subsitution](/docs/core/v3/searching#automatic-base-dn-substitution)
+We're using [automatic base DN subsitution](/docs/core/v4/searching#automatic-base-dn-substitution)
 in query below by supplying `{base}` in the `$query->in()` method.
 </Note>
 

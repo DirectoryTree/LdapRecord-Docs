@@ -9,10 +9,10 @@ export const metadata = {
 Before we begin, it's paramount to understand that LdapRecord does not support credentialess 
 authentication (unless your server supports anonymous binding). If you attempt to configure an LDAP 
 connection without credentials, your user will be logged out after the request ends. Please 
-see the [configuration guide](/docs/laravel/v3/configuration) for more information.
+see the [configuration guide](/docs/laravel/v4/configuration) for more information.
 </Important>
 
-Once you have [configured a new authentication provider](/docs/laravel/v3/auth/database/configuration),
+Once you have [configured a new authentication provider](/docs/laravel/v4/auth/database/configuration),
 you're ready to start logging users into your application.
 
 Logging in is simple -- you only need to use Laravel's `Auth` facade:
