@@ -142,6 +142,63 @@ It is recommended to use _one_ of these options if you have the ability to. This
 - **STARTTLS is recommended over TLS**. It allows you to use the standard LDAP port while still encrypting your connection.
 </Important>
 
+#### Debugging
+
+If you're having connectivity issues over SSL or TLS, you may have to
+create an `ldap.conf` file and add the following inside:
+
+```text
+TLS_REQCERT never
+```
+
+The `ldap.conf` file will likely not exist by default. Create it inside the location for your OS:
+
+| OS      | Location                                           |
+|---------|----------------------------------------------------|
+| Windows | `C:\OpenLDAP\sysconf\ldap.conf`                    |
+| Linux   | `/etc/ldap/ldap.conf` or `/etc/openldap/ldap.conf` |
+| macOS   | `/usr/local/etc/openldap/ldap.conf`                |
+
+The above directories may not exist - you will need to create them in such case.
+
+<Important>
+- You **must** restart your web server after making changes to the `ldap.conf` file.
+- In some cases, you may even have to restart your workstation or server for the changes to take effect.
+</Important>
+
+If you can connect using `TLS_REQCERT never` inside of your `ldap.conf` file,
+you may want to copy your domain CA certificate to your web server, as it
+can be a bit of a security risk as it will ignore invalid certificates.
+
+Copy your domain CA certificate to the following location:
+
+| OS            | Location              |
+| ------------- | --------------------- |
+| Windows       | `C:\OpenLDAP\sysconf` |
+| Linux / macOS | `/etc/ssl/certs`      |
+
+Then, reference it in your `ldap.conf` with the full file path using (replace
+`my-custom-path` with the location of the file):
+
+```text
+TLS_CACERT my-custom-path/ca.pem
+TLS_REQCERT hard
+```
+
+Windows Example:
+
+```text
+TLS_CACERT C:\OpenLDAP\sysconf\ca.pem
+TLS_REQCERT hard
+```
+
+Linux / macOS Example:
+
+```text
+TLS_CACERT /etc/ssl/certs/ca.pem
+TLS_REQCERT hard
+```
+
 ### SASL
 
 This boolean option enables connecting to your LDAP server using SASL (Simple Authentication and Security Layer) via `ldap_sasl_bind`:
@@ -235,63 +292,6 @@ $config = [
         'props' => 'gssapi_flags=mutual_required,delegate_cred'
     ]
 ];
-```
-
-#### Debugging
-
-If you're having connectivity issues over SSL or TLS, you may have to
-create an `ldap.conf` file and add the following inside:
-
-```text
-TLS_REQCERT never
-```
-
-The `ldap.conf` file will likely not exist by default. Create it inside the location for your OS:
-
-| OS      | Location                                           |
-|---------|----------------------------------------------------|
-| Windows | `C:\OpenLDAP\sysconf\ldap.conf`                    |
-| Linux   | `/etc/ldap/ldap.conf` or `/etc/openldap/ldap.conf` |
-| macOS   | `/usr/local/etc/openldap/ldap.conf`                |
-
-The above directories may not exist - you will need to create them in such case.
-
-<Important>
-- You **must** restart your web server after making changes to the `ldap.conf` file.
-- In some cases, you may even have to restart your workstation or server for the changes to take effect.
-</Important>
-
-If you can connect using `TLS_REQCERT never` inside of your `ldap.conf` file,
-you may want to copy your domain CA certificate to your web server, as it
-can be a bit of a security risk as it will ignore invalid certificates.
-
-Copy your domain CA certificate to the following location:
-
-| OS            | Location              |
-| ------------- | --------------------- |
-| Windows       | `C:\OpenLDAP\sysconf` |
-| Linux / macOS | `/etc/ssl/certs`      |
-
-Then, reference it in your `ldap.conf` with the full file path using (replace
-`my-custom-path` with the location of the file):
-
-```text
-TLS_CACERT my-custom-path/ca.pem
-TLS_REQCERT hard
-```
-
-Windows Example:
-
-```text
-TLS_CACERT C:\OpenLDAP\sysconf\ca.pem
-TLS_REQCERT hard
-```
-
-Linux / macOS Example:
-
-```text
-TLS_CACERT /etc/ssl/certs/ca.pem
-TLS_REQCERT hard
 ```
 
 ### Timeout
