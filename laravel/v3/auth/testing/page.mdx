@@ -13,18 +13,10 @@ the [Directory Emulator](/docs/laravel/v3/testing#directory-emulator). Using it,
 
 ## Getting Started
 
-Before we begin, you must require the `doctrine/dbal` into your composers `require-dev` for testing.
-This is due to the `$table->dropColumns(['guid', 'domain'])` call inside the additional
-LdapRecord auth migration and that we are using SQLite in our test environment.
-
-This package is required for modifying columns - as described in the
-[Laravel documentation](https://laravel.com/docs/migrations#modifying-columns).
-
-To do so, run the following command:
-
-```bash
-composer require doctrine/dbal --dev
-```
+Before we begin, configure your test suite to use Laravel's `RefreshDatabase` trait.
+This will run your migrations before your tests while avoiding migration rollbacks
+between tests, which can fail on SQLite when rolling back indexed columns such as
+LdapRecord's `guid` column.
 
 ## Creating the test
 
@@ -36,10 +28,10 @@ php artisan make:test LdapAuthenticationTest
 
 Inside our generated test, we'll make use of the following traits:
 
-**DatabaseMigrations**
+**RefreshDatabase**
 
 ```text
-Illuminate\Foundation\Testing\DatabaseMigrations
+Illuminate\Foundation\Testing\RefreshDatabase
 ```
 
 Using this trait will execute our migrations and ensure our database is ready to import our LDAP user.
@@ -59,7 +51,7 @@ Let's add a `test_auth_works` method into the generated test:
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Auth;
 use LdapRecord\Laravel\Testing\DirectoryEmulator;
@@ -68,7 +60,7 @@ use Tests\TestCase;
 
 class LdapAuthenticationTest extends TestCase
 {
-    use DatabaseMigrations, WithFaker;
+    use RefreshDatabase, WithFaker;
 
     public function test_auth_works()
     {
@@ -407,7 +399,13 @@ as a server variable.
 This server variable (typically `$_SERVER['AUTH_USER']`) is what the `WindowsAuthenticate`
 middleware reads to locate the authenticated user from your LDAP directory.
 
-To set server variables for upcoming requests inside your Laravel tests, use the `withServerVariables()` method:
+To test the middleware directly, create a request with the authenticated user
+server variable and pass it through the `WindowsAuthenticate` middleware:
+
+```php
+use Illuminate\Http\Request;
+use LdapRecord\Laravel\Middleware\WindowsAuthenticate;
+```
 
 ```php
 public function test_windows_authentication_works()
@@ -428,15 +426,23 @@ public function test_windows_authentication_works()
         'DOMAIN', $ldapUser->getFirstAttribute('samaccountname')
     ]);
 
-    // Set the server variables for the upcoming request.
-    $this->withServerVariables([
-        WindowsAuthenticate::$serverKey => $authUser
-    ]);
+    $request = tap(new Request, function (Request $request) use ($authUser) {
+        $request->server->set(WindowsAuthenticate::$serverKey, $authUser);
+    });
 
-    // Attempt accessing a protected page:
-    $this->get('/dashboard')->assertOk();
-
-    // Ensure the user was authenticated:
-    $this->assertTrue(Auth::check());
+    app(WindowsAuthenticate::class)->handle($request, function () {
+        $this->assertTrue(Auth::check());
+    });
 }
+```
+
+If you prefer to test an application route, ensure that the route is protected by
+the `WindowsAuthenticate` middleware before asserting against the response:
+
+```php
+$this->withServerVariables([
+    WindowsAuthenticate::$serverKey => $authUser,
+]);
+
+$this->get('/dashboard')->assertOk();
 ```
