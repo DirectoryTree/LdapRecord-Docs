@@ -1,24 +1,77 @@
+import { PackageLanding, PackageHero, PackageCards, PackageSteps } from '@/components/PackageLanding';
+
 export const metadata = {
-    title: 'Overview',
-    description: 'LdapRecord-Laravel Overview',
+    title: 'LdapRecord Laravel',
+    description: 'Bring LDAP authentication, user synchronization, and directory queries to your Laravel application.',
+};
+
+export const sections = [];
+
+<PackageLanding>
+<PackageHero>
+<div>
+<div className="mb-4 text-sm font-medium text-purple-600 dark:text-purple-400">LDAP for Laravel · v4</div>
+
+# LdapRecord Laravel
+
+Let users sign in with their LDAP credentials. Keep your database users in sync and query your directory using the Laravel conventions you already know.
+
+<div className="mt-7 flex flex-wrap gap-3">
+    <Button href="/docs/laravel/v4/installation" arrow="right" className="px-4 py-2.5">Install the package</Button>
+    <Button href="/docs/laravel/v4/auth" variant="outline" className="px-4 py-2.5">Explore authentication</Button>
+</div>
+<div className="mt-5 text-sm leading-6">Built on <a href="/docs/core/v4" className="font-medium text-purple-600 underline-offset-4 hover:underline dark:text-purple-400">LdapRecord Core</a>, with directory models and queries included.</div>
+</div>
+<div>
+<CodeGroup>
+
+```php
+use Illuminate\Support\Facades\Auth;
+
+$credentials = [
+    'mail' => 'jane@example.com',
+    'password' => $password,
+];
+
+if (Auth::attempt($credentials)) {
+    request()->session()->regenerate();
+
+    return redirect()->intended('/dashboard');
 }
+```
 
-# Overview
+</CodeGroup>
+<div className="text-sm leading-6">After <a href="/docs/laravel/v4/auth/plain/configuration" className="text-purple-600 underline underline-offset-4 dark:text-purple-400">configuring your LDAP authentication provider</a>, use Laravel’s Auth facade to sign in.</div>
+</div>
+</PackageHero>
 
-LdapRecord-Laravel is a package providing you the ability to search
-your LDAP directory, perform operations, and authenticate
-LDAP users into your Laravel application.
+<section className="mt-10">
 
-It uses the core [LdapRecord](/docs/core/v4) package under the hood, so be sure to look at its
-[documentation](/docs/core/v4), so you have an understanding of how everything works.
-It was created with the mindset of porting Laravel's fantastic Eloquent
-database ORM to an LDAP equivalent.
+## Bring your directory into Laravel
 
-If you ever encounter issues or simply need some help getting up and running,
-please feel free to [create an issue](https://github.com/DirectoryTree/LdapRecord/issues/new)
-and I would be happy to help you out.
+<PackageCards items={[
+    { icon: 'authentication', title: 'Authenticate users', description: 'Let users sign in to your application with their existing LDAP credentials.', href: '/docs/laravel/v4/auth' },
+    { icon: 'database', title: 'Sync database users', description: 'Connect LDAP identities to local Eloquent users and sync their attributes.', href: '/docs/laravel/v4/auth/database' },
+    { icon: 'import', title: 'Import directory objects', description: 'Bring users and other LDAP objects into your database with Artisan.', href: '/docs/laravel/v4/importing' },
+]} />
+</section>
 
-If you require immediate support, consider becoming a [sponsor](https://github.com/DirectoryTree/LdapRecord?sponsor=1)
-to receive issue priority, so you get up and running as fast as possible.
+<section className="mt-10">
 
-Let's get started!
+## Set up your application
+
+<PackageSteps items={[
+    { title: 'Install the package', description: 'Add the integration to your Laravel application.', href: '/docs/laravel/v4/installation' },
+    { title: 'Configure your connection', description: 'Tell Laravel how to reach your LDAP directory.', href: '/docs/laravel/v4/configuration' },
+    { title: 'Choose how users sign in', description: 'Use LDAP directly or sync users to your database.', href: '/docs/laravel/v4/auth' },
+]} />
+</section>
+
+<div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-zinc-900/10 pt-6 text-sm dark:border-white/10">
+    <span>Need a hand getting started?</span>
+    <div className="flex flex-wrap gap-5">
+        <a href="https://github.com/DirectoryTree/LdapRecord/issues/new" className="hover:text-purple-600 dark:hover:text-purple-400">Get help</a>
+        <a href="https://github.com/DirectoryTree/LdapRecord-Laravel" className="hover:text-purple-600 dark:hover:text-purple-400">View on GitHub</a>
+    </div>
+</div>
+</PackageLanding>

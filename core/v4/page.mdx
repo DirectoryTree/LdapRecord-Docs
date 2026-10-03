@@ -1,22 +1,79 @@
+import { PackageLanding, PackageHero, PackageCards, PackageSteps } from '@/components/PackageLanding';
+
 export const metadata = {
-    title: 'Overview',
-    description: 'LdapRecord Overview',
+    title: 'LdapRecord Core',
+    description: 'Search your LDAP directory and manage users, groups, and more with expressive PHP models.',
+};
+
+export const sections = [];
+
+<PackageLanding>
+<PackageHero>
+<div>
+<div className="mb-4 text-sm font-medium text-purple-600 dark:text-purple-400">LDAP for PHP · v4</div>
+
+# LdapRecord Core
+
+Work with your LDAP directory using expressive PHP models. Search for users, manage groups, and update directory entries with an API that feels familiar.
+
+<div className="mt-7 flex flex-wrap gap-3">
+    <Button href="/docs/core/v4/quickstart" arrow="right" className="px-4 py-2.5">Start the quickstart</Button>
+    <Button href="/docs/core/v4/models" variant="outline" className="px-4 py-2.5">Explore models</Button>
+</div>
+<div className="mt-5 text-sm leading-6">Building with Laravel? <a href="/docs/laravel/v4" className="font-medium text-purple-600 underline-offset-4 hover:underline dark:text-purple-400">Start with the Laravel integration.</a></div>
+</div>
+<div>
+<CodeGroup>
+
+```php
+use LdapRecord\Models\ActiveDirectory\User;
+
+$user = User::query()
+    ->where('mail', 'jane@example.com')
+    ->firstOrFail();
+
+$groups = $user->groups()->get();
+
+foreach ($groups as $group) {
+    echo $group->getName();
 }
 
-# Overview
+$user->title = 'Engineering Manager';
+$user->save();
+```
 
-LdapRecord is a PHP package that provides you with a full ActiveRecord
-implementation for working with your LDAP server. Each LDAP object type
-has a corresponding "Model" which is used to interact with that type.
-An LDAP object type is determined by its object classes.
+</CodeGroup>
+<div className="text-sm leading-6">An Active Directory example, after <a href="/docs/core/v4/quickstart" className="text-purple-600 underline underline-offset-4 dark:text-purple-400">configuring your connection</a>.</div>
+</div>
+</PackageHero>
 
-Models allow you to execute search operations on your LDAP server as well as create and modify objects.
+<section className="mt-10">
 
-PHP applications that require LDAP integration are very tricky to set up. Creating these
-integrations yourself can take days or even weeks due to the amount of learning
-you must take on to understand how LDAP works.
+## Work with your directory
 
-LdapRecord sweats the small stuff so you can get up and running as fast as possible.
+<PackageCards items={[
+    { icon: 'search', title: 'Search your directory', description: 'Build queries with readable methods to find the entries you need.', href: '/docs/core/v4/searching' },
+    { icon: 'models', title: 'Work with models', description: 'Read and update LDAP entries through PHP objects and relationships.', href: '/docs/core/v4/models' },
+    { icon: 'users', title: 'Manage users and groups', description: 'Work with Active Directory accounts and group memberships.', href: '/docs/core/v4/active-directory/groups' },
+]} />
+</section>
 
-If you require support or assistance getting set up, consider becoming a [sponsor](https://github.com/sponsors/stevebauman)
-to receive issue priority so you get up and running as fast as possible.
+<section className="mt-10">
+
+## Your first LDAP query
+
+<PackageSteps items={[
+    { title: 'Install the package', description: 'Check the requirements and install with Composer.', href: '/docs/core/v4/installation' },
+    { title: 'Connect your directory', description: 'Set your server, credentials, and search base.', href: '/docs/core/v4/configuration' },
+    { title: 'Run your first query', description: 'Connect the pieces with a complete PHP example.', href: '/docs/core/v4/quickstart' },
+]} />
+</section>
+
+<div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-zinc-900/10 pt-6 text-sm dark:border-white/10">
+    <span>Need a hand getting started?</span>
+    <div className="flex flex-wrap gap-5">
+        <a href="https://github.com/DirectoryTree/LdapRecord/issues/new" className="hover:text-purple-600 dark:hover:text-purple-400">Get help</a>
+        <a href="https://github.com/DirectoryTree/LdapRecord" className="hover:text-purple-600 dark:hover:text-purple-400">View on GitHub</a>
+    </div>
+</div>
+</PackageLanding>
